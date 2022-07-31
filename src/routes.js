@@ -16,6 +16,8 @@ import NewMonthlyEmployee from './pages/NewMonthlyEmployee';
 import PersonnalTools from './pages/PersonnalTools';
 import CommonTools from './pages/CommonTools';
 import NewTools from './pages/NewTools';
+import DailyPresence from './pages/DailyPresence';
+import MonthlyPresence from './pages/MonthlyPresence';
 
 
 // ----------------------------------------------------------------------
@@ -25,7 +27,7 @@ export default function Router() {
     {
       path: '/', element: <LogoOnlyLayout />,
       children: [
-        { path: '/', element: <Navigate to="/dashboard/app" /> },
+        { path: '/', element: <Navigate to="/dashboard/home" /> },
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
         { path: '404', element: <NotFound /> },
@@ -55,9 +57,13 @@ export default function Router() {
         { path: 'common', element: <CommonTools /> },
       ]
     },
-    // {
-    //   path: '/presence', 
-    // },
-    { path: '*', element: <Navigate to="/404" replace /> },
+    {
+      path: '/presence', element: <DashboardLayout />,
+      children: [
+        { path: 'dailypresence', element: <DailyPresence /> },
+        { path: 'monthlypresence', element: <MonthlyPresence /> },
+      ]
+    },
+    // { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }

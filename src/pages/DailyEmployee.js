@@ -80,18 +80,18 @@ function DailyEmployee() {
           </Breadcrumbs>
         </Stack>
 
-        {/* <Link to='/employee/new-dailyemployee'> */}
+        <Link to='/employee/new-dailyemployee'>
           <Button
             size="medium"
             variant="outlined"
             color="primary"
-            sx={{ mr: 10, ml: 150, mt: -10, width: 250 }}
+            sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
             startIcon={<AddIcon />}
             href=''
           >
             Nouveau employé
           </Button>
-        {/* </Link> */}
+        </Link>
       </Typography>
 
       <Container maxWidth="xxl">

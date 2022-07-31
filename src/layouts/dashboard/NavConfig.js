@@ -33,32 +33,44 @@ const navConfig = [
     category: 'employee',
     title: 'Employé Journalier',
     path: '/employee/dailyemployee',
-    icon: getIcon('material-symbols:10k-outline-sharp'),
+    icon: getIcon('ic:outline-today'),
   },
   {
     category: 'employee',
     title: 'Employé Mensuel',
     path: '/employee/monthlyemployee',
-    icon: getIcon('eva:pie-chart-2-fill'),
+    icon: getIcon('ic:baseline-calendar-month'),
   },
   {
     category: 'tools',
     title: 'Nouveau outil',
     path: '/tools/new-tool',
-    icon: getIcon('eva:pie-chart-2-fill'),
+    icon: getIcon('ic:baseline-plus'),
   },
   {
     category: 'tools',
     title: 'Personnel',
     path: '/tools/personnal',
-    icon: getIcon('eva:pie-chart-2-fill'),
+    icon: getIcon('la:user'),
   },
 
   {
     category: 'tools',
     title: 'Commun',
     path: '/tools/common',
-    icon: getIcon('eva:pie-chart-2-fill'),
+    icon: getIcon('la:users'),
+  },
+  {
+    category: 'presence',
+    title: 'Présence journalier',
+    path: '/presence/dailypresence',
+    icon: getIcon('ic:outline-today'),
+  },
+  {
+    category: 'presence',
+    title: 'Présence mensuel',
+    path: '/presence/monthlypresence',
+    icon: getIcon('ic:baseline-calendar-month'),
   },
 ];
 
