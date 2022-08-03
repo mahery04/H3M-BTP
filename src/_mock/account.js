@@ -1,8 +1,7 @@
 // ----------------------------------------------------------------------
 
 const account = {
-  displayName: 'Manager ERGON',
-  email: 'ergon@minimals.cc',
+  displayName: 'H3M-BTP',
   photoURL: '/static/mock-images/avatars/avatar_default.jpg',
 };
 

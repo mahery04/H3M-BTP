@@ -63,14 +63,14 @@ function DailyEmployee() {
       Employé(e)s
     </Typography>,
     <Typography key="2">
-      Employées Journalier
+      Employé Journalier
     </Typography>,
   ];
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Employées Journalier
+        Employé Journalier
         <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
           Employé(e)s
         </Typography>
@@ -80,18 +80,18 @@ function DailyEmployee() {
           </Breadcrumbs>
         </Stack>
 
-        <Link to='/employee/new-dailyemployee'>
+        
           <Button
             size="medium"
             variant="outlined"
             color="primary"
             sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
             startIcon={<AddIcon />}
-            href=''
+            href='/employee/new-dailyemployee'
           >
             Nouveau employé
           </Button>
-        </Link>
+        
       </Typography>
 
       <Container maxWidth="xxl">

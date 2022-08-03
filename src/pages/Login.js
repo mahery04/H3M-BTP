@@ -91,7 +91,7 @@ export default function Login() {
         <Container maxWidth="sm">
           <ContentStyle>
             <Typography variant="h4" gutterBottom>
-              Connecter à votre compte ERGON
+              Connecter à votre compte H3M-BTP
             </Typography>
 
             <Typography sx={{ color: 'text.secondary', mb: 5 }}>Entrer les détails suivants</Typography>

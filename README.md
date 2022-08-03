@@ -1,6 +1,6 @@
-# Ergon (frontend)
+# H3M-BTP (frontend)
 
-Gestion de Stock
+Gestion des employés
 
 ## Install the dependencies
 ```bash
