@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -19,46 +19,93 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import IconButton from '@mui/material/IconButton';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
+import swal from '@sweetalert/with-react';
 
-const columns = [
-  { field: 'id', headerName: 'Id', width: 100 },
-  { field: 'matricule', headerName: 'Matricule', width: 100 },
-  { field: 'firstname', headerName: 'Nom', width: 200 },
-  { field: 'lastname', headerName: 'Prénom', width: 200 },
-  { field: 'cin', headerName: 'Numéro CIN', width: 200, type: 'number' },
-  { field: 'address', headerName: 'Adresse', width: 200 },
-  { field: 'contact', headerName: 'Contact', width: 200 },
-  { field: 'post', headerName: 'Poste occupé', width: 200 },
-  { field: 'category', headerName: 'Categorie', width: 200 },
-  { field: 'hiring_date', headerName: 'Date d\'embauche', width: 150 },
-  { field: 'ostie', headerName: 'Ostie', width: 200 },
-  { field: 'cnaps', headerName: 'CNAPS', width: 200 },
-  {
-    field: 'action', headerName: 'Action', width: 150, type: 'actions',
-    getActions: () => [
-      <IconButton component="label">
-        <EditIcon />
-      </IconButton>,
-      <IconButton component="label">
-        <DeleteIcon />
-      </IconButton>
-    ]
-  },
-
-];
-
-const rows = [
-  { id: 1, matricule: 'test_matricule', firstname: 'test_nom', lastname: 'test_prenom', cin: 16453132, address: 'test_adresse', contact: '0331212323', post: 'test_poste', category: 'test_category', hiring_date: '2019-03-12', ostie: 'test_ostie', cnaps: 'test_cnaps' },
-  { id: 2, matricule: 'test_matricule', firstname: 'test_nom', lastname: 'test_prenom', cin: 16453132, address: 'test_adresse', contact: '0331212323', post: 'test_poste', category: 'test_category', hiring_date: '2019-03-12', ostie: 'test_ostie', cnaps: 'test_cnaps' },
-  { id: 3, matricule: 'test_matricule', firstname: 'test_nom', lastname: 'test_prenom', cin: 16453132, address: 'test_adresse', contact: '0331212323', post: 'test_poste', category: 'test_category', hiring_date: '2019-03-12', ostie: 'test_ostie', cnaps: 'test_cnaps' },
-  { id: 4, matricule: 'test_matricule', firstname: 'test_nom', lastname: 'test_prenom', cin: 16453132, address: 'test_adresse', contact: '0331212323', post: 'test_poste', category: 'test_category', hiring_date: '2019-03-12', ostie: 'test_ostie', cnaps: 'test_cnaps' },
-  { id: 5, matricule: 'test_matricule', firstname: 'test_nom', lastname: 'test_prenom', cin: 16453132, address: 'test_adresse', contact: '0331212323', post: 'test_poste', category: 'test_category', hiring_date: '2019-03-12', ostie: 'test_ostie', cnaps: 'test_cnaps' },
-  { id: 6, matricule: 'test_matricule', firstname: 'test_nom', lastname: 'test_prenom', cin: 16453132, address: 'test_adresse', contact: '0331212323', post: 'test_poste', category: 'test_category', hiring_date: '2019-03-12', ostie: 'test_ostie', cnaps: 'test_cnaps' },
-
-];
+import monthlyEmployeeService from '../services/monthlyEmployeeService';
 
 
 function MonthlyEmployee() {
+
+  const [monthlyemployees, setMonthlyemployees] = useState([])
+
+  const getMonthlyEmployees = () => {
+    monthlyEmployeeService.getAll().then((res) => {
+      setMonthlyemployees(res.data)
+    }).catch(err => {
+      console.log(err)
+    }) 
+  }
+
+  useEffect(() => {
+    getMonthlyEmployees()
+  },[])
+
+  const columns = [
+    { field: 'id',          headerName: 'Id',               width: 100 },
+    { field: 'matricule',   headerName: 'Matricule',        width: 100 },
+    { field: 'firstname',   headerName: 'Nom',              width: 200 },
+    { field: 'lastname',    headerName: 'Prénom',           width: 200 },
+    { field: 'cin',         headerName: 'Numéro CIN',       width: 200, type: 'number' },
+    { field: 'address',     headerName: 'Adresse',          width: 200 },
+    { field: 'contact',     headerName: 'Contact',          width: 200 },
+    { field: 'post',        headerName: 'Poste occupé',     width: 200 },
+    { field: 'category',    headerName: 'Categorie',        width: 200 },
+    { field: 'hiring_date', headerName: 'Date d\'embauche', width: 150 },
+    { field: 'ostie_num',   headerName: 'Ostie',            width: 200 },
+    { field: 'cnaps_num',   headerName: 'CNAPS',            width: 200 },
+    { field: 'action',      headerName: 'Action',           width: 150, type: 'actions',
+    renderCell: (data) => {
+      return (
+        <>
+          <Link to={'/'}>
+            <IconButton component="label">
+              <EditIcon />
+            </IconButton>
+          </Link>
+          
+          <IconButton component="label" onClick={() => deleteMonthlyemployee(data.id)}>
+            <DeleteIcon />
+          </IconButton>
+
+        </>
+      )
+    }
+    },
+  
+  ];
+  
+  const rows = monthlyemployees.map(monthlyemployee => ({ 
+    id:           monthlyemployee.monthlyemployee_id, 
+    matricule:    monthlyemployee.matricule, 
+    firstname:    monthlyemployee.firstname, 
+    lastname:     monthlyemployee.lastname, 
+    cin:          monthlyemployee.cin, 
+    address:      monthlyemployee.address, 
+    contact:      monthlyemployee.contact, 
+    post:         monthlyemployee.post, 
+    category:     monthlyemployee.category, 
+    hiring_date:  moment(monthlyemployee.hiring_date).format('YYYY-MM-DD'),
+    ostie_num:    monthlyemployee.ostie_num,
+    cnaps_num:    monthlyemployee.cnaps_num,
+  }))
+
+  const deleteMonthlyemployee = (id) => {
+    swal({
+      text: "Supprimer l'employé de la liste ?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if(willDelete) { 
+        monthlyEmployeeService.remove(id)
+        const newTabList = monthlyemployees.filter((monthlyemployee) => monthlyemployee.id !== id)
+        setMonthlyemployees(newTabList)
+        document.location.reload(true)
+      }
+    });
+  }
 
   const breadcrumbs = [
     <Typography key="1">

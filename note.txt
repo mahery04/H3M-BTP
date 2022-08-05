@@ -1,2 +1,3 @@
 - verify backend model and react id
 - compare branch master
+- set cin int(12) in database

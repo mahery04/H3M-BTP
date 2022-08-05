@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import Button from '@mui/material/Button';
@@ -14,11 +14,11 @@ import Box from '@mui/material/Box';
 
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'; 
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -36,8 +36,8 @@ import moment from 'moment';
 import dailyEmployeeService from '../services/dailyEmployeeService'
 
 
-function NewDailyEmployee() {
-  const [date, setDate] = useState(null);
+function UpdateDailyEmployee(props) {
+  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
 
   const initialEmployeeState = {
     id:           null,
@@ -52,12 +52,30 @@ function NewDailyEmployee() {
     hiring_date:  date,
   }
 
+  const { dailyemployee_id } = useParams()
+  const [loaded, setLoaded] = useState(false)
   const [dailyemployee, setDailyemployee] = useState(initialEmployeeState)
+
+    useEffect(() => {
+        const load = async () => {
+            const res = await dailyEmployeeService.get(dailyemployee_id)
+            console.log("RES LAVA BE ", res.data);
+            setDailyemployee(res.data)
+            setLoaded(true)
+        }
+            if (dailyemployee_id && !loaded) {
+                load();
+            }
+    }, [dailyemployee_id, loaded])
+
+    console.log(loaded)
 
   const handleInputChange = e => {
     const { name, value } = e.target
     setDailyemployee({ ...dailyemployee, [name]: value })
   }
+
+  const navigate = useNavigate();
 
   const insertDate = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
@@ -65,14 +83,9 @@ function NewDailyEmployee() {
     setDailyemployee({ ...dailyemployee, hiring_date: d })
   }
 
-  // console.log(moment(date).format('YYYY-MM-DD'))
-
-  console.log(dailyemployee)
-
-  const navigate = useNavigate()
-
-  const saveEmployee = e => {
-    e.preventDefault()
+  
+  const updateEmployee = e => {
+    e.preventDefault();
 
     var data = {
       matricule:    dailyemployee.matricule,
@@ -85,8 +98,9 @@ function NewDailyEmployee() {
       category:     dailyemployee.category,
       hiring_date:  dailyemployee.hiring_date,
     }
+    console.log(dailyemployee)
 
-    dailyEmployeeService.create(data).then(res => {
+    dailyEmployeeService.update(dailyemployee_id, data).then(res => {
       setDailyemployee({
         id:           res.data.id,
         matricule:    res.data.matricule,
@@ -104,8 +118,8 @@ function NewDailyEmployee() {
       console.log(err)
     })
     navigate('/employee/dailyemployee')
-
   }
+  console.log(dailyemployee)
 
   const breadcrumbs = [
     <Typography key="1">
@@ -119,7 +133,7 @@ function NewDailyEmployee() {
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Nouveau Employée Journalier
+        Modification d'un employé journalier
         <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
           Employé(e)s
         </Typography>
@@ -127,23 +141,13 @@ function NewDailyEmployee() {
           <Breadcrumbs separator="." aria-label="breadcrumb">
             {breadcrumbs}
           </Breadcrumbs>
-        </Stack>
-
-
+        </Stack>s
       </Typography>
 
       <Container maxWidth="xxl">
-
-        {/* <Paper sx={{ width: '95%', overflow: 'hidden' }}>
-          <Box sx={{ height: 500, width: '100%' }}>
-            lorem
-          </Box>
-        </Paper> */}
-
         <Card sx={{ height: 500, width: '95%' }}>
           <CardContent>
-
-            <form onSubmit={saveEmployee} noValidate autoComplete='off'>
+            <form onSubmit={updateEmployee} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ lineHeight: 6 }}>
                   <Grid item xs={2} sm={4} md={4}>
@@ -156,8 +160,7 @@ function NewDailyEmployee() {
                         onChange={handleInputChange} 
                         name="matricule" 
                         label="Numéro matricule" 
-                        variant="standard" 
-                        sx={{ width: '100%' }} 
+                        variant="standard" sx={{ width: '100%' }} 
                       /><br />
                     </Box>
 
@@ -183,13 +186,12 @@ function NewDailyEmployee() {
                         name="post" 
                         label="Poste occupé" 
                         variant="standard" 
-                        sx={{ width: '100%' }} 
+                        sx={{ width: '100%' }}    
                       /><br />
                     </Box>
 
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
@@ -268,11 +270,11 @@ function NewDailyEmployee() {
                         renderInput={(params) =>
                           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                             <TextField 
-                              {...params} 
-                              variant="standard" 
-                              sx={{ width: '100%' }} 
-                              id="hiring_date" 
-                              name="hiring_date" 
+                                {...params} 
+                                variant="standard" 
+                                sx={{ width: '100%' }} 
+                                id="hiring_date" 
+                                name="hiring_date" 
                             /><br />
                           </Box>
                         }
@@ -287,9 +289,9 @@ function NewDailyEmployee() {
                   color="primary"
                   sx={{ width: 250 }}
                   startIcon={<AddIcon />}
-                  onClick={saveEmployee}
+                  onClick={updateEmployee}
                 >
-                  Enregistrer
+                  Modifier
                 </Button>
               </Box>
             </form>
@@ -303,4 +305,4 @@ function NewDailyEmployee() {
   )
 }
 
-export default NewDailyEmployee
+export default UpdateDailyEmployee

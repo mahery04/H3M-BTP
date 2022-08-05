@@ -18,6 +18,7 @@ import CommonTools from './pages/CommonTools';
 import NewTools from './pages/NewTools';
 import DailyPresence from './pages/DailyPresence';
 import MonthlyPresence from './pages/MonthlyPresence';
+import UpdateDailyEmployee from './pages/UpdateDailyEmployee';
 
 
 // ----------------------------------------------------------------------
@@ -45,6 +46,7 @@ export default function Router() {
       children: [
         { path: 'dailyemployee', element: <DailyEmployee /> },
         { path: 'new-dailyemployee', element: <NewDailyEmployee /> },
+        { path: 'updatedailyemployee/:id', element: <UpdateDailyEmployee /> },
         { path: 'monthlyemployee', element: <MonthlyEmployee /> },
         { path: 'new-monthlyemployee', element: <NewMonthlyEmployee /> },
       ]
