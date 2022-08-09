@@ -33,10 +33,10 @@ import ClassIcon from '@mui/icons-material/Class';
 import CallIcon from '@mui/icons-material/Call';
 import moment from 'moment';
 
-import dailyEmployeeService from '../services/dailyEmployeeService'
+import monthlyEmployeeService from '../services/monthlyEmployeeService'
 
 
-function UpdateDailyEmployee(props) {
+function UpdateMonthlyEmployee(props) {
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
 
   const initialEmployeeState = {
@@ -50,31 +50,33 @@ function UpdateDailyEmployee(props) {
     post:         '',
     category:     '',
     hiring_date:  date,
+    ostie_num:    '',
+    cnaps_num:    '',
   }
 
   const findData = useParams()
-  const dailyemployee_id = findData.id
+  const monthlyemployee_id = findData.id
   
   const [loaded, setLoaded] = useState(false)
-  const [dailyemployee, setDailyemployee] = useState(initialEmployeeState)
+  const [monthlyemployee, setMonthlyemployee] = useState(initialEmployeeState)
 
   useEffect(() => {
     const load = async () => {
-      const res = await dailyEmployeeService.get(dailyemployee_id)
+      const res = await monthlyEmployeeService.get(monthlyemployee_id)
       console.log("RES LAVA BE ", res.data);
-      setDailyemployee(res.data)
+      setMonthlyemployee(res.data)
       setLoaded(true)
     }
-    if (dailyemployee_id && !loaded) {
+    if (monthlyemployee_id && !loaded) {
       load();
     }
-  }, [dailyemployee_id, loaded])
+  }, [monthlyemployee_id, loaded])
 
   console.log(loaded)
 
   const handleInputChange = e => {
     const { name, value } = e.target
-    setDailyemployee({ ...dailyemployee, [name]: value })
+    setMonthlyemployee({ ...monthlyemployee, [name]: value })
   }
 
   const navigate = useNavigate();
@@ -82,7 +84,7 @@ function UpdateDailyEmployee(props) {
   const insertDate = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
     setDate(d);
-    setDailyemployee({ ...dailyemployee, hiring_date: d })
+    setMonthlyemployee({ ...monthlyemployee, hiring_date: d })
   }
 
   
@@ -90,52 +92,56 @@ function UpdateDailyEmployee(props) {
     e.preventDefault();
 
     var data = {
-      matricule:    dailyemployee.matricule,
-      firstname:    dailyemployee.firstname,
-      lastname:     dailyemployee.lastname,
-      cin:          dailyemployee.cin,
-      address:      dailyemployee.address,
-      contact:      dailyemployee.contact,
-      post:         dailyemployee.post,
-      category:     dailyemployee.category,
-      hiring_date:  dailyemployee.hiring_date,
+      matricule:    monthlyemployee.matricule,
+      firstname:    monthlyemployee.firstname,
+      lastname:     monthlyemployee.lastname,
+      cin:          monthlyemployee.cin,
+      address:      monthlyemployee.address,
+      contact:      monthlyemployee.contact,
+      post:         monthlyemployee.post,
+      category:     monthlyemployee.category,
+      hiring_date:  monthlyemployee.hiring_date,
+      ostie_num:    monthlyemployee.ostie_num,
+      cnaps_num:    monthlyemployee.cnaps_num,
     }
-    console.log(dailyemployee)
+    console.log(monthlyemployee)
 
-    dailyEmployeeService.update(dailyemployee_id, data).then(res => {
-      setDailyemployee({
-        id:           res.data.id,
-        matricule:    res.data.matricule,
-        firstname:    res.data.firstname,
-        lastname:     res.data.lastname,
-        cin:          res.data.cin,
-        address:      res.data.address,
-        contact:      res.data.contact,
-        post:         res.data.post,
-        category:     res.data.category,
-        hiring_date:  res.data.hiring_date,
-      })
+    monthlyEmployeeService.update(monthlyemployee_id, data).then(res => {
+        setMonthlyemployee({
+            id:           res.data.id,
+            matricule:    res.data.matricule,
+            firstname:    res.data.firstname,
+            lastname:     res.data.lastname,
+            cin:          res.data.cin,
+            address:      res.data.address,
+            contact:      res.data.contact,
+            post:         res.data.post,
+            category:     res.data.category,
+            hiring_date:  res.data.hiring_date,
+            ostie_num:    res.data.ostie_num,
+            cnaps_num:    res.data.cnaps_num,
+        })
       console.log(res.data)
     }).catch(err => {
       console.log(err)
     })
-    navigate('/employee/dailyemployee')
+    navigate('/employee/monthlyemployee')
   }
-  console.log(dailyemployee)
+  console.log(monthlyemployee)
 
   const breadcrumbs = [
     <Typography key="1">
       Employé(e)s
     </Typography>,
     <Typography key="2">
-      Modification d'un employé journalier
+      Modification d'un employé mensuel
     </Typography>,
   ];
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Modification d'un employé journalier
+        Modification d'un employé mensuel
         <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
           Employé(e)s
         </Typography>
@@ -158,7 +164,7 @@ function UpdateDailyEmployee(props) {
                       <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="matricule" 
-                        value={dailyemployee.matricule} 
+                        value={monthlyemployee.matricule} 
                         onChange={handleInputChange} 
                         name="matricule" 
                         label="Numéro matricule" 
@@ -170,7 +176,7 @@ function UpdateDailyEmployee(props) {
                       <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="cin" 
-                        value={dailyemployee.cin} 
+                        value={monthlyemployee.cin} 
                         onChange={handleInputChange} 
                         name="cin" 
                         label="Numéro CIN" 
@@ -183,7 +189,7 @@ function UpdateDailyEmployee(props) {
                       <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="post" 
-                        value={dailyemployee.post} 
+                        value={monthlyemployee.post} 
                         onChange={handleInputChange} 
                         name="post" 
                         label="Poste occupé" 
@@ -198,7 +204,7 @@ function UpdateDailyEmployee(props) {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="firstname" 
-                        value={dailyemployee.firstname} 
+                        value={monthlyemployee.firstname} 
                         onChange={handleInputChange} 
                         name="firstname" 
                         label="Nom" 
@@ -211,7 +217,7 @@ function UpdateDailyEmployee(props) {
                       <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="address" 
-                        value={dailyemployee.address} 
+                        value={monthlyemployee.address} 
                         onChange={handleInputChange} 
                         name="address" 
                         label="Adresse" 
@@ -224,7 +230,7 @@ function UpdateDailyEmployee(props) {
                       <ClassIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="category" 
-                        value={dailyemployee.category} 
+                        value={monthlyemployee.category} 
                         onChange={handleInputChange} 
                         name="category" 
                         label="Categorie" 
@@ -240,7 +246,7 @@ function UpdateDailyEmployee(props) {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="lastname" 
-                        value={dailyemployee.lastname} 
+                        value={monthlyemployee.lastname} 
                         onChange={handleInputChange} 
                         name="lastname" 
                         label="Prénom" 
@@ -253,7 +259,7 @@ function UpdateDailyEmployee(props) {
                       <CallIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="contact" 
-                        value={dailyemployee.contact} 
+                        value={monthlyemployee.contact} 
                         onChange={handleInputChange} 
                         name="contact" 
                         label="Contact" 
@@ -267,7 +273,7 @@ function UpdateDailyEmployee(props) {
                         label="Date d'embauche"
                         id="hiring_date"
                         name="hiring_date"
-                        value={dailyemployee.hiring_date}
+                        value={monthlyemployee.hiring_date}
                         onChange={insertDate}
                         renderInput={(params) =>
                           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -284,7 +290,33 @@ function UpdateDailyEmployee(props) {
                     </LocalizationProvider>
 
                   </Grid>
-                </Grid><br /><br /><br /><br />
+                </Grid><br />
+                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    <Grid item xs={6}>
+                        <TextField
+                            id="ostie_num"
+                            value={monthlyemployee.ostie_num}
+                            onChange={handleInputChange}
+                            name="ostie_num"
+                            label="Numéro OSTIE"
+                            variant="standard"
+                            sx={{ width: '100%' }}
+                        />
+
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            id="cnaps_num"
+                            value={monthlyemployee.cnaps_num}
+                            onChange={handleInputChange}
+                            name="cnaps_num"
+                            label="Numéro CNAPS"
+                            variant="standard"
+                            sx={{ width: '100%' }}
+                        />
+                    </Grid>
+                </Grid>
+              <br /><br /><br />
                 <Button
                   size="medium"
                   variant="outlined"
@@ -307,4 +339,4 @@ function UpdateDailyEmployee(props) {
   )
 }
 
-export default UpdateDailyEmployee
+export default UpdateMonthlyEmployee

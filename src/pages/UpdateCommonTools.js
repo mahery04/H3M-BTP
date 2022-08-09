@@ -18,11 +18,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import IconButton from '@mui/material/IconButton';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import NumbersIcon from '@mui/icons-material/Numbers';
 import BadgeIcon from '@mui/icons-material/Badge';
 import WorkIcon from '@mui/icons-material/Work';
@@ -41,18 +42,17 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import moment from 'moment';
 
-import personnalToolsService from '../services/personnalToolsService'
 import commonToolsService from '../services/commonToolsService'
 
-function NewTools() {
+function UpdateCommonTools() {
+
   const [date, setDate] = useState(null);
   const [affectation, setAffectation] = useState('');
-  const [responsable, setResponsable] = useState('');
   const [statue, setStatue] = useState('');
   const [employees, setEmployees] = useState([]);
 
   const getEmployee = () => {
-    personnalToolsService.getEmployee().then((res) => {
+    commonToolsService.getEmployee().then((res) => {
       setEmployees(res.data)
     }).catch(err => {
       console.log(err)
@@ -65,18 +65,33 @@ function NewTools() {
 
   const initialToolsState = {
     id:                     null,
-    purchase_date:          '',
+    purchase_date:          date,
     identification_number:  '',
     article_name:           '',
     assignation_place:      '',
     statue:                 statue,
     historical:             '',
     material_number:        '',
-    responsable:            responsable,
     tooling_id:             affectation,
   }
 
+  const findData = useParams()
+  const tool_id = findData.id
+
+  const [loaded, setLoaded] = useState(false)
   const [tools, setTools] = useState(initialToolsState)
+
+  useEffect(() => {
+    const load = async () => {
+        const res = await commonToolsService.get(tool_id)
+        console.log(res.data)
+        setTools(res.data)
+        setLoaded(true)
+    }
+    if (tool_id && !loaded) load()
+  }, [tool_id, loaded])
+
+  console.log(loaded)
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -89,18 +104,6 @@ function NewTools() {
     setTools({ ...tools, purchase_date: d })
   }
 
-  const handleAffectationChange = (event) => {
-    const tooling = event.target.value
-    setAffectation(tooling);
-    setTools({ ...tools, tooling_id: tooling })
-  };
-
-  const handleResponsableChange = (event) => {
-    const employee = event.target.value
-    setResponsable(employee);
-    setTools({ ...tools, responsable: employee })
-  };
-
   const handleStatueChange = (event) => {
     const state = event.target.value
     setStatue(state);
@@ -109,16 +112,9 @@ function NewTools() {
 
   console.log(tools.tooling_id, tools)
 
-  let setDisable = false
-  if (affectation === 1) {
-    setDisable = false
-  } else {
-    setDisable = true
-  }
-
   const navigate = useNavigate()
 
-  const saveTools = e => {
+  const updateTools = e => {
     e.preventDefault()
 
     var data = {
@@ -133,27 +129,7 @@ function NewTools() {
       tooling_id:             tools.tooling_id,
     }
 
-    if (tools.tooling_id === 1) {
-      personnalToolsService.create(data).then(res => {
-        setTools({
-          id:                     res.data.id,
-          purchase_date:          res.data.purchase_date,
-          identification_number:  res.data.identification_number,
-          article_name:           res.data.article_name,
-          assignation_place:      res.data.assignation_place,
-          statue:                 res.data.statue,
-          historical:             res.data.historical,
-          material_number:        parseInt(res.data.material_number),
-          responsable:            res.data.responsable,
-          tooling_id:             res.data.tooling_id,
-        })
-        console.log(res.data)
-      }).catch(err => {
-        console.log(err)
-      })
-      navigate('/tools/personnal')
-    } else if (tools.tooling_id === 2) {
-      commonToolsService.create(data).then(res => {
+    commonToolsService.update(tool_id, data).then(res => {
         setTools({
           id:                     res.data.id,
           purchase_date:          res.data.purchase_date,
@@ -166,13 +142,10 @@ function NewTools() {
           tooling_id:             res.data.tooling_id,
         })
         console.log(res.data)
-      }).catch(err => {
+    }).catch(err => {
         console.log(err)
-      })
+    })
       navigate('/tools/common')
-    }
-
-    
 
   }
 
@@ -181,14 +154,14 @@ function NewTools() {
       Outillage
     </Typography>,
     <Typography key="2">
-      Nouveau outil
+      Modification de l'outil
     </Typography>,
   ];
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Nouveau outil
+        Modification de l'outil
         <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
           Outillage
         </Typography>
@@ -197,15 +170,13 @@ function NewTools() {
             {breadcrumbs}
           </Breadcrumbs>
         </Stack>
-
-
       </Typography>
 
       <Container maxWidth="xxl">
 
         <Card sx={{ height: 820, width: '95%' }}>
           <CardContent>
-            <form onSubmit={saveTools} noValidate autoComplete='off'>
+            <form onSubmit={updateTools} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Container maxWidth="xl" sx={{ lineHeight: 5 }}>
 
@@ -214,7 +185,7 @@ function NewTools() {
                       label="Date d'achat"
                       id="purchase_date"
                       name="purchase_date"
-                      value={date}
+                      value={tools.purchase_date}
                       onChange={insertDate}
                       renderInput={(params) =>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -251,52 +222,6 @@ function NewTools() {
                     /><br />
                   </Box>
 
-                  <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <TrendingUpIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
-                          <InputLabel id="tooling_id">Type d'affectation</InputLabel>
-                          <Select
-                            labelId="tooling_id"
-                            id="tooling_id"
-                            value={affectation}
-                            onChange={handleAffectationChange}
-                            label="Age"
-                          >
-                            <MenuItem value={1}>
-                              <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={1}>Personnel</MenuItem>
-                            <MenuItem value={2}>Commun</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Box>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
-                          <InputLabel htmlFor="grouped-native-select" id="responable">Responsable</InputLabel>
-                          <Select 
-                            native 
-                            id="grouped-native-select" 
-                            label="Responsable"  
-                            disabled={setDisable}
-                            value={responsable}
-                            onChange={handleResponsableChange}
-                          >
-                            <option value=''></option>
-                            {employees.map(employee => (
-                              <option key={employee.matricule} value={`${employee.firstname} ${employee.lastname}`}>{employee.firstname} {employee.lastname}</option>
-                            ))}
-                          </Select>
-                        </FormControl><br />
-                      </Box>
-                    </Grid>
-                  </Grid>
-
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
@@ -317,7 +242,7 @@ function NewTools() {
                       <Select
                         labelId="statue"
                         id="statue"
-                        value={statue}
+                        value={tools.statue}
                         onChange={handleStatueChange}
                         label="Age"
                       >
@@ -361,7 +286,7 @@ function NewTools() {
                     color="primary"
                     sx={{ width: 250 }}
                     startIcon={<AddIcon />}
-                    onClick={saveTools}
+                    onClick={updateTools}
                   >
                     Enregistrer
                   </Button>
@@ -379,4 +304,4 @@ function NewTools() {
   )
 }
 
-export default NewTools
+export default UpdateCommonTools

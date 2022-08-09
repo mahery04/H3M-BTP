@@ -58,7 +58,7 @@ function MonthlyEmployee() {
     renderCell: (data) => {
       return (
         <>
-          <Link to={'/'}>
+          <Link to={'/employee/updatemonthlyemployee/' + data.id}>
             <IconButton component="label">
               <EditIcon />
             </IconButton>
@@ -129,24 +129,24 @@ function MonthlyEmployee() {
           </Breadcrumbs>
         </Stack>
 
-        <Link to='/employee/new-monthlyemployee'>
+        
           <Button
             size="medium"
             variant="outlined"
             color="primary"
             sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
             startIcon={<AddIcon />}
-            href=''
+            href="/employee/new-monthlyemployee"
           >
             Nouveau employé
           </Button>
-        </Link>
+      
       </Typography>
 
       <Container maxWidth="xxl">
 
         <Paper sx={{ width: '95%', overflow: 'hidden' }}>
-          <Box sx={{ height: 500, width: '100%' }}>
+          <Box sx={{ height: 520, width: '100%' }}>
             <DataGrid
               rows={rows}
               columns={columns}

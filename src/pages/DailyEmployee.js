@@ -27,8 +27,6 @@ import dailyEmployeeService from '../services/dailyEmployeeService'
 function DailyEmployee() {
 
   const [dailyemployees, setDailyemployees] = useState([]);
-  const { onDelete, setOnDelete } = useState(false);
-
 
   const getDailyemployees = () => {
     dailyEmployeeService.getAll().then((res) => {
@@ -89,12 +87,6 @@ function DailyEmployee() {
   }))
 
   const deleteDailyemployee = (id) => {
-    // let isExecuted = window.confirm("Supprimer l'employé de la liste ?");
-    // if (isExecuted) {
-    //   dailyEmployeeService.remove(id)
-    //   const newTabList = dailyemployees.filter((dailyemployee) => dailyemployee.id !== id)
-    //   setDailyemployees(newTabList)
-    // }
     swal({
       text: "Supprimer l'employé de la liste ?",
       icon: "warning",

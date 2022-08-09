@@ -1,3 +1,7 @@
 - verify backend model and react id
 - compare branch master
-- set cin int(12) in database
+- set cin varchar(50)
+- add mask cin and contact in front
+- clean imports
+- clean all files with new folder
+- loading before getAll

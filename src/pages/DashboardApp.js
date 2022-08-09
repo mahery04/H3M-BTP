@@ -35,11 +35,11 @@ export default function DashboardApp() {
 
         <Grid container spacing={3}>
           <Grid item xs={10} sm={6} md={8}>
-            <AppWidgetSummary title="Employés journaliers" total={714000} icon={'ic:outline-today'} />
+            <AppWidgetSummary title="Employés journaliers" total={0} icon={'ic:outline-today'} />
           </Grid>
 
           <Grid item xs={10} sm={6} md={8}>
-            <AppWidgetSummary title="Employés mensuels" total={1723315} color="warning" icon={'ic:sharp-calendar-month'} />
+            <AppWidgetSummary title="Employés mensuels" total={0} color="warning" icon={'ic:sharp-calendar-month'} />
           </Grid>
         </Grid>
 
