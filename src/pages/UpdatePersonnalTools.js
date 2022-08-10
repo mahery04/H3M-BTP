@@ -11,13 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
 
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import IconButton from '@mui/material/IconButton';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -85,10 +79,10 @@ function UpdatePersonnalTools() {
 
   useEffect(() => {
     const load = async () => {
-        const res = await personnalToolsService.get(tool_id)
-        console.log(res.data)
-        setTools(res.data)
-        setLoaded(true)
+      const res = await personnalToolsService.get(tool_id)
+      console.log(res.data)
+      setTools(res.data)
+      setLoaded(true)
     }
     if (tool_id && !loaded) load()
   }, [tool_id, loaded])
@@ -207,7 +201,6 @@ function UpdatePersonnalTools() {
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
-                      type="number"
                       id="identification_number" 
                       value={tools.identification_number} 
                       onChange={handleInputChange} 
@@ -317,7 +310,7 @@ function UpdatePersonnalTools() {
                     startIcon={<AddIcon />}
                     onClick={updateTools}
                   >
-                    Enregistrer
+                    Modifier
                   </Button>
 
                 </Container>
