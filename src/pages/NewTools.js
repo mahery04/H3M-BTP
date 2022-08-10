@@ -72,8 +72,9 @@ function NewTools() {
     statue:                 statue,
     historical:             '',
     material_number:        '',
+    affectation_type:       affectation,
     responsable:            responsable,
-    tooling_id:             affectation,
+    tooling_id:             '',
   }
 
   const [tools, setTools] = useState(initialToolsState)
@@ -90,9 +91,9 @@ function NewTools() {
   }
 
   const handleAffectationChange = (event) => {
-    const tooling = event.target.value
-    setAffectation(tooling);
-    setTools({ ...tools, tooling_id: tooling })
+    const affectation = event.target.value
+    setAffectation(affectation);
+    setTools({ ...tools, affectation_type: affectation })
   };
 
   const handleResponsableChange = (event) => {
@@ -107,10 +108,10 @@ function NewTools() {
     setTools({ ...tools, statue: state })
   };
 
-  console.log(tools.tooling_id, tools)
+  console.log(tools.affectation_type, tools)
 
   let setDisable = false
-  if (affectation === 1) {
+  if (affectation === "Personnel") {
     setDisable = false
   } else {
     setDisable = true
@@ -129,11 +130,12 @@ function NewTools() {
       statue:                 tools.statue,
       historical:             tools.historical,
       material_number:        tools.material_number,
+      affectation_type:       tools.affectation_type,
       responsable:            tools.responsable,
       tooling_id:             tools.tooling_id,
     }
 
-    if (tools.tooling_id === 1) {
+    
       personnalToolsService.create(data).then(res => {
         setTools({
           id:                     res.data.id,
@@ -144,6 +146,7 @@ function NewTools() {
           statue:                 res.data.statue,
           historical:             res.data.historical,
           material_number:        parseInt(res.data.material_number),
+          affectation_type:       res.data.affectation_type,
           responsable:            res.data.responsable,
           tooling_id:             res.data.tooling_id,
         })
@@ -152,28 +155,7 @@ function NewTools() {
         console.log(err)
       })
       navigate('/tools/personnal')
-    } else if (tools.tooling_id === 2) {
-      commonToolsService.create(data).then(res => {
-        setTools({
-          id:                     res.data.id,
-          purchase_date:          res.data.purchase_date,
-          identification_number:  res.data.identification_number,
-          article_name:           res.data.article_name,
-          assignation_place:      res.data.assignation_place,
-          statue:                 res.data.statue,
-          historical:             res.data.historical,
-          material_number:        parseInt(res.data.material_number),
-          tooling_id:             res.data.tooling_id,
-        })
-        console.log(res.data)
-      }).catch(err => {
-        console.log(err)
-      })
-      navigate('/tools/common')
-    }
-
-    
-
+   
   }
 
   const breadcrumbs = [
@@ -227,7 +209,6 @@ function NewTools() {
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
-                      type="number"
                       id="identification_number" 
                       value={tools.identification_number} 
                       onChange={handleInputChange} 
@@ -267,8 +248,8 @@ function NewTools() {
                             <MenuItem value={1}>
                               <em>None</em>
                             </MenuItem>
-                            <MenuItem value={1}>Personnel</MenuItem>
-                            <MenuItem value={2}>Commun</MenuItem>
+                            <MenuItem value="Personnel">Personnel</MenuItem>
+                            <MenuItem value="Commun">Commun</MenuItem>
                           </Select>
                         </FormControl>
                       </Box>
@@ -343,7 +324,7 @@ function NewTools() {
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
-
+                  
                   <TextField 
                     id="historical" 
                     value={tools.historical}
