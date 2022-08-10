@@ -152,31 +152,13 @@ function UpdatePersonnalTools() {
 
   }
 
-  const breadcrumbs = [
-    <Typography key="1">
-      Outillage
-    </Typography>,
-    <Typography key="2">
-      Modification de l'outil
-    </Typography>,
-  ];
-
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
         Modification de l'outil
-        <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
-          Outillage
-        </Typography>
-        <Stack spacing={2}>
-          <Breadcrumbs separator="." aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
       </Typography>
 
       <Container maxWidth="xxl">
-
         <Card sx={{ height: 820, width: '95%' }}>
           <CardContent>
             <form onSubmit={updateTools} noValidate autoComplete='off'>

@@ -107,29 +107,11 @@ function MonthlyEmployee() {
     });
   }
 
-  const breadcrumbs = [
-    <Typography key="1">
-      Employé(e)s
-    </Typography>,
-    <Typography key="2">
-      Employées Mensuels
-    </Typography>,
-  ];
-
+  
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Employées Mensuels
-        <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
-          Employé(e)s
-        </Typography>
-        <Stack spacing={2}>
-          <Breadcrumbs separator="." aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-
-        
+        Listes des employé(e)s mensuels
           <Button
             size="medium"
             variant="outlined"

@@ -30,11 +30,11 @@ export default function DashboardApp() {
     <Page title="Dashboard">
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Dashboard Employés
+          Effectifs des employés journaliers et mensuels
         </Typography>
 
-        <Grid container spacing={3}>
-          <Grid item xs={10} sm={6} md={8}>
+        <Grid container spacing={3} sx={{justifyContent:'center'}}>
+          <Grid item xs={10} sm={6} md={8} sx={{marginBottom:10}}>
             <AppWidgetSummary title="Employés journaliers" total={0} icon={'ic:outline-today'} />
           </Grid>
 

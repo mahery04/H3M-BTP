@@ -112,14 +112,14 @@ function NewDailyEmployee() {
       Employé(e)s
     </Typography>,
     <Typography key="2">
-      Nouvelle employée journalier
+      Nouveau employé journalier
     </Typography>,
   ];
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Nouveau Employée Journalier
+        Nouveau Employé Journalier
         <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
           Employé(e)s
         </Typography>

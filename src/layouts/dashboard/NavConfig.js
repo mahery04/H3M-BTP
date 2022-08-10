@@ -41,17 +41,17 @@ const navConfig = [
     path: '/employee/monthlyemployee',
     icon: getIcon('ic:baseline-calendar-month'),
   },
-  {
-    category: 'tools',
-    title: 'Nouveau outil',
-    path: '/tools/new-tool',
-    icon: getIcon('ic:baseline-plus'),
-  },
+  // {
+  //   category: 'tools',
+  //   title: 'Nouveau outil',
+  //   path: '/tools/new-tool',
+  //   icon: getIcon('ic:baseline-plus'),
+  // },
   {
     category: 'tools',
     title: 'Listes des outils',
     path: '/tools/personnal',
-    icon: getIcon('la:user'),
+    icon: getIcon('ic:list'),
   },
   {
     category: 'presence',

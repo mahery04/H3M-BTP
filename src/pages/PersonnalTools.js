@@ -103,40 +103,20 @@ function PersonnalTools() {
     });
   }
 
-  const breadcrumbs = [
-    <Typography key="1">
-      Outillage
-    </Typography>,
-    <Typography key="2">
-      Outillage Personnel
-    </Typography>,
-  ];
-
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Listes des outils
-        <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
-          Outillages
-        </Typography>
-        <Stack spacing={2}>
-          <Breadcrumbs separator="." aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-
-        {/* <Link to='/employee/new-dailyemployee'>
+        Listes des outillages 
           <Button
             size="medium"
             variant="outlined"
             color="primary"
             sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
             startIcon={<AddIcon />}
-            href=''
+            href='/tools/new-tool'
           >
-            Nouveau employé
+            Nouveau outil
           </Button>
-        </Link> */}
       </Typography>
 
       <Container maxWidth="xxl">

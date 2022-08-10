@@ -3,19 +3,16 @@ import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Stack from '@mui/material/Stack';
+
 import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import IconButton from '@mui/material/IconButton';
 import { Link } from 'react-router-dom';
 import moment from 'moment'
@@ -103,44 +100,24 @@ function DailyEmployee() {
     });
   }
 
-  const breadcrumbs = [
-    <Typography key="1">
-      Employé(e)s
-    </Typography>,
-    <Typography key="2">
-      Employé Journalier
-    </Typography>,
-  ];
-
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Employé Journalier
-        <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
-          Employé(e)s
-        </Typography>
-        <Stack spacing={2}>
-          <Breadcrumbs separator="." aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-
-        
-          <Button
-            size="medium"
-            variant="outlined"
-            color="primary"
-            sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
-            startIcon={<AddIcon />}
-            href='/employee/new-dailyemployee'
-          >
-            Nouveau employé
-          </Button>
+        Listes des employé(e)s journaliers
+        <Button
+          size="medium"
+          variant="outlined"
+          color="primary"
+          sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
+          startIcon={<AddIcon />}
+          href='/employee/new-dailyemployee'
+        >
+          Nouveau employé
+        </Button>
         
       </Typography>
 
       <Container maxWidth="xxl">
-
         <Paper sx={{ width: '95%', overflow: 'hidden' }}>
           <Box sx={{ height: 450, width: '100%' }}>
             <DataGrid
@@ -154,10 +131,6 @@ function DailyEmployee() {
             />
           </Box>
         </Paper>
-
-        
-        
-
       </Container>
     </div>
   )
