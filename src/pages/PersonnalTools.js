@@ -115,9 +115,9 @@ function PersonnalTools() {
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Outillage Personnel
+        Listes des outils
         <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
-          Outillage
+          Outillages
         </Typography>
         <Stack spacing={2}>
           <Breadcrumbs separator="." aria-label="breadcrumb">
