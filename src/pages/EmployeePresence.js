@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Typography from '@mui/material/Typography';
@@ -84,39 +84,79 @@ function Table({ columns, data }) {
 
 function EmployeePresence() {
 
-  const columns = React.useMemo(
+  const columns = useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: '1ère Semaine',
         columns: [
           {
-            Header: 'First Name',
-            accessor: 'firstName',
+            Header: 'Janvier',
+            accessor: 'janvier',
+          }
+        ],
+      },
+      {
+        Header: '1ère Semaine',
+        columns: [
+          {
+            Header: 'Semaine 1',
+            accessor: 'semaine 1',
           },
           {
-            Header: 'Last Name',
-            accessor: 'lastName',
+            Header: 'Salaire 1',
+            accessor: 'salaire 1',
           },
         ],
       },
       {
-        Header: 'Info',
+        Header: '2ème Semaine',
         columns: [
           {
-            Header: 'Age',
-            accessor: 'age',
+            Header: 'Semaine 2',
+            accessor: 'semaine 2',
           },
           {
-            Header: 'Visits',
-            accessor: 'visits',
+            Header: 'Salaire 2',
+            accessor: 'salaire 2',
+          },
+        ],
+      },
+      {
+        Header: '3ème Semaine',
+        columns: [
+          {
+            Header: 'Semaine 3',
+            accessor: 'semaine 3',
           },
           {
-            Header: 'Status',
-            accessor: 'status',
+            Header: 'Salaire 3',
+            accessor: 'salaire 3',
+          },
+        ],
+      },
+      {
+        Header: '4ème Semaine',
+        columns: [
+          {
+            Header: 'Semaine 4',
+            accessor: 'semaine 4',
           },
           {
-            Header: 'Profile Progress',
-            accessor: 'progress',
+            Header: 'Salaire 4',
+            accessor: 'salaire 4',
+          },
+        ],
+      },
+      {
+        Header: '5ème Semaine',
+        columns: [
+          {
+            Header: 'Semaine 5',
+            accessor: 'semaine 5',
+          },
+          {
+            Header: 'Salaire 5',
+            accessor: 'salaire 5',
           },
         ],
       },
@@ -170,8 +210,8 @@ function EmployeePresence() {
             <b>Prénom : </b> {dailyemployee.lastname} <br/>
           </CardContent>
           <Styles>
-            <Table columns={columns} data={dataPresence} />
-          </Styles>
+          <Table columns={columns} data={dataPresence} />
+        </Styles>
         </Card>
     </div>
   )
