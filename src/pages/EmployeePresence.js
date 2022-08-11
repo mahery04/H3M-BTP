@@ -201,8 +201,8 @@ function EmployeePresence() {
         >
           Retour
         </Button> 
-        <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-            Listes des présences des employés
+        <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5, textAlign:'center' }}>
+          Listes des présences des employés
         </Typography>
         <Card sx={{ minWidth: 275 }}>
           <CardContent>
