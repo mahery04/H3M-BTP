@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
 import EditIcon from '@mui/icons-material/Edit';
