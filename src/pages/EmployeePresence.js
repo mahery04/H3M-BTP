@@ -165,7 +165,7 @@ function EmployeePresence() {
     []
   )
 
-  const dataPresence = React.useMemo(() => makeData(20), [])
+  const dataPresence = useMemo(() => makeData(7), [])
   
   const initialEmployeeState = {
     id:           null,
