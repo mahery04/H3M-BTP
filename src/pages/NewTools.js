@@ -156,11 +156,11 @@ function NewTools() {
             <form onSubmit={saveTools} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Container maxWidth="xl" sx={{ lineHeight: 5 }}>
-
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       label="Date d'achat"
                       id="purchase_date"
+                      required
                       name="purchase_date"
                       value={date}
                       onChange={insertDate}
@@ -176,6 +176,7 @@ function NewTools() {
                     <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
                       id="identification_number" 
+                      required
                       value={tools.identification_number} 
                       onChange={handleInputChange} 
                       name="identification_number" 
@@ -189,6 +190,7 @@ function NewTools() {
                     <FeedIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
                       id="article_name" 
+                      required
                       value={tools.article_name}
                       onChange={handleInputChange}
                       name="article_name" 
@@ -207,6 +209,7 @@ function NewTools() {
                           <Select
                             labelId="tooling_id"
                             id="tooling_id"
+                            required
                             value={affectation}
                             onChange={handleAffectationChange}
                             label="Age"
@@ -229,6 +232,7 @@ function NewTools() {
                           <Select 
                             native 
                             id="grouped-native-select" 
+                            required
                             label="Responsable"  
                             disabled={setDisable}
                             value={responsable}
@@ -248,6 +252,7 @@ function NewTools() {
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
                       id="assignation_place" 
+                      required
                       value={tools.assignation_place}
                       onChange={handleInputChange}
                       name="assignation_place" 
@@ -264,6 +269,7 @@ function NewTools() {
                       <Select
                         labelId="statue"
                         id="statue"
+                        required
                         value={statue}
                         onChange={handleStatueChange}
                         label="Age"
@@ -282,6 +288,7 @@ function NewTools() {
                     <TextField 
                       type="number"
                       id="material_number" 
+                      required
                       value={tools.material_number}
                       onChange={handleInputChange}
                       name="material_number" 
@@ -293,6 +300,7 @@ function NewTools() {
                   
                   <TextField 
                     id="historical" 
+                    required
                     value={tools.historical}
                     onChange={handleInputChange}
                     name="historical" 
@@ -312,15 +320,11 @@ function NewTools() {
                   >
                     Créer
                   </Button>
-
                 </Container>
-
               </Box>
             </form>
           </CardContent>
         </Card>
-
-
       </Container>
     </div>
   )

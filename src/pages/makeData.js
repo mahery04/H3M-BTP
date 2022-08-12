@@ -12,7 +12,7 @@ const newPerson = () => {
   const statusChance = Math.random()
   return {
     // janvier: namor.generate({ words: 1, numbers: 0 }),
-    janvier: ['Lundi'],
+    janvier: ['Lundi','Mardi'],
     lastName: namor.generate({ words: 1, numbers: 0 }),
     age: Math.floor(Math.random() * 30),
     visits: Math.floor(Math.random() * 100),

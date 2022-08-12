@@ -67,7 +67,6 @@ function DailyEmployee() {
         )
       }
     },
-  
   ];
   
   const rows = dailyemployees.map(dailyemployee => ({ 

@@ -99,29 +99,10 @@ function NewDailyEmployee() {
 
   }
 
-  const breadcrumbs = [
-    <Typography key="1">
-      Employé(e)s
-    </Typography>,
-    <Typography key="2">
-      Nouveau employé journalier
-    </Typography>,
-  ];
-
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
         Nouveau Employé Journalier
-        <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
-          Employé(e)s
-        </Typography>
-        <Stack spacing={2}>
-          <Breadcrumbs separator="." aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-
-
       </Typography>
 
       <Container maxWidth="xxl">
@@ -144,6 +125,7 @@ function NewDailyEmployee() {
                       <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="matricule" 
+                        required
                         value={dailyemployee.matricule} 
                         onChange={handleInputChange} 
                         name="matricule" 
@@ -157,6 +139,7 @@ function NewDailyEmployee() {
                       <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="cin" 
+                        required
                         value={dailyemployee.cin} 
                         onChange={handleInputChange} 
                         name="cin" 
@@ -170,6 +153,7 @@ function NewDailyEmployee() {
                       <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="post" 
+                        required
                         value={dailyemployee.post} 
                         onChange={handleInputChange} 
                         name="post" 
@@ -186,6 +170,7 @@ function NewDailyEmployee() {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="firstname" 
+                        required
                         value={dailyemployee.firstname} 
                         onChange={handleInputChange} 
                         name="firstname" 
@@ -199,6 +184,7 @@ function NewDailyEmployee() {
                       <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="address" 
+                        required
                         value={dailyemployee.address} 
                         onChange={handleInputChange} 
                         name="address" 
@@ -212,10 +198,11 @@ function NewDailyEmployee() {
                       <ClassIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="category" 
+                        required
                         value={dailyemployee.category} 
                         onChange={handleInputChange} 
                         name="category" 
-                        label="Categorie" 
+                        label="Catégorie" 
                         variant="standard" 
                         sx={{ width: '100%' }} 
                       /><br />
@@ -228,6 +215,7 @@ function NewDailyEmployee() {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="lastname" 
+                        required
                         value={dailyemployee.lastname} 
                         onChange={handleInputChange} 
                         name="lastname" 
@@ -241,6 +229,7 @@ function NewDailyEmployee() {
                       <CallIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="contact" 
+                        required
                         value={dailyemployee.contact} 
                         onChange={handleInputChange} 
                         name="contact" 
@@ -254,6 +243,7 @@ function NewDailyEmployee() {
                       <DatePicker
                         label="Date d'embauche"
                         id="hiring_date"
+                        required
                         name="hiring_date"
                         value={date}
                         onChange={insertDate}
@@ -264,13 +254,13 @@ function NewDailyEmployee() {
                               variant="standard" 
                               sx={{ width: '100%' }} 
                               id="hiring_date" 
+                              required
                               name="hiring_date" 
                             /><br />
                           </Box>
                         }
                       />
                     </LocalizationProvider>
-
                   </Grid>
                 </Grid><br /><br /><br /><br />
                 <Button
@@ -285,11 +275,8 @@ function NewDailyEmployee() {
                 </Button>
               </Box>
             </form>
-
           </CardContent>
         </Card>
-
-
       </Container>
     </div>
   )
