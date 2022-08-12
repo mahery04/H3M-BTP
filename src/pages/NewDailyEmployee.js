@@ -24,11 +24,14 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ClassIcon from '@mui/icons-material/Class';
 import CallIcon from '@mui/icons-material/Call';
 import moment from 'moment';
+import InputMask from 'react-input-mask'
+import swal from '@sweetalert/with-react';
 
 import dailyEmployeeService from '../services/dailyEmployeeService'
 
 
 function NewDailyEmployee() {
+  
   const [date, setDate] = useState(null);
 
   const initialEmployeeState = {
@@ -78,31 +81,59 @@ function NewDailyEmployee() {
       hiring_date:  dailyemployee.hiring_date,
     }
 
-    dailyEmployeeService.create(data).then(res => {
-      setDailyemployee({
-        id:           res.data.id,
-        matricule:    res.data.matricule,
-        firstname:    res.data.firstname,
-        lastname:     res.data.lastname,
-        cin:          res.data.cin,
-        address:      res.data.address,
-        contact:      res.data.contact,
-        post:         res.data.post,
-        category:     res.data.category,
-        hiring_date:  res.data.hiring_date,
+    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.post.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0) {
+      swal({
+        title: "Un erreur est survenue!",
+        text: "Veuillez remplir tous les formulaires",
+        icon: "error",
+        button: "OK",
+      });
+    } else {
+      dailyEmployeeService.create(data).then(res => {
+        setDailyemployee({
+          id:           res.data.id,
+          matricule:    res.data.matricule,
+          firstname:    res.data.firstname,
+          lastname:     res.data.lastname,
+          cin:          res.data.cin,
+          address:      res.data.address,
+          contact:      res.data.contact,
+          post:         res.data.post,
+          category:     res.data.category,
+          hiring_date:  res.data.hiring_date,
+        })
+        console.log(res.data)
+      }).catch(err => {
+        console.log(err)
       })
-      console.log(res.data)
-    }).catch(err => {
-      console.log(err)
-    })
-    navigate('/employee/dailyemployee')
+      navigate('/employee/dailyemployee?inserted')
+    }
 
   }
+
+  const breadcrumbs = [
+    <Typography key="1">
+      Employé(e)s
+    </Typography>,
+    <Typography key="2">
+      Nouveau employé journalier
+    </Typography>,
+  ];
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
         Nouveau Employé Journalier
+        <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
+          Employé(e)s
+        </Typography>
+        <Stack spacing={2}>
+          <Breadcrumbs separator="." aria-label="breadcrumb">
+            {breadcrumbs}
+          </Breadcrumbs>
+        </Stack>
+
+
       </Typography>
 
       <Container maxWidth="xxl">
@@ -125,7 +156,6 @@ function NewDailyEmployee() {
                       <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="matricule" 
-                        required
                         value={dailyemployee.matricule} 
                         onChange={handleInputChange} 
                         name="matricule" 
@@ -137,23 +167,30 @@ function NewDailyEmployee() {
 
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <TextField 
-                        id="cin" 
-                        required
+                      <InputMask
                         value={dailyemployee.cin} 
                         onChange={handleInputChange} 
-                        name="cin" 
-                        label="Numéro CIN" 
-                        variant="standard" 
-                        sx={{ width: '100%' }} 
-                      /><br />
+                        mask="999 999 999 999"
+                        disabled={false}
+                        maskChar=""
+                      >
+                        {() => <TextField 
+                          id="cin" 
+                          name="cin"  
+                          variant="standard" 
+                          sx={{ width: '100%' }} 
+                          label="Numéro CIN"  
+                        />}
+                      </InputMask>
+                      <br />
                     </Box>
+
+                    
 
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="post" 
-                        required
                         value={dailyemployee.post} 
                         onChange={handleInputChange} 
                         name="post" 
@@ -170,7 +207,6 @@ function NewDailyEmployee() {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="firstname" 
-                        required
                         value={dailyemployee.firstname} 
                         onChange={handleInputChange} 
                         name="firstname" 
@@ -184,7 +220,6 @@ function NewDailyEmployee() {
                       <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="address" 
-                        required
                         value={dailyemployee.address} 
                         onChange={handleInputChange} 
                         name="address" 
@@ -198,11 +233,10 @@ function NewDailyEmployee() {
                       <ClassIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="category" 
-                        required
                         value={dailyemployee.category} 
                         onChange={handleInputChange} 
                         name="category" 
-                        label="Catégorie" 
+                        label="Categorie" 
                         variant="standard" 
                         sx={{ width: '100%' }} 
                       /><br />
@@ -215,7 +249,6 @@ function NewDailyEmployee() {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="lastname" 
-                        required
                         value={dailyemployee.lastname} 
                         onChange={handleInputChange} 
                         name="lastname" 
@@ -227,23 +260,28 @@ function NewDailyEmployee() {
 
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <CallIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <TextField 
-                        id="contact" 
-                        required
+                      <InputMask
                         value={dailyemployee.contact} 
                         onChange={handleInputChange} 
-                        name="contact" 
-                        label="Contact" 
-                        variant="standard" 
-                        sx={{ width: '100%' }} 
-                      /><br />
+                        mask="999 99 999 99"
+                        disabled={false}
+                        maskChar=""
+                      >
+                        {() => <TextField 
+                          id="contact" 
+                          name="contact" 
+                          variant="standard" 
+                          sx={{ width: '100%' }} 
+                          label="Contact" 
+                        />}
+                      </InputMask>
+                      <br />
                     </Box>
 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
                         label="Date d'embauche"
                         id="hiring_date"
-                        required
                         name="hiring_date"
                         value={date}
                         onChange={insertDate}
@@ -254,7 +292,6 @@ function NewDailyEmployee() {
                               variant="standard" 
                               sx={{ width: '100%' }} 
                               id="hiring_date" 
-                              required
                               name="hiring_date" 
                             /><br />
                           </Box>
@@ -275,8 +312,11 @@ function NewDailyEmployee() {
                 </Button>
               </Box>
             </form>
+
           </CardContent>
         </Card>
+
+
       </Container>
     </div>
   )

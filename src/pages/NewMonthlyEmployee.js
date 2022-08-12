@@ -23,6 +23,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ClassIcon from '@mui/icons-material/Class';
 import CallIcon from '@mui/icons-material/Call';
 import moment from 'moment';
+import InputMask from 'react-input-mask'
+import swal from '@sweetalert/with-react';
 
 import monthlyEmployeeService from '../services/monthlyEmployeeService';
 
@@ -77,26 +79,37 @@ function NewMonthlyEmployee() {
       hiring_date:  monthlyemployee.hiring_date,
       ostie_num:    monthlyemployee.ostie_num,
       cnaps_num:    monthlyemployee.cnaps_num,
+    } 
+
+    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.post.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.ostie_num.length <= 0 || data.cnaps_num.length <= 0) {
+      swal({
+        title: "Un erreur est survenue!",
+        text: "Veuillez remplir tous les formulaires",
+        icon: "error",
+        button: "OK",
+      });
+    } else {
+      monthlyEmployeeService.create(data).then(res => {
+        setMonthlyemployee({
+          id:           res.data.id,
+          matricule:    res.data.matricule,
+          firstname:    res.data.firstname,
+          lastname:     res.data.lastname,
+          cin:          res.data.cin,
+          address:      res.data.address,
+          contact:      res.data.contact,
+          post:         res.data.post,
+          category:     res.data.category,
+          hiring_date:  res.data.hiring_date,
+        })
+        console.log(res.data)
+      }).catch(err => {
+        console.log(err)
+      })
+      navigate('/employee/monthlyemployee?inserted')
     }
 
-    monthlyEmployeeService.create(data).then(res => {
-      setMonthlyemployee({
-        id:           res.data.id,
-        matricule:    res.data.matricule,
-        firstname:    res.data.firstname,
-        lastname:     res.data.lastname,
-        cin:          res.data.cin,
-        address:      res.data.address,
-        contact:      res.data.contact,
-        post:         res.data.post,
-        category:     res.data.category,
-        hiring_date:  res.data.hiring_date,
-      })
-      console.log(res.data)
-    }).catch(err => {
-      console.log(err)
-    })
-    navigate('/employee/monthlyemployee')
+    
 
   }
 
@@ -156,15 +169,22 @@ function NewMonthlyEmployee() {
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField 
-                      id="cin" 
+                    <InputMask
                       value={monthlyemployee.cin} 
                       onChange={handleInputChange} 
-                      name="cin" 
-                      label="Numéro CIN" 
-                      variant="standard" 
-                      sx={{ width: '100%' }} 
-                    /><br />
+                      mask="999 999 999 999"
+                      disabled={false}
+                      maskChar=""
+                    >
+                      {() => <TextField 
+                        id="cin" 
+                        name="cin" 
+                        variant="standard" 
+                        sx={{ width: '100%' }} 
+                        label="Numéro CIN" 
+                      />}
+                    </InputMask>
+                    <br />
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -240,15 +260,23 @@ function NewMonthlyEmployee() {
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <CallIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField 
-                      id="contact" 
+                    <InputMask
                       value={monthlyemployee.contact} 
                       onChange={handleInputChange} 
-                      name="contact" 
-                      label="Contact" 
-                      variant="standard" 
-                      sx={{ width: '100%' }} 
-                    /><br />
+                      mask="999 99 999 99"
+                      disabled={false}
+                      maskChar=""
+                    >
+                      {() => <TextField 
+                        id="contact" 
+                        name="contact" 
+                        variant="standard" 
+                        sx={{ width: '100%' }} 
+                        label="Contact" 
+                      />}
+                    </InputMask>
+                    <br />
+
                   </Box>
 
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -299,6 +327,7 @@ function NewMonthlyEmployee() {
                   />
                 </Grid>
               </Grid>
+
               <br /><br /><br />
               <Button
                 size="medium"
@@ -314,8 +343,6 @@ function NewMonthlyEmployee() {
             </form>
           </CardContent>
         </Card>
-
-
       </Container>
     </div>
   )
