@@ -49,7 +49,7 @@ function DailyEmployee() {
     { field: 'post',        headerName: 'Poste occupé',     width: 200 },
     { field: 'category',    headerName: 'Categorie',        width: 200 },
     { field: 'hiring_date', headerName: 'Date d\'embauche', width: 150 },
-    { field: 'action',      headerName: 'Action',           width: 150, type: 'actions',
+    { field: 'action',      headerName: 'Action',           width: 150, type: 'action',
       renderCell: (data) => {
         return (
           <>
@@ -113,7 +113,6 @@ function DailyEmployee() {
         >
           Nouveau employé
         </Button>
-        
       </Typography>
 
       <Container maxWidth="xxl">
@@ -125,7 +124,6 @@ function DailyEmployee() {
               components={{ Toolbar: GridToolbar }}
               pageSize={5}
               rowsPerPageOptions={[5]}
-              // checkboxSelection
               disableSelectionOnClick
             />
           </Box>
