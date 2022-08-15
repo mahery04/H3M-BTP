@@ -18,14 +18,45 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 import { useTheme } from '@mui/material/styles';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import dailyEmployeeService from '../services/dailyEmployeeService';
 
+import { makeStyles } from "@material-ui/styles";
+
+const useStyles = makeStyles({
+  label: {
+    width: "179px",
+    height: "35px",
+    backgroundColor: "red",
+  },
+  input: {
+    fontFamily: "sans-serif",
+    fontSize: "14px",
+    height: "85px",
+    "& .react-date-picker__wrapper": {
+      padding: "0 10px",
+      borderColor: "#ccc",
+      borderRadius: "4px"
+    },
+    "& .react-date-picker--open": {
+      borderColor: "red"
+    }
+  },
+});
 
 
 function TablePaginationActions(props) {
@@ -90,14 +121,13 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-
-
-function createData(id,matricule, firstname, lastname) {
+function createData(id,matricule, firstname, lastname, contact) {
   return {
     id,
     matricule,
     firstname,
     lastname,
+    contact,
     history: [
       {
         jour: 'Lundi',        
@@ -120,18 +150,23 @@ function createData(id,matricule, firstname, lastname) {
       {
         jour: 'Dimanche',
       },
+      {
+        jour: 'TOTAL',
+      },
     ],
   };
 }
 
-
-
-
-
-
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(new Date());
+  const classes = useStyles();
+  const [presence, setPresence] = useState('');
+
+  const handleChange = (event) => {
+    setPresence(event.target.value);
+  };
 
   return (
     <React.Fragment>
@@ -148,73 +183,202 @@ function Row(props) {
         <TableCell component="th" scope="row">{row.matricule}</TableCell>
         <TableCell align="center">{row.firstname}</TableCell>
         <TableCell align="center">{row.lastname}</TableCell>
+        <TableCell align="center">{row.contact}</TableCell>
       </TableRow>
 
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Présence
+              <Typography variant="h6" gutterBottom component="div" sx={{mb: 2}}>
+                Mois
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Stack spacing={3}>
+                    <DatePicker
+                      views={['month', 'year']}
+                      minDate={new Date('2012-01-01')}
+                      value={value}
+                      className={classes.input}
+                      onChange={(newValue) => {
+                        setValue(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} helperText={null} />}
+                    />
+                  </Stack>
+                </LocalizationProvider>
               </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Janvier 2022</TableCell>
-                      
-                    <TableCell align="center" sx={{backgroundColor:'Khaki'}}>Semaine 1</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'Khaki'}}>Avance</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'Khaki'}}>Salaire</TableCell>
-            
-                    <TableCell align="center" sx={{backgroundColor:'Plum'}}>Semaine 2</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'Plum'}}>Avance</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'Plum'}}>Salaire</TableCell>  
-                
-                    <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>Semaine 3</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>Avance</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>Salaire</TableCell>
-                  
-                    <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>Semaine 4</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>Avance</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>Salaire</TableCell>
-                
-                    <TableCell align="center" sx={{backgroundColor:'Coral'}}>Semaine 5</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'Coral'}}>Avance</TableCell>
-                    <TableCell align="center" sx={{backgroundColor:'Coral'}}>Salaire</TableCell>
-                    
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.jour}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.jour}
+              <TableContainer sx={{ width: 1500 }}>
+                <Table size="small" aria-label="purchases" sx={{ width: "max-content" }}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">
+                      {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <Stack spacing={3}>
+                          <DatePicker
+                            views={['month', 'year']}
+                            label="Mois"
+                            minDate={new Date('2012-01-01')}
+                            value={value}
+                            className={classes.input}
+                            onChange={(newValue) => {
+                              setValue(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} helperText={null} />}
+                          />
+                        </Stack>
+                      </LocalizationProvider> */}
+                      Jour
                       </TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'Khaki'}}>1</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'Khaki'}}>2</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'Khaki'}}>3</TableCell>
-
-                      <TableCell align="center" sx={{backgroundColor:'Plum'}}>4</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'Plum'}}>5</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'Plum'}}>6</TableCell>
-
-                      <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>7</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>8</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>9</TableCell>
-
-                      <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>10</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>11</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>12</TableCell>
-
-                      <TableCell align="center" sx={{backgroundColor:'Coral'}}>13</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'Coral'}}>14</TableCell>
-                      <TableCell align="center" sx={{backgroundColor:'Coral'}}>15</TableCell>
+                        
+                      <TableCell align="center" sx={{backgroundColor:'Khaki'}}>Semaine 1</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'Khaki'}}>Avance</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'Khaki'}}>Salaire</TableCell>
+              
+                      <TableCell align="center" sx={{backgroundColor:'Plum'}}>Semaine 2</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'Plum'}}>Avance</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'Plum'}}>Salaire</TableCell>  
+                  
+                      <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>Semaine 3</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>Avance</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>Salaire</TableCell>
+                    
+                      <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>Semaine 4</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>Avance</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>Salaire</TableCell>
+                  
+                      <TableCell align="center" sx={{backgroundColor:'Coral'}}>Semaine 5</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'Coral'}}>Avance</TableCell>
+                      <TableCell align="center" sx={{backgroundColor:'Coral'}}>Salaire</TableCell>
+                      
                     </TableRow>
-                  ))}
-                </TableBody>
+                  </TableHead>
 
-              </Table>
+                  <TableBody>
+                    {row.history.map((historyRow) => (
+                      <TableRow key={historyRow.jour}>
+                        <TableCell component="th" scope="row">
+                          {historyRow.jour}
+                        </TableCell>
+
+                        <TableCell align="center" sx={{backgroundColor:'Khaki'}}>
+                          <FormControl variant="standard" sx={{ m: 1, minWidth: 50 }}>
+                            <InputLabel id="demo-simple-select-standard-label">Présence</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-standard-label"
+                              id="demo-simple-select-standard"
+                              value={presence}
+                              onChange={handleChange}
+                              label="Présence"
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              <MenuItem value={10}>Une journée</MenuItem>
+                              <MenuItem value={20}>Demi-journée</MenuItem>
+                              <MenuItem value={30}>Absent</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'Khaki'}}>0.00 Ar</TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'Khaki'}}>15000 Ar</TableCell>
+                      
+                        {/* SEMAINE 2 */}
+                        <TableCell align="center" sx={{backgroundColor:'Plum'}}>
+                          <FormControl variant="standard" sx={{ m: 1, minWidth: 50 }}>
+                            <InputLabel id="demo-simple-select-standard-label">Présence</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-standard-label"
+                              id="demo-simple-select-standard"
+                              value={presence}
+                              onChange={handleChange}
+                              label="Présence"
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              <MenuItem value={10}>Une journée</MenuItem>
+                              <MenuItem value={20}>Demi-journée</MenuItem>
+                              <MenuItem value={30}>Absent</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'Plum'}}>0.00 Ar</TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'Plum'}}>15000 Ar</TableCell>
+
+                        {/* SEMAINE 3 */}
+                        <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>
+                          <FormControl variant="standard" sx={{ m: 1, minWidth: 50 }}>
+                            <InputLabel id="demo-simple-select-standard-label">Présence</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-standard-label"
+                              id="demo-simple-select-standard"
+                              value={presence}
+                              onChange={handleChange}
+                              label="Présence"
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              <MenuItem value={10}>Une journée</MenuItem>
+                              <MenuItem value={20}>Demi-journée</MenuItem>
+                              <MenuItem value={30}>Absent</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>0.00 Ar</TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'PaleGreen'}}>15000 Ar</TableCell>
+
+                        {/* SEMAINE 4 */}
+                        <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>
+                          <FormControl variant="standard" sx={{ m: 1, minWidth: 50 }}>
+                            <InputLabel id="demo-simple-select-standard-label">Présence</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-standard-label"
+                              id="demo-simple-select-standard"
+                              value={presence}
+                              onChange={handleChange}
+                              label="Présence"
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              <MenuItem value={10}>Une journée</MenuItem>
+                              <MenuItem value={20}>Demi-journée</MenuItem>
+                              <MenuItem value={30}>Absent</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>0.00 Ar</TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'LightSeaGreen'}}>15000 Ar</TableCell>
+
+                        {/* SEMAINE 5 */}
+                        <TableCell align="center" sx={{backgroundColor:'Coral'}}>
+                          <FormControl variant="standard" sx={{ m: 1, minWidth: 50 }}>
+                            <InputLabel id="demo-simple-select-standard-label">Présence</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-standard-label"
+                              id="demo-simple-select-standard"
+                              value={presence}
+                              onChange={handleChange}
+                              label="Présence"
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              <MenuItem value={10}>Une journée</MenuItem>
+                              <MenuItem value={20}>Demi-journée</MenuItem>
+                              <MenuItem value={30}>Absent</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'Coral'}}>0.00 Ar</TableCell>
+                        <TableCell align="center" sx={{backgroundColor:'Coral'}}>15000 Ar</TableCell>
+                      </TableRow>
+                    ))}
+                    
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Box>
           </Collapse>
         </TableCell>
@@ -241,8 +405,6 @@ const DailyPresence = () => {
   const [dailyEmployees, setDailyEmployees] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  
   
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -271,6 +433,7 @@ const DailyPresence = () => {
     dailyEmployee.matricule,
     dailyEmployee.firstname,
     dailyEmployee.lastname,
+    dailyEmployee.contact
   ))).sort((a, b) => (a.firstname < b.firstname ? -1 : 1));
 
   const emptyRows =
@@ -290,26 +453,21 @@ const DailyPresence = () => {
               <TableCell align="rigth">N° Matricule</TableCell>
               <TableCell align="center">Nom </TableCell>
               <TableCell align="center">Prénom</TableCell>
+              <TableCell align="center">Contact</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {rows.map((row) => (
+            {(rowsPerPage > 0
+              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : rows
+            ).map((row) => (
               <Row key={row.matricule} row={row} />
-            ))} */}
-
-
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <Row key={row.matricule} row={row} />
-          ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-
+            ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
           </TableBody>
           <TableFooter>
           <TableRow>
