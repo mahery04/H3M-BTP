@@ -150,9 +150,7 @@ function createData(id,matricule, firstname, lastname, contact) {
       {
         jour: 'Dimanche',
       },
-      {
-        jour: 'TOTAL',
-      },
+      
     ],
   };
 }
