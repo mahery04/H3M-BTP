@@ -356,7 +356,7 @@ function NewDailyEmployee() {
                         name="remarque" 
                         label="Remarque" 
                         variant="standard" 
-                        sx={{ width: '100%' }} 
+                        sx={{ width: '100%', mt: 7 }} 
                       /><br/>
                     </Box>
                   </Grid>
