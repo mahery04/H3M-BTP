@@ -58,7 +58,6 @@ const useStyles = makeStyles({
   },
 });
 
-
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;

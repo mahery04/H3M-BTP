@@ -7,6 +7,10 @@ import Container from '@mui/material/Container';
 import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 import { useNavigate } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
@@ -22,10 +26,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TwoKIcon from '@mui/icons-material/TwoK';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import moment from 'moment';
 import swal from '@sweetalert/with-react';
 
@@ -126,7 +126,7 @@ function NewTools() {
 
     if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.historical <= 0 ||  tools.material_number <= 0 ||  tools.affectation_type <= 0 ||  tools.responsable <= 0 ||  tools.tooling_id <= 0) {
       swal({
-        title: "Un erreur est survenue!",
+        title: "Un erreur est survenu!",
         text: "Veuillez remplir tous les formulaires",
         icon: "error",
         button: "OK",
@@ -166,7 +166,6 @@ function NewTools() {
             <form onSubmit={saveTools} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Container maxWidth="xl" sx={{ lineHeight: 5 }}>
-
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       label="Date d'achat"

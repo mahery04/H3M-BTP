@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Stack from '@mui/material/Stack';
 import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 import { useNavigate } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
@@ -18,21 +20,43 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import NumbersIcon from '@mui/icons-material/Numbers';
 import BadgeIcon from '@mui/icons-material/Badge';
-import WorkIcon from '@mui/icons-material/Work';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ClassIcon from '@mui/icons-material/Class';
 import CallIcon from '@mui/icons-material/Call';
+import WorkIcon from '@mui/icons-material/Work';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import EngineeringIcon from '@mui/icons-material/Engineering';
+import GroupsIcon from '@mui/icons-material/Groups';
+
 import moment from 'moment';
-import InputMask from 'react-input-mask'
+import InputMask from 'react-input-mask';
 import swal from '@sweetalert/with-react';
 
-import dailyEmployeeService from '../services/dailyEmployeeService'
+import dailyEmployeeService from '../services/dailyEmployeeService';
+import postDailyEmployeeService from '../services/postDailyEmployeeService';
 
 
 function NewDailyEmployee() {
   
   const [date, setDate] = useState(null);
+  const [posts, setPost] = useState([]);
+  const [postValue,setPostValue] = useState('');
+  const [group,setGroup] = useState('');
+
+
+  const getPostDailyEmployees = () => {
+    postDailyEmployeeService.getAllPosts().then((res) => {
+      setPost(res.data)
+      console.log("POST OCCUPE", res.data);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  useEffect(() => {
+    getPostDailyEmployees()
+  },[])
 
   const initialEmployeeState = {
     id:           null,
@@ -42,9 +66,13 @@ function NewDailyEmployee() {
     cin:          null,
     address:      '',
     contact:      '',
-    post:         '',
+    post_id:      postValue,
+    code_chantier: '',
+    group:        group,
     category:     '',
     hiring_date:  date,
+    tools: '',
+    remarque:     ''
   }
 
   const [dailyemployee, setDailyemployee] = useState(initialEmployeeState)
@@ -54,13 +82,22 @@ function NewDailyEmployee() {
     setDailyemployee({ ...dailyemployee, [name]: value })
   }
 
+  const handleGroupChange = (event) => {
+    setGroup(event.target.value);
+    setDailyemployee({...dailyemployee, group: event.target.value })
+  };
+
+  const handlePostChange = (event) => {
+    const postInput = event.target.value
+    setPostValue(postInput);
+    setDailyemployee({...dailyemployee, post_id: postInput})
+  };
+
   const insertDate = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
     setDate(d);
     setDailyemployee({ ...dailyemployee, hiring_date: d })
   }
-
-  // console.log(moment(date).format('YYYY-MM-DD'))
 
   console.log(dailyemployee)
 
@@ -76,12 +113,16 @@ function NewDailyEmployee() {
       cin:          dailyemployee.cin,
       address:      dailyemployee.address,
       contact:      dailyemployee.contact,
-      post:         dailyemployee.post,
+      post_id:      dailyemployee.post_id,
+      code_chantier:dailyemployee.code_chantier,
+      group:        dailyemployee.group,
       category:     dailyemployee.category,
       hiring_date:  dailyemployee.hiring_date,
+      tools: '',
+      remarque:     dailyemployee.remarque
     }
 
-    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.post.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0) {
+    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.post_id.length <= 0 || data.code_chantier.length <= 0 || data.group.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.remarque.length <= 0) {
       swal({
         title: "Un erreur est survenue!",
         text: "Veuillez remplir tous les formulaires",
@@ -98,9 +139,13 @@ function NewDailyEmployee() {
           cin:          res.data.cin,
           address:      res.data.address,
           contact:      res.data.contact,
-          post:         res.data.post,
+          post_id:      res.data.post_id,
+          code_chantier:res.data.code_chantier,
+          group:        res.data.group,   
           category:     res.data.category,
           hiring_date:  res.data.hiring_date,
+          tools: '',
+          remarque:     res.data.remarque
         })
         console.log(res.data)
       }).catch(err => {
@@ -108,50 +153,21 @@ function NewDailyEmployee() {
       })
       navigate('/employee/dailyemployee?inserted')
     }
-
   }
-
-  const breadcrumbs = [
-    <Typography key="1">
-      Employé(e)s
-    </Typography>,
-    <Typography key="2">
-      Nouveau employé journalier
-    </Typography>,
-  ];
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
         Nouveau Employé Journalier
-        <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
-          Employé(e)s
-        </Typography>
-        <Stack spacing={2}>
-          <Breadcrumbs separator="." aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-
-
       </Typography>
 
       <Container maxWidth="xxl">
-
-        {/* <Paper sx={{ width: '95%', overflow: 'hidden' }}>
-          <Box sx={{ height: 500, width: '100%' }}>
-            lorem
-          </Box>
-        </Paper> */}
-
-        <Card sx={{ height: 500, width: '95%' }}>
+        <Card sx={{ height: 600, width: '95%' }}>
           <CardContent>
-
             <form onSubmit={saveEmployee} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ lineHeight: 6 }}>
                   <Grid item xs={2} sm={4} md={4}>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
@@ -185,24 +201,38 @@ function NewDailyEmployee() {
                       <br />
                     </Box>
 
-                    
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 6 }}>
+                        <InputLabel htmlFor="grouped-native-select" id="post">Poste occupé</InputLabel>
+                        <Select
+                          native
+                          id="grouped-native-select"
+                          value={postValue}
+                          onChange={handlePostChange}
+                          label="Post occupé"
+                        >
+                          <option value=''></option>
+                            {posts.map(post => (
+                              <option key={post.post_id} value={`${post.post_id}`}>{post.post_name}</option>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <EngineeringIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
-                        id="post" 
-                        value={dailyemployee.post} 
+                        id="code_chantier" 
+                        value={dailyemployee.code_chantier} 
                         onChange={handleInputChange} 
-                        name="post" 
-                        label="Poste occupé" 
+                        name="code_chantier" 
+                        label="Code chantier" 
                         variant="standard" 
                         sx={{ width: '100%' }} 
                       /><br />
                     </Box>
-
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
@@ -236,15 +266,34 @@ function NewDailyEmployee() {
                         value={dailyemployee.category} 
                         onChange={handleInputChange} 
                         name="category" 
-                        label="Categorie" 
+                        label="Catégorie" 
                         variant="standard" 
                         sx={{ width: '100%' }} 
                       /><br />
                     </Box>
 
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt:7 }}>
+                        <InputLabel id="demo-simple-select-standard-label">Groupe</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={group}
+                          onChange={handleGroupChange}
+                          label="Groupe"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="BTP">BTP</MenuItem>
+                          <MenuItem value="SIP">SIP</MenuItem>
+                          <MenuItem value="Parapharmaceutique">Parapharmaceutique</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
@@ -298,8 +347,20 @@ function NewDailyEmployee() {
                         }
                       />
                     </LocalizationProvider>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField 
+                        id="remarque" 
+                        value={dailyemployee.remarque} 
+                        onChange={handleInputChange} 
+                        name="remarque" 
+                        label="Remarque" 
+                        variant="standard" 
+                        sx={{ width: '100%' }} 
+                      /><br/>
+                    </Box>
                   </Grid>
-                </Grid><br /><br /><br /><br />
+                </Grid><br/><br/><br/><br/>
                 <Button
                   size="medium"
                   variant="outlined"
@@ -312,11 +373,8 @@ function NewDailyEmployee() {
                 </Button>
               </Box>
             </form>
-
           </CardContent>
         </Card>
-
-
       </Container>
     </div>
   )

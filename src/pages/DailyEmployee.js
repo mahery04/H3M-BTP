@@ -10,11 +10,12 @@ import Box from '@mui/material/Box';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
+import { Link } from 'react-router-dom';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import { Link } from 'react-router-dom';
+
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
 
@@ -39,16 +40,20 @@ function DailyEmployee() {
     
 
   const columns = [
-    { field: 'id',          headerName: 'Id',               width: 100 },
+    { field: 'id',          headerName: 'Id',               width: 50 },
     { field: 'matricule',   headerName: 'Matricule',        width: 100 },
-    { field: 'firstname',   headerName: 'Nom',              width: 200 },
-    { field: 'lastname',    headerName: 'Prénom',           width: 200 },
-    { field: 'cin',         headerName: 'Numéro CIN',       width: 200, type: 'number' },
-    { field: 'address',     headerName: 'Adresse',          width: 200 },
-    { field: 'contact',     headerName: 'Contact',          width: 200 },
-    { field: 'post',        headerName: 'Poste occupé',     width: 200 },
-    { field: 'category',    headerName: 'Categorie',        width: 200 },
+    { field: 'firstname',   headerName: 'Nom',              width: 100 },
+    { field: 'lastname',    headerName: 'Prénom',           width: 100 },
+    { field: 'cin',         headerName: 'Numéro CIN',       width: 150, type: 'number' },
+    { field: 'address',     headerName: 'Adresse',          width: 100 },
+    { field: 'post_name',        headerName: 'Poste occupé',     width: 150 },
+    { field: 'code_chantier',headerName: 'Code Chantier',   width: 150 },
+    { field: 'group',       headerName: 'Groupe',           width: 100 },
+    { field: 'contact',     headerName: 'Contact',          width: 150 },
+    { field: 'category',    headerName: 'Catégorie',        width: 100 },
     { field: 'hiring_date', headerName: 'Date d\'embauche', width: 150 },
+    { field: 'tools',       headerName: 'Outils empruntés', width: 150 },
+    { field: 'remarque',    headerName: 'Remarque',        width: 200 },
     { field: 'action',      headerName: 'Action',           width: 150, type: 'action',
       renderCell: (data) => {
         return (
@@ -77,9 +82,13 @@ function DailyEmployee() {
     cin:          dailyemployee.cin, 
     address:      dailyemployee.address, 
     contact:      dailyemployee.contact, 
-    post:         dailyemployee.post, 
+    post_name:      dailyemployee.post_name, 
+    code_chantier:dailyemployee.code_chantier,
+    group: dailyemployee.group,
     category:     dailyemployee.category, 
-    hiring_date:  moment(dailyemployee.hiring_date).format('YYYY-MM-DD')
+    hiring_date:  moment(dailyemployee.hiring_date).format('YYYY-MM-DD'),
+    tools: '',
+    remarque:     dailyemployee.remarque
   }))
 
   const deleteDailyemployee = (id) => {
