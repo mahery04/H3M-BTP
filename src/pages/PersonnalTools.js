@@ -37,16 +37,12 @@ function PersonnalTools() {
   },[])
 
   const columns = [
-    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 100 },
+    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 200 },
     { field: 'identification_number', headerName: 'Numéro d\'identification', width: 200 },
-    { field: 'article_name',          headerName: 'Nom de l\'article',        width: 200 },
-    { field: 'assignation_place',     headerName: 'Lieu d\'affectation',      width: 200 },
+    { field: 'article_name',          headerName: 'Nom de l\'article',        width: 250 },
     { field: 'statue',                headerName: 'Etat',                     width: 200 },
     { field: 'material_number',       headerName: 'Nombre de matériel',       width: 200, type: 'number' },
-    { field: 'affectation_type',       headerName: 'Type d\'affectation',       width: 200},
-    { field: 'responsable',           headerName: 'Responsable',              width: 200 },
-    { field: 'historical',            headerName: 'Historique',               width: 100 },
-    { field: 'action',                headerName: 'Action',                   width: 150, type: 'actions',
+    { field: 'action',                headerName: 'Action',                   width: 200, type: 'actions',
       renderCell: (data) => {
         return (
           <>

@@ -62,12 +62,10 @@ function MonthlyEmployee() {
           <IconButton component="label" onClick={() => deleteMonthlyemployee(data.id)}>
             <DeleteIcon />
           </IconButton>
-
         </>
       )
     }
     },
-  
   ];
   
   const rows = monthlyemployees.map(monthlyemployee => ({ 

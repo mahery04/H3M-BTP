@@ -3,28 +3,69 @@ import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
-
-import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 
+import { Grid, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { Link } from 'react-router-dom';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'; 
 
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ArticleIcon from '@mui/icons-material/Article';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import FilterTiltShiftIcon from '@mui/icons-material/FilterTiltShift';
 
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
 
-import dailyEmployeeService from '../services/dailyEmployeeService'
+import dailyEmployeeService from '../services/dailyEmployeeService';
+import personnalToolsService from '../services/personnalToolsService';
 
+const style = {
+  position: 'absolute',
+  top: '45%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '0px solid #000',
+  borderRadius: '8px',
+  width: '60%',
+  height: '750px'
+};
 
 function DailyEmployee() {
 
   const [dailyemployees, setDailyemployees] = useState([]);
+  const [tools,setTool] = useState([]);
+  const [toolValue,setToolValue] = useState();
+  const [dateLoan, setDateLoan] = useState(null);
+  const [dateDelivery, setDateDelivery] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [identifiant, setIdentifiant] = useState(null);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const label = { inputProps: { 'aria-label': 'Checkbox demo' }}
+
+  const urlFull = window.location.href;
+    const idu = urlFull.split("?");
 
   const getDailyemployees = () => {
     dailyEmployeeService.getAll().then((res) => {
@@ -37,7 +78,60 @@ function DailyEmployee() {
   useEffect(() => {
     getDailyemployees()
   },[])
-    
+
+  const getTools = () => {
+    personnalToolsService.getAll().then((res) => {
+      setTool(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  useEffect(() => {
+    getTools()
+  },[])
+
+  const initialToolState = {
+    tool_id: null,
+    article_name: toolValue,
+    number:'',
+    loan_date: '',
+    delivery_date:'',
+    observation:'',
+    dailyemployee_id: identifiant
+  }
+
+  const [toolDailyEmployee,setToolDailyEmployee] = useState(initialToolState)
+
+  const handleToolChange = (event) => {
+    // const toolInput = event.target.value
+    const { name, value } = event.target
+    setToolValue(toolValue);
+    setToolDailyEmployee({...toolDailyEmployee, [name]: value})
+  };
+
+  console.log(toolDailyEmployee);
+
+  const insertDateLoan = (newDate) => {
+    const d = moment(newDate).format('YYYY-MM-DD')
+    setDateLoan(d);
+    setToolDailyEmployee({...toolDailyEmployee, loan_date: d })
+  }
+
+  const insertDateDelivery = (newDate) => {
+    const d = moment(newDate).format('YYYY-MM-DD')
+    setDateDelivery(d);
+    setToolDailyEmployee({...toolDailyEmployee, delivery_date: d })
+  }
+
+  const insertIdentifiant = () => {
+    // const urlFull = window.location.href;
+    // const idu = urlFull.split("?");
+    setIdentifiant(idu[1])
+    setToolDailyEmployee({...toolDailyEmployee, dailyemployee_id: identifiant })
+  }
+
+
 
   const columns = [
     { field: 'id',          headerName: 'Id',               width: 50 },
@@ -46,15 +140,32 @@ function DailyEmployee() {
     { field: 'lastname',    headerName: 'Prénom',           width: 100 },
     { field: 'cin',         headerName: 'Numéro CIN',       width: 150, type: 'number' },
     { field: 'address',     headerName: 'Adresse',          width: 100 },
-    { field: 'post_name',        headerName: 'Poste occupé',     width: 150 },
+    { field: 'post_name',   headerName: 'Poste occupé',     width: 150 },
     { field: 'code_chantier',headerName: 'Code Chantier',   width: 150 },
     { field: 'group',       headerName: 'Groupe',           width: 100 },
     { field: 'contact',     headerName: 'Contact',          width: 150 },
     { field: 'category',    headerName: 'Catégorie',        width: 100 },
     { field: 'hiring_date', headerName: 'Date d\'embauche', width: 150 },
-    { field: 'tools',       headerName: 'Outils empruntés', width: 150 },
-    { field: 'remarque',    headerName: 'Remarque',        width: 200 },
-    { field: 'action',      headerName: 'Action',           width: 150, type: 'action',
+    { field: 'tools',       headerName: 'Matériels empruntés', width: 150 ,type: 'action',
+      renderCell: (data) => {
+        return (
+          <>
+            <Stack direction="row">
+              <Link to={'/employee/dailyemployee?' + data.id}>
+                <Chip 
+                  icon={<AddCircleIcon/>} 
+                  label="Voir"
+                  onClick={handleOpen}
+                  variant="outlined"
+                  color="primary"
+                />
+              </Link>
+            </Stack>
+          </>
+        )
+      }},
+    { field: 'remarque', headerName: 'Remarque', width: 200 },
+    { field: 'action', headerName: 'Action', width: 150, type: 'action',
       renderCell: (data) => {
         return (
           <>
@@ -63,17 +174,15 @@ function DailyEmployee() {
                 <EditIcon />
               </IconButton>
             </Link>
-            
-            <IconButton component="label" onClick={() => deleteDailyemployee(data.id)}>
+            {/* <IconButton component="label" onClick={() => deleteDailyemployee(data.id)}>
               <DeleteIcon />
-            </IconButton>
-
+            </IconButton> */}
           </>
         )
       }
     },
   ];
-  
+
   const rows = dailyemployees.map(dailyemployee => ({ 
     id:           dailyemployee.dailyemployee_id, 
     matricule:    dailyemployee.matricule, 
@@ -82,7 +191,7 @@ function DailyEmployee() {
     cin:          dailyemployee.cin, 
     address:      dailyemployee.address, 
     contact:      dailyemployee.contact, 
-    post_name:      dailyemployee.post_name, 
+    post_name:    dailyemployee.post_name, 
     code_chantier:dailyemployee.code_chantier,
     group: dailyemployee.group,
     category:     dailyemployee.category, 
@@ -90,6 +199,28 @@ function DailyEmployee() {
     tools: '',
     remarque:     dailyemployee.remarque
   }))
+
+  const columns_tools = [
+    { field: 'id', headerName: 'Id', width: 50, align:'center'  },
+    { field: 'nametool', headerName: 'Nom du matériel', width: 200, align:'center' },
+    { field: 'numbertool', headerName: 'Nombre de matériel', width: 150, align:'center' },
+    { field: 'loan_date', headerName: 'Date d\'emprunt', width: 200, align:'center' },
+    { field: 'delivery_date', headerName: 'Date de remise', width: 200, align:'center' },
+    { field: 'observation', headerName: 'Observation', width: 250, align:'center' },
+    { field: 'action', headerName: 'Action', width: 100, type: 'action',
+      renderCell: (data) => {
+        return (
+          <>
+            <Link to={'/employee/updatedailyemployee/' + data.id}>
+              <IconButton component="label">
+                <EditIcon />
+              </IconButton>
+            </Link>
+          </>
+        )
+      }
+    },
+  ];
 
   const deleteDailyemployee = (id) => {
     swal({
@@ -108,6 +239,43 @@ function DailyEmployee() {
     });
   }
 
+  const saveTools = e => {
+    e.preventDefault()
+
+    var data = {
+      dailyemployee_id: toolDailyEmployee.dailyemployee_id,
+      tool_id: toolDailyEmployee.tool_id,
+      article_name: toolDailyEmployee.article_name,
+      number: toolDailyEmployee.number,
+      loan_date: toolDailyEmployee.loan_date,
+      delivery_date: toolDailyEmployee.delivery_date,
+      observation: toolDailyEmployee.observation
+    }
+
+    if (data.article_name.length <= 0 || data.number.length <= 0 || data.loan_date.length <= 0) {
+      swal({
+        title: "Un erreur est survenu",
+        text: "Veuillez remplir tous les formulaires",
+        icon: "error",
+        button: "OK"
+      });
+    } else {
+      personnalToolsService.create(data).then(res => {
+        setToolDailyEmployee({
+          dailyemployee_id: res.data.dailyemployee_id,
+          tool_id: res.data.tool_id,
+          number: res.data.number,
+          loan_date: res.data.loan_date,
+          delivery_date: res.data.delivery_date,
+          observation: res.data.observation
+        })
+        console.log("TOOLS CR22S ", res.data);
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+  }
+
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
@@ -123,6 +291,135 @@ function DailyEmployee() {
           Nouveau employé
         </Button>
       </Typography>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h4" component="h2" sx={{ textAlign:'center', color:'DimGray', lineHeight:3 }}>
+            Nouveau matériels empruntés
+          </Typography>
+          <Container maxWidth="xxl"> 
+            <form onSubmit={saveTools} noValidate autoComplete='off'>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={{ xs: 2, md: 5 }} columns={{ xs: 4, sm: 8, md: 8 }} sx={{ lineHeight: 5 }}>
+                  <Grid item xs={2} sm={4} md={4}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <ArticleIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
+                        <InputLabel htmlFor="grouped-native-select" id="nametool">Nom du matériel</InputLabel>
+                        <Select 
+                          native 
+                          id="grouped-native-select" 
+                          label="Nom du matériel"  
+                          name="tool_id"
+                          value={toolValue}
+                          onChange={handleToolChange}
+                        >
+                          <option value=''></option>
+                          {tools.map(tool => (
+                            <option key={tool.tool_id} value={`${tool.tool_id}`}>{tool.article_name}</option>
+                          ))}
+                        </Select>
+                      </FormControl><br />
+                    </Box>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        label="Date d'emprunt"
+                        id="loan_date"
+                        name="loan_date"
+                        value={dateLoan}
+                        onChange={insertDateLoan}
+                        renderInput={(params) =>
+                          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <TextField 
+                              {...params} 
+                              variant="standard" 
+                              sx={{ width: '100%' }} 
+                              id="loan_date" 
+                              name="loan_date" 
+                            /><br />
+                          </Box>
+                        }
+                      />
+                    </LocalizationProvider>                    
+                  </Grid>
+                  <Grid item xs={2} sm={4} md={4}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <ConfirmationNumberIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField 
+                        id="number" 
+                        name="number" 
+                        label="Nombre de matériel" 
+                        value={toolValue}
+                        onChange={handleToolChange}
+                        variant="standard" 
+                        sx={{ width: '100%' }} 
+                      /><br />
+                    </Box>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        label="Date de remise"
+                        id="delivery_date"
+                        name="delivery_date" 
+                        value={dateDelivery}
+                        onChange={insertDateDelivery}
+                        renderInput={(params) =>
+                          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <TextField 
+                              {...params} 
+                              variant="standard" 
+                              sx={{ width: '100%' }} 
+                              id="delivery_date" 
+                              name="delivery_date" 
+                            /><br />
+                          </Box>
+                        }
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                </Grid>
+              </Box>  
+              <input type="hidden" name="dailyemployee_id" value={identifiant} onChange={insertIdentifiant} />
+              <Box sx={{ display: 'flex', alignItems: 'flex-end', lineHeight:5 }}>
+                <FilterTiltShiftIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                <TextField 
+                  id="observation" 
+                  name="observation" 
+                  value={toolValue}
+                  label="Observation" 
+                  onChange={handleToolChange}
+                  variant="standard" 
+                  sx={{ width: '100%' }} 
+                /><br />
+              </Box> <br/> <br/>
+              <Button
+                size="medium"
+                variant="outlined"
+                color="primary"
+                sx={{ width: 920, ml:10 }}
+                startIcon={<AddIcon />}
+                onClick={saveTools}
+              >
+                Enregistrer
+              </Button>          
+            </form>   <br/>
+            <Box sx={{ height: 300, width: '100%' }}>
+              <DataGrid
+                rows={rows}
+                columns={columns_tools}
+                components={{ Toolbar: GridToolbar }}
+                pageSize={2}
+                rowsPerPageOptions={[5]}
+                disableSelectionOnClick
+              />
+          </Box>
+          </Container> 
+        </Box>
+      </Modal>
 
       <Container maxWidth="xxl">
         <Paper sx={{ width: '95%', overflow: 'hidden' }}>

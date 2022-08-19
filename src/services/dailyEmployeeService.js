@@ -16,12 +16,20 @@ const update = (id, data) => {
     return http.put(`/api/dailyemployee/${id}`, data)
 }
 
+const upstatutone = (id, data) => {
+    return http.put(`/api/dailyemployee/statutone/${id}`,data)
+}
+
+const upstatutzero = (id, data) => {
+    return http.put(`/api/dailyemployee/statutzero/${id}`,data)
+}
+
 const remove = id => {
     return http.delete(`/api/dailyemployee/${id}`)
 }
 
 const exportedObject =  {
-    getAll, get, create, update, remove
+    getAll, get, create, update, upstatutone, upstatutzero, remove
 }
 
 export default exportedObject
