@@ -121,9 +121,6 @@ function NewTools() {
       responsable:            tools.responsable,
       tooling_id:             tools.tooling_id,
     }
-
-    
-
     if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.historical <= 0 ||  tools.material_number <= 0 ||  tools.affectation_type <= 0 ||  tools.responsable <= 0 ||  tools.tooling_id <= 0) {
       swal({
         title: "Un erreur est survenu!",

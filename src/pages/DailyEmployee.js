@@ -12,8 +12,9 @@ import Modal from '@mui/material/Modal';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 
-import { Grid, TextField } from '@mui/material';
+import { Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { Link } from 'react-router-dom';
@@ -35,6 +36,9 @@ import swal from '@sweetalert/with-react';
 
 import dailyEmployeeService from '../services/dailyEmployeeService';
 import personnalToolsService from '../services/personnalToolsService';
+import toolsDailyEmployee from '../services/toolsDailyEmployee';
+
+import axios from 'axios';
 
 const style = {
   position: 'absolute',
@@ -58,14 +62,15 @@ function DailyEmployee() {
   const [dateDelivery, setDateDelivery] = useState(null);
   const [open, setOpen] = useState(false);
   const [identifiant, setIdentifiant] = useState(null);
+  const [numberTool,setNumberTool] = useState(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const label = { inputProps: { 'aria-label': 'Checkbox demo' }}
 
-  const urlFull = window.location.href;
-    const idu = urlFull.split("?");
+  // const urlFull = window.location.href;
+  //   const idu = urlFull.split("?");
 
   const getDailyemployees = () => {
     dailyEmployeeService.getAll().then((res) => {
@@ -92,13 +97,12 @@ function DailyEmployee() {
   },[])
 
   const initialToolState = {
+    dailyemployee_id: identifiant,
     tool_id: null,
-    article_name: toolValue,
     number:'',
     loan_date: '',
     delivery_date:'',
-    observation:'',
-    dailyemployee_id: identifiant
+    observation:''
   }
 
   const [toolDailyEmployee,setToolDailyEmployee] = useState(initialToolState)
@@ -110,7 +114,7 @@ function DailyEmployee() {
     setToolDailyEmployee({...toolDailyEmployee, [name]: value})
   };
 
-  console.log(toolDailyEmployee);
+  
 
   const insertDateLoan = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
@@ -124,14 +128,41 @@ function DailyEmployee() {
     setToolDailyEmployee({...toolDailyEmployee, delivery_date: d })
   }
 
-  const insertIdentifiant = () => {
-    // const urlFull = window.location.href;
-    // const idu = urlFull.split("?");
-    setIdentifiant(idu[1])
-    setToolDailyEmployee({...toolDailyEmployee, dailyemployee_id: identifiant })
+  if (open === true) {
+    const urlFull = window.location.href;
+    const idu = urlFull.split("?");
+    var set = setTimeout(() => {
+      setIdentifiant(idu[1])
+      setToolDailyEmployee({...toolDailyEmployee, dailyemployee_id: identifiant })
+    }, 100); 
+
+    if (toolDailyEmployee.dailyemployee_id !== null) {
+      clearTimeout(set)
+    }
   }
 
+  const getNumber = (id) => {
+    toolsDailyEmployee.getNumber(id).then((res) => {
+      setNumberTool(res[0].material_number)
+      console.log(numberTool)
+    })
+    // console.log('log')
+  }
 
+  if (open === false) {
+    const urlFull = window.location.href;
+    const idu = urlFull.split("?");
+    var set = setTimeout(() => {
+      setIdentifiant(null)
+      setToolDailyEmployee({...toolDailyEmployee, dailyemployee_id: identifiant })
+    }, 100); 
+
+    if (toolDailyEmployee.dailyemployee_id == null) {
+      clearTimeout(set)
+    }
+  }
+
+  console.log("TOOLSDAILYEMPLOYEE ",toolDailyEmployee);
 
   const columns = [
     { field: 'id',          headerName: 'Id',               width: 50 },
@@ -245,35 +276,40 @@ function DailyEmployee() {
     var data = {
       dailyemployee_id: toolDailyEmployee.dailyemployee_id,
       tool_id: toolDailyEmployee.tool_id,
-      article_name: toolDailyEmployee.article_name,
       number: toolDailyEmployee.number,
       loan_date: toolDailyEmployee.loan_date,
       delivery_date: toolDailyEmployee.delivery_date,
       observation: toolDailyEmployee.observation
     }
+    console.log("DATA ",data);
 
-    if (data.article_name.length <= 0 || data.number.length <= 0 || data.loan_date.length <= 0) {
-      swal({
-        title: "Un erreur est survenu",
-        text: "Veuillez remplir tous les formulaires",
-        icon: "error",
-        button: "OK"
-      });
-    } else {
-      personnalToolsService.create(data).then(res => {
-        setToolDailyEmployee({
-          dailyemployee_id: res.data.dailyemployee_id,
-          tool_id: res.data.tool_id,
-          number: res.data.number,
-          loan_date: res.data.loan_date,
-          delivery_date: res.data.delivery_date,
-          observation: res.data.observation
-        })
-        console.log("TOOLS CR22S ", res.data);
-      }).catch(err => {
-        console.log(err);
-      })
-    }
+    // if ( data.number.length <= 0 || data.loan_date.length <= 0) {
+    //   swal({
+    //     title: "Un erreur est survenu",
+    //     text: "Veuillez remplir tous les formulaires",
+    //     icon: "error",
+    //     button: "OK"
+    //   });
+    // } else {
+    //   toolsDailyEmployee.create(data).then(res => {
+    //     setToolDailyEmployee({
+    //       dailyemployee_id: res.data.dailyemployee_id,
+    //       tool_id: res.data.tool_id,
+    //       number: res.data.number,
+    //       loan_date: res.data.loan_date,
+    //       delivery_date: res.data.delivery_date,
+    //       observation: res.data.observation
+    //     })
+    //   }).catch(err => {
+    //     console.log(err);
+    //   })
+    // }
+
+    axios.post('http://localhost:4000/api/toolsdailyemployee',data)
+    .then((res)=> {
+      console.log(res.data);
+    })
+
   }
 
   return (
@@ -351,14 +387,21 @@ function DailyEmployee() {
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <ConfirmationNumberIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
-                        id="number" 
+                        id="standard-number" 
                         name="number" 
                         label="Nombre de matériel" 
+                        type='number'
                         value={toolValue}
                         onChange={handleToolChange}
+                        InputProps={{
+                          inputProps: { 
+                            max: 100, min: 0 
+                          }
+                        }}
                         variant="standard" 
                         sx={{ width: '100%' }} 
-                      /><br />
+                      />
+                      <br />
                     </Box>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
@@ -383,7 +426,7 @@ function DailyEmployee() {
                   </Grid>
                 </Grid>
               </Box>  
-              <input type="hidden" name="dailyemployee_id" value={identifiant} onChange={insertIdentifiant} />
+              {/* <input type="hidden" id="dailyemployee_id" name="dailyemployee_id" value={identifiant} onChange={insertIdentifiant} /> */}
               <Box sx={{ display: 'flex', alignItems: 'flex-end', lineHeight:5 }}>
                 <FilterTiltShiftIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                 <TextField 
