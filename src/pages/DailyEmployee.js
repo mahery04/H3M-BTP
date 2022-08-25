@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
-import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -69,9 +68,6 @@ function DailyEmployee() {
 
   const label = { inputProps: { 'aria-label': 'Checkbox demo' }}
 
-  // const urlFull = window.location.href;
-  //   const idu = urlFull.split("?");
-
   const getDailyemployees = () => {
     dailyEmployeeService.getAll().then((res) => {
       setDailyemployees(res.data)
@@ -113,8 +109,6 @@ function DailyEmployee() {
     setToolValue(toolValue);
     setToolDailyEmployee({...toolDailyEmployee, [name]: value})
   };
-
-  
 
   const insertDateLoan = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
@@ -161,8 +155,6 @@ function DailyEmployee() {
       clearTimeout(set)
     }
   }
-
-  console.log("TOOLSDAILYEMPLOYEE ",toolDailyEmployee);
 
   const columns = [
     { field: 'id',          headerName: 'Id',               width: 50 },
@@ -281,35 +273,11 @@ function DailyEmployee() {
       delivery_date: toolDailyEmployee.delivery_date,
       observation: toolDailyEmployee.observation
     }
-    console.log("DATA ",data);
-
-    // if ( data.number.length <= 0 || data.loan_date.length <= 0) {
-    //   swal({
-    //     title: "Un erreur est survenu",
-    //     text: "Veuillez remplir tous les formulaires",
-    //     icon: "error",
-    //     button: "OK"
-    //   });
-    // } else {
-    //   toolsDailyEmployee.create(data).then(res => {
-    //     setToolDailyEmployee({
-    //       dailyemployee_id: res.data.dailyemployee_id,
-    //       tool_id: res.data.tool_id,
-    //       number: res.data.number,
-    //       loan_date: res.data.loan_date,
-    //       delivery_date: res.data.delivery_date,
-    //       observation: res.data.observation
-    //     })
-    //   }).catch(err => {
-    //     console.log(err);
-    //   })
-    // }
 
     axios.post('http://localhost:4000/api/toolsdailyemployee',data)
     .then((res)=> {
       console.log(res.data);
     })
-
   }
 
   return (
@@ -357,7 +325,7 @@ function DailyEmployee() {
                         >
                           <option value=''></option>
                           {tools.map(tool => (
-                            <option key={tool.tool_id} value={`${tool.tool_id}`}>{tool.article_name}</option>
+                            <option key={tool.tool_id} value={`${tool.tool_id}`}>{tool.article_name} </option>
                           ))}
                         </Select>
                       </FormControl><br />
@@ -426,7 +394,6 @@ function DailyEmployee() {
                   </Grid>
                 </Grid>
               </Box>  
-              {/* <input type="hidden" id="dailyemployee_id" name="dailyemployee_id" value={identifiant} onChange={insertIdentifiant} /> */}
               <Box sx={{ display: 'flex', alignItems: 'flex-end', lineHeight:5 }}>
                 <FilterTiltShiftIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                 <TextField 

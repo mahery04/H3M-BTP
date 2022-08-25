@@ -4,12 +4,12 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Stack from '@mui/material/Stack';
 import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
@@ -24,9 +24,11 @@ import PortraitIcon from '@mui/icons-material/Portrait';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ClassIcon from '@mui/icons-material/Class';
 import CallIcon from '@mui/icons-material/Call';
+
 import moment from 'moment';
 
-import dailyEmployeeService from '../services/dailyEmployeeService'
+import dailyEmployeeService from '../services/dailyEmployeeService';
+import postDailyEmployeeService from '../services/postDailyEmployeeService';
 
 
 function UpdateDailyEmployee(props) {
@@ -40,7 +42,7 @@ function UpdateDailyEmployee(props) {
     cin:          null,
     address:      '',
     contact:      '',
-    post:         '',
+    post_id:      '',
     category:     '',
     hiring_date:  date,
   }
@@ -48,13 +50,12 @@ function UpdateDailyEmployee(props) {
   const findData = useParams()
   const dailyemployee_id = findData.id
   
-  const [loaded, setLoaded] = useState(false)
-  const [dailyemployee, setDailyemployee] = useState(initialEmployeeState)
+  const [loaded, setLoaded] = useState(false);
+  const [dailyemployee, setDailyemployee] = useState(initialEmployeeState);
 
   useEffect(() => {
     const load = async () => {
       const res = await dailyEmployeeService.get(dailyemployee_id)
-      console.log("RES LAVA BE ", res.data);
       setDailyemployee(res.data)
       setLoaded(true)
     }
@@ -62,8 +63,6 @@ function UpdateDailyEmployee(props) {
       load();
     }
   }, [dailyemployee_id, loaded])
-
-  console.log(loaded)
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -89,7 +88,7 @@ function UpdateDailyEmployee(props) {
       cin:          dailyemployee.cin,
       address:      dailyemployee.address,
       contact:      dailyemployee.contact,
-      post:         dailyemployee.post,
+      post_id:      dailyemployee.post_id,
       category:     dailyemployee.category,
       hiring_date:  dailyemployee.hiring_date,
     }
@@ -104,7 +103,7 @@ function UpdateDailyEmployee(props) {
         cin:          res.data.cin,
         address:      res.data.address,
         contact:      res.data.contact,
-        post:         res.data.post,
+        post_id:      res.data.post_id,
         category:     res.data.category,
         hiring_date:  res.data.hiring_date,
       })
@@ -114,29 +113,11 @@ function UpdateDailyEmployee(props) {
     })
     navigate('/employee/dailyemployee')
   }
-  console.log(dailyemployee)
-
-  const breadcrumbs = [
-    <Typography key="1">
-      Employé(e)s
-    </Typography>,
-    <Typography key="2">
-      Modification d'un employé journalier
-    </Typography>,
-  ];
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
         Modification d'un employé journalier
-        <Typography variant="h4" sx={{ px: 5, mt: 2, ml: -5, mb: 2 }}>
-          Employé(e)s
-        </Typography>
-        <Stack spacing={2}>
-          <Breadcrumbs separator="." aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
       </Typography>
 
       <Container maxWidth="xxl">
@@ -176,7 +157,7 @@ function UpdateDailyEmployee(props) {
                       <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField 
                         id="post" 
-                        value={dailyemployee.post} 
+                        value={dailyemployee.post_id} 
                         onChange={handleInputChange} 
                         name="post" 
                         label="Poste occupé" 
@@ -220,7 +201,7 @@ function UpdateDailyEmployee(props) {
                         value={dailyemployee.category} 
                         onChange={handleInputChange} 
                         name="category" 
-                        label="Categorie" 
+                        label="Catégorie" 
                         variant="standard" 
                         sx={{ width: '100%' }} 
                       /><br />

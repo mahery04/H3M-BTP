@@ -21,6 +21,7 @@ import UpdateDailyEmployee from './pages/UpdateDailyEmployee';
 import UpdateMonthlyEmployee from './pages/UpdateMonthlyEmployee';
 import UpdatePersonnalTools from './pages/UpdatePersonnalTools';
 import EmployeePresence from './pages/EmployeePresence';
+import NewDailyPresence from './pages/NewDailyPresence';
 
 
 // ----------------------------------------------------------------------
@@ -68,6 +69,7 @@ export default function Router() {
         { path: 'dailypresence', element: <DailyPresence /> },
         { path: 'monthlypresence', element: <MonthlyPresence /> },
         { path: 'employeepresence/:id', element: <EmployeePresence /> },
+        { path: 'newdailypresence/:id', element: <NewDailyPresence /> },
       ]
     },
     // { path: '*', element: <Navigate to="/404" replace /> },
