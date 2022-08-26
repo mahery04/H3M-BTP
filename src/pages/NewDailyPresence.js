@@ -1,6 +1,5 @@
 import React,{useState, useEffect} from 'react';
 
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -9,16 +8,21 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 
+import { DataGrid } from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid-premium';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'; 
 import { Grid, TextField } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import moment from 'moment';
 
 import dailyEmployeeService from '../services/dailyEmployeeService';
+
 
 function NewDailyPresence() {
 
@@ -28,15 +32,12 @@ function NewDailyPresence() {
   const [dateEnd, setdateEnd] = useState(null);
   const [age, setAge] = useState('');
 
-
   const handleChange = (event) => {
     setAge(event.target.value);
   }
 
   const findData = useParams();
   const dailyemployee_id = findData.id
-
-  console.log("DAILYID", dailyemployee_id);
 
   useEffect(() => {
     const load = async () => {
@@ -60,17 +61,37 @@ function NewDailyPresence() {
     setdateEnd(d);
     setDailyEmployees({ ...dailyEmployees, end_date: d })
   }
-   
+
+  const rows = [
+    { id: 1, day: 'Lundi', presence: 'p', avance: '0.00ar', salary: '7500ar',action:'a' },
+    { id: 2, day: 'Lundi', presence: 'p', avance: '0.00ar', salary: '7500ar',action:'a' },
+  ];
+  
+  const columns = [
+    { field: 'day', headerName: 'Jour', width: 200 },
+    { field: 'presence', headerName: 'Présence', width: 200 },
+    { field: 'avance', headerName: 'Avance', width: 200 },
+    { field: 'salary', headerName: 'Salaire', width: 200 },
+    { field: 'action', headerName: 'Action', width: 200, type: 'action',
+      renderCell: () => {
+        return (
+          <>
+            <Button variant="contained">Contained</Button>
+          </>
+        )
+      }
+    } ,
+  ]
   return (
     <div>
       <Container maxWidth="xxl">
-        <Card sx={{ height: 800, width: '100%' }}>
+        <Card sx={{ height: 900, width: '100%' }}>
           <Box sx={{ ml:8, mt:5, fontSize:'18px'}}> 
             <div>
               <b>N° Matricule :</b> {dailyEmployees.matricule} <br/>
               <b>Nom : </b> {dailyEmployees.firstname} <br/>
               <b>Prénom :</b> {dailyEmployees.lastname} <br/>
-              <b>Poste occupé : </b> {dailyEmployees.post_name}<br />  
+              <b>Poste occupé : </b> {dailyEmployees.post_name}<br/>  
             </div>             
           </Box>
           <CardContent>
@@ -102,7 +123,7 @@ function NewDailyPresence() {
                         label="Date de début"
                         id="start_date"
                         name="start_date"
-                        value={dateStart}
+                        value={dateStart} 
                         onChange={insertStartDate}
                         renderInput={(params) =>
                           <Box sx={{ mt:-15 }}>
@@ -143,10 +164,21 @@ function NewDailyPresence() {
                 </Grid>
               </Box>
             </form>
+            <Paper sx={{ width: '100%', overflow: 'hidden', mt:-10 }}>
+              <Box sx={{ height: 450, width: '100%' }}>
+                <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  components={{ Toolbar: GridToolbar }}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  disableSelectionOnClick
+                />
+              </Box>
+            </Paper>
           </CardContent>
         </Card>
       </Container>
-
     </div>
   )
 }

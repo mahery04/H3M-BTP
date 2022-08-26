@@ -44,7 +44,6 @@ function NewDailyEmployee() {
   const [postValue,setPostValue] = useState('');
   const [group,setGroup] = useState('');
 
-
   const getPostDailyEmployees = () => {
     postDailyEmployeeService.getAllPosts().then((res) => {
       setPost(res.data)
