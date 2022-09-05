@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Container from '@mui/material/Container';
-import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-
+import { Button, Card, CardContent, Container, Typography, Box, InputLabel, MenuItem, FormControl} from '@mui/material';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { TextField } from '@mui/material';
@@ -15,6 +8,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import AddIcon from '@mui/icons-material/Add';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -22,9 +16,6 @@ import FeedIcon from '@mui/icons-material/Feed';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TwoKIcon from '@mui/icons-material/TwoK';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import moment from 'moment';
 
@@ -140,7 +131,7 @@ function UpdatePersonnalTools() {
     }).catch(err => {
         console.log(err)
     })
-      navigate('/tools/personnal')
+      navigate('/tools/personnal?updated')
 
   }
 
@@ -199,7 +190,7 @@ function UpdatePersonnalTools() {
                   </Box>
 
                  
-                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
                         <InputLabel htmlFor="grouped-native-select" id="responable">Responsable</InputLabel>
@@ -216,7 +207,7 @@ function UpdatePersonnalTools() {
                             ))}
                         </Select>
                     </FormControl><br />
-                </Box>
+                </Box> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />

@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Container from '@mui/material/Container';
-import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import { Button, Paper, Container, Typography, Box } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -18,9 +15,25 @@ import moment from 'moment'
 import swal from '@sweetalert/with-react';
 
 import personnalToolsService from '../services/personnalToolsService'
-
+import Label from '../components/Label';
 
 function PersonnalTools() {
+
+    const notification = () => {
+    let url = window.location.href
+    let param = url.split('?')
+    console.log(param[1])
+    if(param[1] === 'inserted') {
+      swal("", "Outil inseré avec succés!", "success");
+    } else if(param[1] === 'deleted') {
+      swal("", "Outil supprimé avec succés!", "success");
+    } else if(param[1] === 'updated') {
+      swal("", "Outil modifié avec succés!", "success");
+    }
+  }
+  notification()
+
+  const navigate = useNavigate()
 
   const [personnaltools, setPersonnaltools] = useState([])
 
@@ -37,11 +50,18 @@ function PersonnalTools() {
   },[])
 
   const columns = [
-    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 200 },
-    { field: 'identification_number', headerName: 'Numéro d\'identification', width: 200 },
+    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 80 },
+    { field: 'identification_number', headerName: 'Numéro d\'identification', width: 150 },
     { field: 'article_name',          headerName: 'Nom de l\'article',        width: 250 },
-    { field: 'statue',                headerName: 'Etat',                     width: 200 },
-    { field: 'material_number',       headerName: 'Nombre de matériel',       width: 200, type: 'number' },
+    { field: 'statue',                headerName: 'Etat',                     width: 80, type: 'action',
+    renderCell: (data) => {
+      if (data.row.statue==='Nouveau') {
+        return( <Label variant="ghost" color='success'>Nouveau</Label> )
+      } else if(data.row.statue==='Occasion') {
+        return( <Label variant="ghost" color='warning'>Occasion</Label> )
+      }
+    }},
+    { field: 'material_number',       headerName: 'Nombre de matériel',       width: 150, type: 'number' },
     { field: 'action',                headerName: 'Action',                   width: 200, type: 'actions',
       renderCell: (data) => {
         return (
@@ -89,7 +109,7 @@ function PersonnalTools() {
         personnalToolsService.remove(id)
         const newTabList = personnaltools.filter((personnaltool) => personnaltool.id !== id)
         setPersonnaltools(newTabList)
-        document.location.reload(true)
+        navigate('/tools/personnal?deleted')
       }
     });
   }

@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Container from '@mui/material/Container';
-import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import { Button, Card, CardContent, Container, Typography, Box, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
@@ -18,6 +8,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import AddIcon from '@mui/icons-material/Add';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -117,11 +108,11 @@ function NewTools() {
       statue:                 tools.statue,
       historical:             tools.historical,
       material_number:        tools.material_number,
-      affectation_type:       tools.affectation_type,
-      responsable:            tools.responsable,
+      // affectation_type:       tools.affectation_type,
+      // responsable:            tools.responsable,
       tooling_id:             tools.tooling_id,
     }
-    if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.historical <= 0 ||  tools.material_number <= 0 ||  tools.affectation_type <= 0 ||  tools.responsable <= 0 ||  tools.tooling_id <= 0) {
+    if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.historical <= 0 ||  tools.material_number <= 0) {
       swal({
         title: "Un erreur est survenu!",
         text: "Veuillez remplir tous les formulaires",
@@ -139,8 +130,8 @@ function NewTools() {
           statue:                 res.data.statue,
           historical:             res.data.historical,
           material_number:        parseInt(res.data.material_number),
-          affectation_type:       res.data.affectation_type,
-          responsable:            res.data.responsable,
+          // affectation_type:       res.data.affectation_type,
+          // responsable:            res.data.responsable,
           tooling_id:             res.data.tooling_id,
         })
         console.log(res.data)
@@ -158,7 +149,7 @@ function NewTools() {
       </Typography>
 
       <Container maxWidth="xxl">
-        <Card sx={{ height: 820, width: '95%' }}>
+        <Card sx={{ height: '100%', width: '95%' }}>
           <CardContent>
             <form onSubmit={saveTools} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
@@ -204,7 +195,7 @@ function NewTools() {
                     /><br />
                   </Box>
 
-                  <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                  {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>
                       <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                         <TrendingUpIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -248,7 +239,7 @@ function NewTools() {
                         </FormControl><br />
                       </Box>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />

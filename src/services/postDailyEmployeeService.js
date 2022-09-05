@@ -4,8 +4,12 @@ const getAllPosts = () => {
     return http.get('/api/posts')
 }
 
+const create = (data) => {
+    return http.post('/api/posts', data)
+}
+
 const exportedObject = {
-    getAllPosts
+    getAllPosts, create
 }
 
 export default exportedObject

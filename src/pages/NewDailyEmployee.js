@@ -27,6 +27,7 @@ import swal from '@sweetalert/with-react';
 
 import dailyEmployeeService from '../services/dailyEmployeeService';
 import postDailyEmployeeService from '../services/postDailyEmployeeService';
+import Post from './Post';
 
 function NewDailyEmployee() {
   
@@ -164,6 +165,7 @@ function NewDailyEmployee() {
         >
           Retour
         </Button>
+        <Post />
       </Typography>
 
       <Container maxWidth="xxl">
