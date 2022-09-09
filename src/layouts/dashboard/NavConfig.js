@@ -49,9 +49,15 @@ const navConfig = [
   // },
   {
     category: 'tools',
-    title: 'Listes des outils',
+    title: 'Outillages personnel',
     path: '/tools/personnal',
-    icon: getIcon('ic:list'),
+    icon: getIcon('la:user'),
+  },
+  {
+    category: 'tools',
+    title: 'Outillages commun',
+    path: '/tools/common',
+    icon: getIcon('la:users'),
   },
   {
     category: 'presence',

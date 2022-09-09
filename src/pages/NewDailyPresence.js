@@ -1,16 +1,7 @@
 import React,{useState, useEffect} from 'react';
 import AppWidgetSummary from '../sections/@dashboard/app/AppWidgetSummary';
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Container from '@mui/material/Container';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
+import { Box, Card, CardContent, Container, InputLabel, MenuItem, FormControl, Select, Paper, Button } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
@@ -150,7 +141,6 @@ function NewDailyPresence() {
         } else {
           return(<b>{data.row.presence_salary} Ar</b>)
         }
-        
       }
     },
   ]
@@ -218,10 +208,29 @@ function NewDailyPresence() {
           day_id: res.data.day_id,
           status: res.data.status
         })
+        dailyPresenceService.salary(dailyemployee_id)
+        dailyPresenceService.setPresence(dailyemployee_id)
         window.location.reload(true)
       })
     }
   }
+
+  //show dashboard
+  const [totalSalary, setTotalSalary] = useState(0)
+  const [nbPresence, setNbPresence] = useState(0)
+
+  const getSalary = () => {
+    dailyPresenceService.getSalary(dailyemployee_id).then((res) => { setTotalSalary(res.data.total_salary) }).catch(err => { console.log(err) })
+  }
+
+  const getNbPresence = () => {
+    dailyPresenceService.nbPresence(dailyemployee_id).then((res) => { setNbPresence(res.data.nb_presence) }).catch(err => { console.log(err) })
+  }
+
+  useEffect(() => {
+    getSalary()
+    getNbPresence()
+  })
 
   return (
     <div>
@@ -380,7 +389,7 @@ function NewDailyPresence() {
 
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL NOMBRE DE JOURS TRAVAILLES" total={0} color="warning" icon={'ant-design:shopping-filled'} />
+                <AppWidgetSummary title="TOTAL NOMBRE DE JOURS TRAVAILLES" total={nbPresence} color="warning" icon={'ant-design:shopping-filled'} />
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
@@ -392,7 +401,7 @@ function NewDailyPresence() {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL SALAIRE" total={0} color="success" icon={'ant-design:gift-filled'} />
+                <AppWidgetSummary title="TOTAL SALAIRE" total={totalSalary} color="success" icon={'ant-design:gift-filled'} />
               </Grid>
             </Grid>
           </Container><br />

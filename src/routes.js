@@ -14,7 +14,6 @@ import NewDailyEmployee from './pages/NewDailyEmployee';
 import MonthlyEmployee from './pages/MonthlyEmployee';
 import NewMonthlyEmployee from './pages/NewMonthlyEmployee';
 import PersonnalTools from './pages/PersonnalTools';
-import NewTools from './pages/NewTools';
 import DailyPresence from './pages/DailyPresence';
 import MonthlyPresence from './pages/MonthlyPresence';
 import UpdateDailyEmployee from './pages/UpdateDailyEmployee';
@@ -24,6 +23,10 @@ import EmployeePresence from './pages/EmployeePresence';
 import ToolsDailyEmployee from './pages/ToolsDailyEmployee';
 import NewDailyPresence from './pages/NewDailyPresence';
 import ToolsMonthlyEmployee from './pages/ToolsMonthlyEmployee';
+import CommonTools from './pages/CommonTools';
+import UpdateCommonTools from './pages/UpdateCommonTools';
+import NewPersonnalTools from './pages/NewPersonnalTools';
+import NewCommonTools from './pages/NewCommonTools';
 
 
 // ----------------------------------------------------------------------
@@ -63,8 +66,11 @@ export default function Router() {
       path: '/tools', element: <DashboardLayout />,
       children: [
         { path: 'personnal', element: <PersonnalTools /> },
-        { path: 'new-tool', element: <NewTools /> },
+        { path: 'newpersonnaltool', element: <NewPersonnalTools /> },
+        { path: 'newcommontool', element: <NewCommonTools /> },
+        { path: 'common', element: <CommonTools /> },
         { path: 'updatepersonnal/:id', element: <UpdatePersonnalTools /> },
+        { path: 'updatecommon/:id', element: <UpdateCommonTools /> },
       ]
     },
     {

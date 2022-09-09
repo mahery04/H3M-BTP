@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, Card, CardContent, Container, Typography, Box, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
+import { Button, Card, CardContent, Container, Typography, Box, InputLabel, MenuItem, FormControl} from '@mui/material';
 
-import { useNavigate } from 'react-router-dom';
-import { Grid, TextField } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { TextField } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -14,15 +14,15 @@ import PortraitIcon from '@mui/icons-material/Portrait';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import FeedIcon from '@mui/icons-material/Feed';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TwoKIcon from '@mui/icons-material/TwoK';
 
+import Select from '@mui/material/Select';
 import moment from 'moment';
-import swal from '@sweetalert/with-react';
 
-import personnalToolsService from '../services/personnalToolsService'
+import commonToolsService from '../services/commonToolsService'
 
-function NewTools() {
+function UpdateCommonTools() {
+
   const [date, setDate] = useState(null);
   const [affectation, setAffectation] = useState('');
   const [responsable, setResponsable] = useState('');
@@ -30,7 +30,7 @@ function NewTools() {
   const [employees, setEmployees] = useState([]);
 
   const getEmployee = () => {
-    personnalToolsService.getEmployee().then((res) => {
+    commonToolsService.getEmployee().then((res) => {
       setEmployees(res.data)
     }).catch(err => {
       console.log(err)
@@ -43,19 +43,34 @@ function NewTools() {
 
   const initialToolsState = {
     id:                     null,
-    purchase_date:          '',
+    purchase_date:          date,
     identification_number:  '',
     article_name:           '',
     assignation_place:      '',
     statue:                 statue,
     historical:             '',
     material_number:        '',
-    affectation_type:       affectation,
-    responsable:            responsable,
-    tooling_id:             '',
+    // responsable:            responsable,
+    tooling_id:             affectation,
   }
 
+  const findData = useParams()
+  const tool_id = findData.id
+
+  const [loaded, setLoaded] = useState(false)
   const [tools, setTools] = useState(initialToolsState)
+
+  useEffect(() => {
+    const load = async () => {
+      const res = await commonToolsService.get(tool_id)
+      console.log(res.data)
+      setTools(res.data)
+      setLoaded(true)
+    }
+    if (tool_id && !loaded) load()
+  }, [tool_id, loaded])
+
+  console.log(loaded)
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -67,12 +82,6 @@ function NewTools() {
     setDate(d)
     setTools({ ...tools, purchase_date: d })
   }
-
-  const handleAffectationChange = (event) => {
-    const affectation = event.target.value
-    setAffectation(affectation);
-    setTools({ ...tools, affectation_type: affectation })
-  };
 
   const handleResponsableChange = (event) => {
     const employee = event.target.value
@@ -86,18 +95,11 @@ function NewTools() {
     setTools({ ...tools, statue: state })
   };
 
-  console.log(tools.affectation_type, tools)
-
-  let setDisable = false
-  if (affectation === "Personnel") {
-    setDisable = false
-  } else {
-    setDisable = true
-  }
+  console.log(tools.tooling_id, tools)
 
   const navigate = useNavigate()
 
-  const saveTools = e => {
+  const updateTools = e => {
     e.preventDefault()
 
     var data = {
@@ -108,19 +110,11 @@ function NewTools() {
       statue:                 tools.statue,
       historical:             tools.historical,
       material_number:        tools.material_number,
-      // affectation_type:       tools.affectation_type,
-      // responsable:            tools.responsable,
+    //   responsable:            tools.responsable,
       tooling_id:             tools.tooling_id,
     }
-    if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.historical <= 0 ||  tools.material_number <= 0) {
-      swal({
-        title: "Un erreur est survenu!",
-        text: "Veuillez remplir tous les formulaires",
-        icon: "error",
-        button: "OK",
-      });
-    } else {
-      personnalToolsService.create(data).then(res => {
+
+    commonToolsService.update(tool_id, data).then(res => {
         setTools({
           id:                     res.data.id,
           purchase_date:          res.data.purchase_date,
@@ -130,36 +124,36 @@ function NewTools() {
           statue:                 res.data.statue,
           historical:             res.data.historical,
           material_number:        parseInt(res.data.material_number),
-          // affectation_type:       res.data.affectation_type,
-          // responsable:            res.data.responsable,
+        //   responsable:            res.data.responsable,
           tooling_id:             res.data.tooling_id,
         })
         console.log(res.data)
-      }).catch(err => {
+    }).catch(err => {
         console.log(err)
-      })
-      navigate('/tools/personnal?inserted')
-    }
+    })
+      navigate('/tools/common?updated')
+
   }
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Création d'un nouveau outil
+        Modification de l'outil
       </Typography>
 
       <Container maxWidth="xxl">
-        <Card sx={{ height: '100%', width: '95%' }}>
+        <Card sx={{ height: 820, width: '95%' }}>
           <CardContent>
-            <form onSubmit={saveTools} noValidate autoComplete='off'>
+            <form onSubmit={updateTools} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Container maxWidth="xl" sx={{ lineHeight: 5 }}>
+
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       label="Date d'achat"
                       id="purchase_date"
                       name="purchase_date"
-                      value={date}
+                      value={tools.purchase_date}
                       onChange={insertDate}
                       renderInput={(params) =>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -195,51 +189,25 @@ function NewTools() {
                     /><br />
                   </Box>
 
-                  {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <TrendingUpIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
-                          <InputLabel id="tooling_id">Type d'affectation</InputLabel>
-                          <Select
-                            labelId="tooling_id"
-                            id="tooling_id"
-                            value={affectation}
-                            onChange={handleAffectationChange}
-                            label="Age"
-                          >
-                            <MenuItem value={1}>
-                              <em>None</em>
-                            </MenuItem>
-                            <MenuItem value="Personnel">Personnel</MenuItem>
-                            <MenuItem value="Commun">Commun</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Box>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
-                          <InputLabel htmlFor="grouped-native-select" id="responable">Responsable</InputLabel>
-                          <Select 
-                            native 
-                            id="grouped-native-select" 
-                            label="Responsable"  
-                            disabled={setDisable}
-                            value={responsable}
+                 
+                {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
+                        <InputLabel htmlFor="grouped-native-select" id="responable">Responsable</InputLabel>
+                        <Select
+                            native
+                            id="grouped-native-select"
+                            label="Responsable"
+                            value={tools.responsable}
                             onChange={handleResponsableChange}
-                          >
+                        >
                             <option value=''></option>
                             {employees.map(employee => (
-                              <option key={employee.matricule} value={`${employee.firstname} ${employee.lastname}`}>{employee.firstname} {employee.lastname}</option>
+                                <option key={employee.matricule} value={`${employee.firstname} ${employee.lastname}`}>{employee.firstname} {employee.lastname}</option>
                             ))}
-                          </Select>
-                        </FormControl><br />
-                      </Box>
-                    </Grid>
-                  </Grid> */}
+                        </Select>
+                    </FormControl><br />
+                </Box> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -261,7 +229,7 @@ function NewTools() {
                       <Select
                         labelId="statue"
                         id="statue"
-                        value={statue}
+                        value={tools.statue}
                         onChange={handleStatueChange}
                         label="Age"
                       >
@@ -287,7 +255,7 @@ function NewTools() {
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
-                  
+
                   <TextField 
                     id="historical" 
                     value={tools.historical}
@@ -305,18 +273,22 @@ function NewTools() {
                     color="primary"
                     sx={{ width: 250 }}
                     startIcon={<AddIcon />}
-                    onClick={saveTools}
+                    onClick={updateTools}
                   >
-                    Créer
+                    Modifier
                   </Button>
+
                 </Container>
+
               </Box>
             </form>
           </CardContent>
         </Card>
+
+
       </Container>
     </div>
   )
 }
 
-export default NewTools
+export default UpdateCommonTools

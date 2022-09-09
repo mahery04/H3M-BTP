@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Paper, Container, Typography, Box } from '@mui/material';
+import { Button, Paper, Container, Typography, Box, Tooltip } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
@@ -10,6 +10,8 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+
 import { Link } from 'react-router-dom';
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
@@ -62,6 +64,16 @@ function PersonnalTools() {
       }
     }},
     { field: 'material_number',       headerName: 'Nombre de matériel',       width: 150, type: 'number' },
+    { field: 'historical',            headerName: 'Historique',               width: 100, type: 'action', 
+    renderCell: (data) => {
+        if (data.row.historical)
+        return (
+          <Tooltip title={data.row.historical}>
+            <InfoIcon sx={{ color: 'grey' }}/>
+          </Tooltip>
+        )
+      }},
+    { field: 'assignation_place',     headerName: 'Lieu d\'affectation',      width: 150, type: 'number' },
     { field: 'action',                headerName: 'Action',                   width: 200, type: 'actions',
       renderCell: (data) => {
         return (
@@ -91,8 +103,6 @@ function PersonnalTools() {
     assignation_place:      personnaltool.assignation_place,
     statue:                 personnaltool.statue,
     material_number:        personnaltool.material_number,
-    affectation_type:       personnaltool.affectation_type,
-    responsable:            personnaltool.responsable,
     etat:                   personnaltool.etat,
     historical:             personnaltool.historical,
   }))
@@ -117,14 +127,14 @@ function PersonnalTools() {
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Listes des outillages 
+        Outillages Personnels
           <Button
             size="medium"
             variant="outlined"
             color="primary"
             sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
             startIcon={<AddIcon />}
-            href='/tools/new-tool'
+            href='/tools/newpersonnaltool'
           >
             Nouveau outil
           </Button>

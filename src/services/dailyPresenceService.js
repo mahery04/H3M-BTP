@@ -16,8 +16,24 @@ const action = (id, data) => {
     return http.put(`/api/dailypresence/${id}`, data)
 }
 
+const salary = (id) => {
+    return http.put(`/api/weekpresence/salary/${id}`)
+}
+
+const getSalary = (id) => {
+    return http.get(`/api/weekpresence/salary/${id}`)
+}
+
+const setPresence = (id) => {
+    return http.put(`/api/weekpresence/presence/${id}`)
+}
+
+const nbPresence = (id) => {
+    return http.get(`/api/weekpresence/presence/${id}`)
+}
+
 const exportedObject = {
-    getAll, create, update, action
+    getAll, create, update, action, salary, getSalary, setPresence, nbPresence
 }
 
 export default exportedObject
