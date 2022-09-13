@@ -32,8 +32,12 @@ const nbPresence = (id) => {
     return http.get(`/api/weekpresence/presence/${id}`)
 }
 
+const history = (id) => {
+    return http.get(`/api/weekpresence/history/${id}`)
+}
+
 const exportedObject = {
-    getAll, create, update, action, salary, getSalary, setPresence, nbPresence
+    getAll, create, update, action, salary, getSalary, setPresence, nbPresence, history
 }
 
 export default exportedObject

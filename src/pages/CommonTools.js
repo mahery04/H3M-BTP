@@ -21,21 +21,21 @@ import Label from '../components/Label';
 
 const CommonTools = () => {
 
-    const notification = () => {
-        let url = window.location.href
-        let param = url.split('?')
-        console.log(param[1])
-        if (param[1] === 'inserted') {
-            swal("", "Outil inseré avec succés!", "success");
-        } else if (param[1] === 'deleted') {
-            swal("", "Outil supprimé avec succés!", "success");
-        } else if (param[1] === 'updated') {
-            swal("", "Outil modifié avec succés!", "success");
-        }
+  const notification = () => {
+    let url = window.location.href
+    let param = url.split('?')
+    console.log(param[1])
+    if (param[1] === 'inserted') {
+      swal("", "Outil inseré avec succés!", "success");
+    } else if (param[1] === 'deleted') {
+      swal("", "Outil supprimé avec succés!", "success");
+    } else if (param[1] === 'updated') {
+      swal("", "Outil modifié avec succés!", "success");
     }
-    notification()
+  }
+  notification()
 
-    const [commontools, setCommontools] = useState([])
+  const [commontools, setCommontools] = useState([])
 
   const getCommonTools = () => {
     commonToolsService.getAll().then((res) => {
@@ -55,15 +55,15 @@ const CommonTools = () => {
     { field: 'article_name',          headerName: 'Nom de l\'article',        width: 200 },
     { field: 'assignation_place',     headerName: 'Lieu d\'affectation',      width: 150, type: 'number' },
     { field: 'statue',                headerName: 'Etat',                     width: 80, type: 'action',
-    renderCell: (data) => {
-      if (data.row.statue==='Nouveau') {
-        return( <Label variant="ghost" color='success'>Nouveau</Label> )
-      } else if(data.row.statue==='Occasion') {
-        return( <Label variant="ghost" color='warning'>Occasion</Label> )
-      }
-    }},
+      renderCell: (data) => {
+        if (data.row.statue === 'Nouveau') {
+          return (<Label variant="ghost" color='success'>Nouveau</Label>)
+        } else if (data.row.statue === 'Occasion') {
+          return (<Label variant="ghost" color='warning'>Occasion</Label>)
+        }
+      }},
     { field: 'material_number',       headerName: 'Nombre de matériel',       width: 100, type: 'number' },
-    { field: 'historical',            headerName: 'Historique',               width: 100, type: 'action', 
+    { field: 'historical',            headerName: 'Remarque',               width: 100, type: 'action', 
     renderCell: (data) => {
         if (data.row.historical)
         return (

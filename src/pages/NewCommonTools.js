@@ -107,7 +107,7 @@ function NewCommonTools() {
       historical:             tools.historical,
       material_number:        tools.material_number,
     }
-    if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.historical <= 0 ||  tools.material_number <= 0) {
+    if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.material_number <= 0) {
       swal({
         title: "Un erreur est survenu!",
         text: "Veuillez remplir tous les formulaires",
@@ -285,7 +285,7 @@ function NewCommonTools() {
                     value={tools.historical}
                     onChange={handleInputChange}
                     name="historical" 
-                    label="Historique" 
+                    label="Remarque" 
                     variant="standard" 
                     sx={{ width: '100%', marginTop: 4 }} 
                   />

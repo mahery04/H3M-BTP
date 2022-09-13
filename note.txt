@@ -1,11 +1,8 @@
-- verify backend model and react id
-- compare branch master
-- set cin varchar(50)
-- add mask cin and contact in front
-- clean imports
-- clean all files with new folder
 - loading before getAll
-
-- custom status to badge (CHECK)
-- add new post
-- add "retour" button for new/update
+- global view in daily presence
+- export pdf in global view
+- monthly presence concept
+- ...
+- contrat/famille crud
+- login/signup
+- 

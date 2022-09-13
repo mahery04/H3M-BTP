@@ -252,7 +252,7 @@ function NewMonthlyEmployee() {
                         value={monthlyemployee.code_chantier}
                         onChange={handleInputChange}
                         name="code_chantier"
-                        label="Code chantier"
+                        label="Code"
                         variant="standard"
                         sx={{ width: '100%' }}
                       /><br />

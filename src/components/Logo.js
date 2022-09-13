@@ -15,7 +15,7 @@ export default function Logo({ disabledLink = false, sx }) {
   const theme = useTheme();
 
   // OR
-  const logo = <Box component="img" src="/static/logo_h3m.png" sx={{ width: 150, height: 100, ...sx }} />
+  const logo = <Box component="img" src="/static/logo_h3m.png" sx={{ width: 150, height: 80, ...sx }} />
 
   // const logo = (
   //   <Box sx={{ width: 40, height: 40, ...sx }}>

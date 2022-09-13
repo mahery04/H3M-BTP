@@ -45,10 +45,11 @@ function NewDailyPresence() {
   const [lastdate, setLastdate] = useState(null)
 
   const initialWeekState = {
-    id:         null,
-    month:      moment(month.$d).format('MMMM YYYY'),
-    first_date: firstdate,
-    last_date:  lastdate
+    id:                 null,
+    month:              moment(month.$d).format('MMMM YYYY'),
+    first_date:         firstdate,
+    last_date:          lastdate,
+    dailyemployee_id:   dailyemployee_id
   }
   const [week, setWeek] = useState(initialWeekState)
 
@@ -73,9 +74,10 @@ function NewDailyPresence() {
   const saveWeek = e => {
     e.preventDefault()
     var data = {
-      month:        week.month,
-      first_date:   week.first_date,
-      last_date:    week.last_date,
+      month:            week.month,
+      first_date:       week.first_date,
+      last_date:        week.last_date,
+      dailyemployee_id: week.dailyemployee_id,
     }
     if (!data.first_date || !data.last_date) {
       swal({
@@ -87,10 +89,11 @@ function NewDailyPresence() {
     } else {
       dailyPresenceService.create(dailyemployee_id, data).then(res => {
         setWeek({
-          id:         res.data.id,
-          month:      res.data.month,
-          first_date: res.data.firstdate,
-          last_date:  res.data.last_date,
+          id:               res.data.id,
+          month:            res.data.month,
+          first_date:       res.data.firstdate,
+          last_date:        res.data.last_date,
+          dailyemployee_id: res.data.dailyemployee_id,
         })
         window.location.reload(true)
       })
@@ -159,9 +162,9 @@ function NewDailyPresence() {
   const [salary, setSalary] = useState(0)
 
   const initialPresenceState = {
-    id:               null,
-    day_id:           dayValue,
-    status:           statusValue,
+    id:     null,
+    day_id: dayValue,
+    status: statusValue,
   }
   const [presence, setPresence] = useState(initialPresenceState)
 
@@ -203,11 +206,6 @@ function NewDailyPresence() {
       });
     } else {
       dailyPresenceService.action(dailyemployee_id, data).then(res => {
-        setPresence({
-          id:     res.data.id,
-          day_id: res.data.day_id,
-          status: res.data.status
-        })
         dailyPresenceService.salary(dailyemployee_id)
         dailyPresenceService.setPresence(dailyemployee_id)
         window.location.reload(true)
