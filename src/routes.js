@@ -29,6 +29,7 @@ import NewPersonnalTools from './pages/NewPersonnalTools';
 import NewCommonTools from './pages/NewCommonTools';
 import NewMonthlyPresence from './pages/NewMonthlyPresence';
 import DailyPresenceHistory from './pages/DailyPresenceHistory';
+import DailyPresenceView from './pages/DailyPresenceView';
 
 
 // ----------------------------------------------------------------------
@@ -84,6 +85,7 @@ export default function Router() {
         { path: 'newdailypresence/:id', element: <NewDailyPresence /> },
         { path: 'newmonthlypresence/:id', element: <NewMonthlyPresence /> },
         { path: 'dailypresence-history/:id', element: <DailyPresenceHistory /> },
+        { path: 'dailypresence-view', element: <DailyPresenceView /> },
       ]
     },
     // { path: '*', element: <Navigate to="/404" replace /> },

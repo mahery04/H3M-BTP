@@ -121,7 +121,7 @@ function NewDailyPresence() {
         if (!data.row.date) {
           return ''
         } else {
-          return moment(presence.date).format('YYYY-MM-DD')
+          return moment(data.row.date).format('YYYY-MM-DD')
         }
       }
     },
@@ -208,6 +208,7 @@ function NewDailyPresence() {
       dailyPresenceService.action(dailyemployee_id, data).then(res => {
         dailyPresenceService.salary(dailyemployee_id)
         dailyPresenceService.setPresence(dailyemployee_id)
+        dailyPresenceService.setAbsence(dailyemployee_id)
         window.location.reload(true)
       })
     }
@@ -216,6 +217,7 @@ function NewDailyPresence() {
   //show dashboard
   const [totalSalary, setTotalSalary] = useState(0)
   const [nbPresence, setNbPresence] = useState(0)
+  const [nbAbsence, setNbAbsence] = useState(0)
 
   const getSalary = () => {
     dailyPresenceService.getSalary(dailyemployee_id).then((res) => { setTotalSalary(res.data.total_salary) }).catch(err => { console.log(err) })
@@ -225,9 +227,14 @@ function NewDailyPresence() {
     dailyPresenceService.nbPresence(dailyemployee_id).then((res) => { setNbPresence(res.data.nb_presence) }).catch(err => { console.log(err) })
   }
 
+  const getNbAbsence = () => {
+    dailyPresenceService.nbAbsence(dailyemployee_id).then((res) => { setNbAbsence(res.data.nb_absence) }).catch(err => { console.log(err) })
+  }
+
   useEffect(() => {
     getSalary()
     getNbPresence()
+    getNbAbsence()
   })
 
   return (
@@ -391,11 +398,7 @@ function NewDailyPresence() {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL NOMBRE D'ABSENCE" total={0} color="error" icon={'ant-design:tag-filled'} />
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL AVANCE SALAIRE" total={0} icon={'ant-design:alert-filled'} />
+                <AppWidgetSummary title="TOTAL NOMBRE D'ABSENCE" total={nbAbsence} color="error" icon={'ant-design:tag-filled'} />
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>

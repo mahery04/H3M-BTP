@@ -40,6 +40,13 @@ function DailyPresence() {
       renderCell: (data) => {
         return (
           <>
+            <Link to={'/presence/dailypresence-history/' + data.id}>
+              <Tooltip title="Historique">
+                <IconButton component="label">
+                  <HistoryIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
             <Link to={'/presence/newdailypresence/' + data.id}>
               <Button
                 variant="outlined"
@@ -47,13 +54,6 @@ function DailyPresence() {
               >
                 Voir présence
               </Button>
-            </Link>
-            <Link to={'/presence/dailypresence-history/' + data.id}>
-              <Tooltip title="Historique">
-                <IconButton component="label">
-                  <HistoryIcon />
-                </IconButton>
-              </Tooltip>
             </Link>
           </>
         )
@@ -71,7 +71,7 @@ function DailyPresence() {
   }))
 
   return (
-    <div>
+    <>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
         Présence des employés journaliers
         <Button
@@ -80,7 +80,7 @@ function DailyPresence() {
           color="primary"
           sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
           startIcon={<VisibilityIcon />}
-          href='/employee/new-dailyemployee'
+          href='/presence/dailypresence-view'
         >
           Vue global
         </Button>
@@ -100,7 +100,7 @@ function DailyPresence() {
           </Box>
         </Paper>
       </Container>
-    </div>
+    </>
   )
 }
 

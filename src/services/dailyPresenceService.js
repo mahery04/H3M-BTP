@@ -4,6 +4,10 @@ const getAll = (id) => {
     return http.get(`/api/weekpresence/${id}`)
 }
 
+const getMonth = () => {
+    return http.get(`/api/weekpresence/month`)
+}
+
 const create = (id, data) => {
     return http.post(`/api/weekpresence/${id}`, data)
 }
@@ -32,12 +36,20 @@ const nbPresence = (id) => {
     return http.get(`/api/weekpresence/presence/${id}`)
 }
 
+const setAbsence = (id) => {
+    return http.put(`/api/weekpresence/absence/${id}`)
+}
+
+const nbAbsence = (id) => {
+    return http.get(`/api/weekpresence/absence/${id}`)
+}
+
 const history = (id) => {
     return http.get(`/api/weekpresence/history/${id}`)
 }
 
 const exportedObject = {
-    getAll, create, update, action, salary, getSalary, setPresence, nbPresence, history
+    getAll, getMonth, create, update, action, salary, getSalary, setPresence, setAbsence, nbAbsence, nbPresence, nbPresence, history
 }
 
 export default exportedObject

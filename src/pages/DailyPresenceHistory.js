@@ -8,6 +8,7 @@ import { Box, Breadcrumbs, Button, Container, Paper, Stack, Typography } from '@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { DataGrid } from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid-premium';
 
 import dailyEmployeeService from '../services/dailyEmployeeService'
 import dailyPresenceService from '../services/dailyPresenceService'
@@ -42,11 +43,12 @@ const DailyPresenceHistory = () => {
     }, [])
 
     const columns = [
-        { field: 'month', headerName: 'Mois de', width: 150},
-        { field: 'first_date', headerName: 'Date de début', width: 150},
-        { field: 'last_date', headerName: 'Date de fin', width: 150},
-        { field: 'nb_present', headerName: 'Present', width: 150},
-        { field: 'total_salary', headerName: 'Total salaire', width: 150}
+        { field: 'month',           headerName: 'Mois de',          width: 150},
+        { field: 'first_date',      headerName: 'Date de début',    width: 150},
+        { field: 'last_date',       headerName: 'Date de fin',      width: 150},
+        { field: 'nb_present',      headerName: 'Present',          width: 150},
+        { field: 'nb_absent',       headerName: 'Absent',           width: 150},
+        { field: 'total_salary',    headerName: 'Total salaire',    width: 150}
     ]
     const rows = historicals.map(historical => ({
         id:             historical.weekpresence_id,
@@ -54,6 +56,7 @@ const DailyPresenceHistory = () => {
         first_date:     moment(historical.first_date).format('YYYY-MM-DD'),
         last_date:      moment(historical.last_date).format('YYYY-MM-DD'),
         nb_present:     historical.nb_present,
+        nb_absent:      historical.nb_absent,
         total_salary:   historical.total_salary,
     }))
 
@@ -93,6 +96,7 @@ const DailyPresenceHistory = () => {
                         <DataGrid
                             rows={rows}
                             columns={columns}
+                            components={{ Toolbar: GridToolbar }}
                             pageSize={7}
                             rowsPerPageOptions={[7]}
                             disableSelectionOnClick

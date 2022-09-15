@@ -121,7 +121,7 @@ const NewMonthlyPresence = () => {
           if (!data.row.date) {
             return ''
           } else {
-            return moment(presence.date).format('YYYY-MM-DD')
+            return moment(data.row.date).format('YYYY-MM-DD')
           }
         }
       },
@@ -232,6 +232,33 @@ const NewMonthlyPresence = () => {
     }
 
     //show dashboard
+    const [nbPresence, setNbPresence] = useState(0)
+    const [nbAbsence, setNbAbsence] = useState(0)
+    const [totalAdvance, setTotalAdvance] = useState(0)
+    const [totalSalary, setTotalSalary] = useState(0)
+
+    const getNbPresence = () => {
+      monthlyPresenceService.nbPresence(monthlyemployee_id).then((res) => { setNbPresence(res.data.nb_presence) }).catch(err => { console.log(err) })
+    }
+  
+    const getNbAbsence = () => {
+      monthlyPresenceService.nbAbsence(monthlyemployee_id).then((res) => { setNbAbsence(res.data.nb_absence) }).catch(err => { console.log(err) })
+    }
+
+    const getAdvance = () => {
+      monthlyPresenceService.getAdvance(monthlyemployee_id).then((res) => { setTotalAdvance(res.data.total_advance) }).catch(err => { console.log(err) })
+    }
+
+    const getSalary = () => {
+      monthlyPresenceService.getSalary(monthlyemployee_id).then((res) => { setTotalSalary(res.data.total_salary) }).catch(err => { console.log(err) })
+    }
+
+    useEffect(() => {
+      getNbPresence()
+      getNbAbsence()
+      getAdvance()
+      getSalary()
+    })
 
   return (
     <div>
@@ -426,19 +453,19 @@ const NewMonthlyPresence = () => {
 
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL NOMBRE DE JOURS TRAVAILLES" total={0} color="warning" icon={'ant-design:shopping-filled'} />
+                <AppWidgetSummary title="TOTAL NOMBRE DE JOURS TRAVAILLES" total={nbPresence} color="warning" icon={'ant-design:shopping-filled'} />
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL NOMBRE D'ABSENCE" total={0} color="error" icon={'ant-design:tag-filled'} />
+                <AppWidgetSummary title="TOTAL NOMBRE D'ABSENCE" total={nbAbsence} color="error" icon={'ant-design:tag-filled'} />
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL AVANCE SALAIRE" total={0} icon={'ant-design:alert-filled'} />
+                <AppWidgetSummary title="TOTAL AVANCE SALAIRE" total={totalAdvance} icon={'ant-design:alert-filled'} />
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL SALAIRE" total={0} color="success" icon={'ant-design:gift-filled'} />
+                <AppWidgetSummary title="TOTAL SALAIRE" total={totalSalary} color="success" icon={'ant-design:gift-filled'} />
               </Grid>
             </Grid>
           </Container><br />
