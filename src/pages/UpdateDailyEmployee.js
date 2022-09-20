@@ -74,7 +74,6 @@ function UpdateDailyEmployee(props) {
   useEffect(() => {
     const load = async () => {
       const res = await dailyEmployeeService.get(dailyemployee_id)
-      console.log("RES LAVA BE ", res.data);
       setDailyemployee(res.data)
       setLoaded(true)
     }
@@ -82,8 +81,6 @@ function UpdateDailyEmployee(props) {
       load();
     }
   }, [dailyemployee_id, loaded])
-
-  console.log(loaded)
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -111,8 +108,6 @@ function UpdateDailyEmployee(props) {
     setDate(d);
     setDailyemployee({ ...dailyemployee, hiring_date: d })
   }
-
-  console.log(dailyemployee)
 
   const navigate = useNavigate()
 
@@ -160,7 +155,6 @@ function UpdateDailyEmployee(props) {
           status:       res.data.status,
           remarque:     res.data.remarque
         })
-        console.log(res.data)
       }).catch(err => {
         console.log(err)
       })

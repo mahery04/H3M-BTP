@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import swal from '@sweetalert/with-react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, MenuItem, Avatar, IconButton } from '@mui/material';
@@ -10,6 +12,7 @@ import account from '../../_mock/account';
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const navigate = useNavigate()
   const anchorRef = useRef(null);
 
   const [open, setOpen] = useState(null);
@@ -21,6 +24,22 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  const logout = e => {
+    e.preventDefault()
+    swal({
+      text: "Voulez-vous vous déconnecter ?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if(willDelete) { 
+        sessionStorage.removeItem('userInfo')
+        navigate('/login')
+      }
+    });
+  }
 
   return (
     <>
@@ -80,7 +99,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem onClick={logout} sx={{ m: 1 }}>
           Déconnexion
         </MenuItem>
       </MenuPopover>

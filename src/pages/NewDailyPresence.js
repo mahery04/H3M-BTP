@@ -187,7 +187,6 @@ function NewDailyPresence() {
     setStatusValue(statusInput)
     setPresence({ ...presence, status: statusInput})
   }
-  console.log('presence =',presence)
 
   const savePresence = e => {
     e.preventDefault()
@@ -258,7 +257,7 @@ function NewDailyPresence() {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       views={['year', 'month']}
-                      label="Year and Month"
+                      label="Mois et Année"
                       minDate={dayjs('2012-03-01')}
                       maxDate={dayjs('2023-06-01')}
                       value={month}
@@ -402,7 +401,7 @@ function NewDailyPresence() {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL SALAIRE" total={totalSalary} color="success" icon={'ant-design:gift-filled'} />
+                <AppWidgetSummary title="TOTAL SALAIRE - AR" total={totalSalary} color="success" icon={'ant-design:gift-filled'} />
               </Grid>
             </Grid>
           </Container><br />

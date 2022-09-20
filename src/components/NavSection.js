@@ -214,13 +214,14 @@ export default function NavSection({ navConfig, ...other }) {
           {getMenus('family')}
         </AccordionDetails>
       </Accordion>
-       
-      {/* <p style={category}>Dashboard</p>
-      {getMenus('dashboard')} <br />
-      <p style={category}>Employé(e)s</p>
-      {getMenus('employee')} <br />
-      <p style={category}>Outillage</p>
-      {getMenus('tools')} <br /> */}
+      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Cantine</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('cantine')}
+        </AccordionDetails>
+      </Accordion>
     </Box>
   );
 }

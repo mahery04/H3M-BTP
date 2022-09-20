@@ -24,7 +24,6 @@ function DailyEmployee() {
   const notification = () => {
     let url = window.location.href
     let param = url.split('?')
-    console.log(param[1])
     if(param[1] === 'inserted') {
       swal("", "Employé inseré avec succés!", "success");
     } else if(param[1] === 'deleted') {
@@ -52,10 +51,10 @@ function DailyEmployee() {
   const columns = [
     { field: 'id',            headerName: 'Id',               width: 50 },
     { field: 'matricule',     headerName: 'Matricule',        width: 100 },
-    { field: 'firstname',     headerName: 'Nom',              width: 200 },
+    { field: 'firstname',     headerName: 'Nom',              width: 150 },
     { field: 'lastname',      headerName: 'Prénom',           width: 200 },
     { field: 'cin',           headerName: 'Numéro CIN',       width: 150, type: 'number' },
-    { field: 'address',       headerName: 'Adresse',          width: 100 },
+    { field: 'address',       headerName: 'Adresse',          width: 150 },
     { field: 'post_name',     headerName: 'Poste occupé',     width: 150 },
     { field: 'code_chantier', headerName: 'Code Chantier',    width: 150 },
     { field: 'group',         headerName: 'Groupe',           width: 100 },
@@ -122,7 +121,7 @@ function DailyEmployee() {
     contact:      dailyemployee.contact, 
     post_name:    dailyemployee.post_name, 
     code_chantier:dailyemployee.code_chantier,
-    group: dailyemployee.group,
+    group:        dailyemployee.group,
     category:     dailyemployee.category, 
     hiring_date:  moment(dailyemployee.hiring_date).format('YYYY-MM-DD'),
     status:       dailyemployee.status,

@@ -29,7 +29,6 @@ function EmployeePresence() {
   useEffect(() => {
     const load = async () => {
       const res = await dailyEmployeeService.get(employee_id)
-      console.log("RES LAVA BE ", res.data);
       setDailyemployee(res.data)
       setLoaded(true)
     }

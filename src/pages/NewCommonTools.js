@@ -84,8 +84,6 @@ function NewCommonTools() {
     setTools({ ...tools, statue: state })
   };
 
-  console.log(tools.affectation_type, tools)
-
   let setDisable = false
   if (affectation === "Personnel") {
     setDisable = false

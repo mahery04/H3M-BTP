@@ -10,20 +10,20 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
-import dailyPresenceService from '../services/dailyPresenceService';
+import monthlyPresenceService from '../services/monthlyPresenceService';
 
 import moment from 'moment';
 import dayjs from 'dayjs';
 import swal from '@sweetalert/with-react';
 
-const DailyPresenceView = () => {
+const MonthlyPresenceView = () => {
 
   const [months, setMonth] = useState([])
   const [monthValue, setMonthValue] = useState('')
   const [views, setViews] = useState([])
 
   const getMonths = () => {
-    dailyPresenceService.getMonth().then((res)=> {
+    monthlyPresenceService.getMonth().then((res)=> {
       setMonth(res.data)
     }).catch(err => {
       console.log(err);
@@ -43,7 +43,7 @@ const DailyPresenceView = () => {
     e.preventDefault()
 
     var data = { month: monthValue }
-    dailyPresenceService.globalView(data).then(res => {
+    monthlyPresenceService.globalView(data).then(res => {
       setViews(res.data)
     }).catch(err => {
       console.log(err)
@@ -57,18 +57,23 @@ const DailyPresenceView = () => {
     { field: 'post_name',       headerName: 'Poste occupé',         width: 150},
     { field: 'first_date',      headerName: 'Début',                width: 150},
     { field: 'last_date',       headerName: 'Fin',                  width: 150},
-    { field: 'nb_present',      headerName: 'Total présence',        width: 100},
-    { field: 'nb_absent',       headerName: 'Total absence',         width: 100},
+    { field: 'nb_present',      headerName: 'Total present',        width: 100},
+    { field: 'nb_absent',       headerName: 'Total absent',         width: 100},
     { field: 'total_salary',    headerName: 'Total Salaire',        width: 100, type: 'action',
       renderCell: (data) => {
           if (data.row.total_salary) return `${data.row.total_salary} Ar`
       }
     },
-    { field: 'signature',    headerName: 'Signature',        width: 100},
+    { field: 'total_advance',   headerName: 'Total Advance',        width: 150, type: 'action',
+      renderCell: (data) => {
+          if (data.row.total_advance) return `${data.row.total_advance} Ar`
+      }
+    },
+    { field: 'signature',    headerName: 'Signature',               width: 100},
   ]
 
   const rows = views.map(view => ({
-    id:           view.weekpresence_id,
+    id:           view.monthlyweekpresence_id,
     matricule:    view.matricule,
     firstname:    view.firstname,
     lastname:     view.lastname,
@@ -77,20 +82,21 @@ const DailyPresenceView = () => {
     last_date:    moment(view.last_date).format('DD-MM-YYYY'),
     nb_present:   view.nb_present,
     nb_absent:    view.nb_absent,
+    total_advance:view.total_advance,
     total_salary: view.total_salary,
   }))
 
   return (
     <>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Présence des employées journaliers - vue global
+        Présence des employées mensuels - vue global
         <Button
           size="medium"
           variant="outlined"
           color="primary"
           sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
           startIcon={<ArrowBackIcon />}
-          href='/presence/dailypresence'
+          href='/presence/monthlypresence'
         >
           Retour
         </Button>
@@ -140,4 +146,4 @@ const DailyPresenceView = () => {
   )
 }
 
-export default DailyPresenceView
+export default MonthlyPresenceView

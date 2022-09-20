@@ -24,7 +24,6 @@ const CommonTools = () => {
   const notification = () => {
     let url = window.location.href
     let param = url.split('?')
-    console.log(param[1])
     if (param[1] === 'inserted') {
       swal("", "Outil inseré avec succés!", "success");
     } else if (param[1] === 'deleted') {

@@ -76,7 +76,6 @@ function UpdateMonthlyEmployee(props) {
   useEffect(() => {
     const load = async () => {
       const res = await monthlyEmployeeService.get(monthlyemployee_id)
-      console.log("RES LAVA BE ", res.data);
       setMonthlyemployee(res.data)
       setLoaded(true)
     }
@@ -85,7 +84,6 @@ function UpdateMonthlyEmployee(props) {
     }
   }, [monthlyemployee_id, loaded])
 
-  console.log(loaded)
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -107,8 +105,6 @@ function UpdateMonthlyEmployee(props) {
     setPostValue(postInput);
     setMonthlyemployee({...monthlyemployee, post_id: postInput})
   };
-
-  console.log(monthlyemployee)
 
   const navigate = useNavigate();
 
@@ -138,7 +134,6 @@ function UpdateMonthlyEmployee(props) {
       ostie_num:    monthlyemployee.ostie_num,
       cnaps_num:    monthlyemployee.cnaps_num,
     }
-    console.log(monthlyemployee)
 
     if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.group.length <= 0 || data.post_id.length <= 0 || data.status.length <= 0 || data.code_chantier.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.ostie_num.length <= 0 || data.cnaps_num.length <= 0) {
       swal({
@@ -167,14 +162,12 @@ function UpdateMonthlyEmployee(props) {
               ostie_num:    res.data.ostie_num,
               cnaps_num:    res.data.cnaps_num,
           })
-        console.log(res.data)
       }).catch(err => {
         console.log(err)
       })
       navigate('/employee/monthlyemployee?updated')
   }
   }
-  console.log(monthlyemployee)
 
   let showMotif = false
   // useEffect(() => {

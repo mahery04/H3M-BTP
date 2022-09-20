@@ -205,7 +205,6 @@ const NewMonthlyPresence = () => {
       setStatusValue(statusInput)
       setPresence({ ...presence, status: statusInput})
     }
-    console.log('presence =',presence)
 
     const savePresence = e => {
       e.preventDefault()
@@ -227,6 +226,10 @@ const NewMonthlyPresence = () => {
       } else {
         monthlyPresenceService.action(monthlyemployee_id, data).then(res => {
           window.location.reload(true)
+          monthlyPresenceService.setPresence(monthlyemployee_id)
+          monthlyPresenceService.setAbsence(monthlyemployee_id)
+          monthlyPresenceService.advance(monthlyemployee_id)
+          monthlyPresenceService.salary(monthlyemployee_id)
         })
       }
     }
@@ -281,7 +284,7 @@ const NewMonthlyPresence = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       views={['year', 'month']}
-                      label="Year and Month"
+                      label="Mois et Année"
                       minDate={dayjs('2012-03-01')}
                       maxDate={dayjs('2023-06-01')}
                       value={month}
@@ -461,11 +464,11 @@ const NewMonthlyPresence = () => {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL AVANCE SALAIRE" total={totalAdvance} icon={'ant-design:alert-filled'} />
+                <AppWidgetSummary title="TOTAL AVANCE SALAIRE - AR" total={totalAdvance} icon={'ant-design:alert-filled'} />
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL SALAIRE" total={totalSalary} color="success" icon={'ant-design:gift-filled'} />
+                <AppWidgetSummary title="TOTAL SALAIRE - AR" total={totalSalary} color="success" icon={'ant-design:gift-filled'} />
               </Grid>
             </Grid>
           </Container><br />

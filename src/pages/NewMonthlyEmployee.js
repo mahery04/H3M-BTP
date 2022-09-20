@@ -97,8 +97,6 @@ function NewMonthlyEmployee() {
     setMonthlyemployee({ ...monthlyemployee, hiring_date: d })
   }
 
-  console.log(monthlyemployee)
-
   const navigate = useNavigate()
 
   const saveEmployee = e => {
@@ -149,7 +147,6 @@ function NewMonthlyEmployee() {
           ostie_num:      res.data.ostie_num,
           cnaps_num:      res.data.cnaps_num,
         })
-        console.log(res.data)
       }).catch(err => {
         console.log(err)
       })

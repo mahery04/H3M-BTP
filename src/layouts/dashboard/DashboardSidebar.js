@@ -12,7 +12,7 @@ import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 //
-import navConfig from './NavConfig';
+import { navConfig } from './NavConfig';
 
 // ----------------------------------------------------------------------
 

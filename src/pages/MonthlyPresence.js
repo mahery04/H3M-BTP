@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { Typography, Paper, Container, Box, Button } from '@mui/material';
+import { Typography, Paper, Container, Box, Button, Link, Tooltip, IconButton } from '@mui/material';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import HistoryIcon from '@mui/icons-material/History';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
-import { Link } from 'react-router-dom';
 
 import MonthlyEmployeeService from '../services/monthlyEmployeeService'
 
@@ -17,7 +17,6 @@ const MonthlyPresence = () => {
   const getMonthlyEmployees = () => {
     MonthlyEmployeeService.getAll().then((res) => {
       setMonthlyemployees(res.data)
-      console.log(res.data)
     }).catch(err => {
       console.log(err);
     })
@@ -34,17 +33,24 @@ const MonthlyPresence = () => {
     { field: 'lastname',  headerName: 'Prénom',       width: 200 },
     { field: 'contact',   headerName: 'Contact',      width: 150 },
     { field: 'post_name', headerName: 'Post occupé',  width: 100 },
-    { field: 'action',    headerName: 'Action',       width: 150, type: 'action',
+    { field: 'action',    headerName: 'Action',       width: 250, type: 'action',
       renderCell: (data) => {
         return (
           <>
-            <Link to={'/presence/newmonthlypresence/' + data.id}>
-            <Button 
-              variant="outlined" 
-              size="medium"
-            >
-              Voir présence
-            </Button>
+            <Link underline="none" href={'/presence/monthlypresence-history/' + data.id}>
+              <Tooltip title="Historique">
+                <IconButton component="label">
+                  <HistoryIcon sx={{color:'green', width:'55px'}} />
+                </IconButton>
+              </Tooltip>
+            </Link>
+            <Link underline="none" href={'/presence/newmonthlypresence/' + data.id}>
+              <Button 
+                variant="outlined" 
+                size="medium"
+              >
+                Voir présence
+              </Button>
             </Link>
           </>
         )
@@ -71,7 +77,7 @@ const MonthlyPresence = () => {
           color="primary"
           sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
           startIcon={<VisibilityIcon />}
-          href='/employee/new-dailyemployee'
+          href='/presence/monthlypresence-view'
         >
           Vue global
         </Button>

@@ -1,55 +1,65 @@
-import * as Yup from 'yup';
+import axios from 'axios'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFormik, Form, FormikProvider } from 'formik';
 // material
 import { Stack, Checkbox, TextField, IconButton, InputAdornment, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
+import swal from '@sweetalert/with-react';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('L\'e-mail doit être une adresse e-mail valide').required('L\'e-mail est requis'),
-    password: Yup.string().required('Mot de passe requis'),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-      remember: true,
-    },
-    validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate.push('/dashboard', { replace: true });
-    },
-  });
-
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const [login, setLogin] = useState()
+  const [password, setPassword] = useState()
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
 
+  const handleSubmit = async e => {
+    e.preventDefault()
+
+    if (!login || !password) {
+      swal({
+        title: "Un erreur est survenue!",
+        text: "Veuillez remplir tous les formulaires.",
+        icon: "error",
+        button: "OK",
+      });
+    } 
+    else {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { data } = await axios.post(
+        "http://localhost:4000/api/user/login",
+        { login, password },
+        config
+      );
+
+      sessionStorage.setItem("userInfo", JSON.stringify(data));
+      window.location.href = "http://localhost:3000/dashboard/home?welcome";
+    }
+  };
+
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <TextField
             fullWidth
             autoComplete="username"
             type="email"
             label="Adresse mail"
-            {...getFieldProps('email')}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
+            value={login}
+            onChange={e => setLogin(e.target.value)}
           />
 
           <TextField
@@ -57,7 +67,6 @@ export default function LoginForm() {
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
             label="Mot de passe"
-            {...getFieldProps('password')}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -67,26 +76,16 @@ export default function LoginForm() {
                 </InputAdornment>
               ),
             }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
           />
         </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <FormControlLabel
-            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label="Se souvenir de moi"
-          />
+        <br /><br />
 
-          {/* <Link component={RouterLink} variant="subtitle2" to="#" underline="hover">
-            Forgot password?
-          </Link> */}
-        </Stack>
-
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton fullWidth size="large" type="submit" variant="contained">
           Connexion
         </LoadingButton>
-      </Form>
-    </FormikProvider>
+      </form>
   );
 }

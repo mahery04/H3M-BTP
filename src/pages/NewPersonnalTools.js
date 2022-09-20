@@ -86,8 +86,6 @@ function NewPersonnalTools() {
     setTools({ ...tools, statue: state })
   };
 
-  console.log(tools.affectation_type, tools)
-
   let setDisable = false
   if (affectation === "Personnel") {
     setDisable = false
@@ -130,7 +128,6 @@ function NewPersonnalTools() {
           material_number:        parseInt(res.data.material_number),
           tooling_id:             res.data.tooling_id,
         })
-        console.log(res.data)
       }).catch(err => {
         console.log(err)
       })

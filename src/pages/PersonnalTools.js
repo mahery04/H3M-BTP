@@ -24,7 +24,6 @@ function PersonnalTools() {
     const notification = () => {
     let url = window.location.href
     let param = url.split('?')
-    console.log(param[1])
     if(param[1] === 'inserted') {
       swal("", "Outil inseré avec succés!", "success");
     } else if(param[1] === 'deleted') {
@@ -52,9 +51,9 @@ function PersonnalTools() {
   },[])
 
   const columns = [
-    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 80 },
-    { field: 'identification_number', headerName: 'Numéro d\'identification', width: 150 },
-    { field: 'article_name',          headerName: 'Nom de l\'article',        width: 250 },
+    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 150 },
+    { field: 'identification_number', headerName: 'Numéro d\'identification', width: 200 },
+    { field: 'article_name',          headerName: 'Nom de l\'article',        width: 200 },
     { field: 'statue',                headerName: 'Etat',                     width: 80, type: 'action',
     renderCell: (data) => {
       if (data.row.statue==='Nouveau') {

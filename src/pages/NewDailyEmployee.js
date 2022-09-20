@@ -95,8 +95,6 @@ function NewDailyEmployee() {
     setDailyemployee({ ...dailyemployee, hiring_date: d })
   }
 
-  console.log(dailyemployee)
-
   const navigate = useNavigate()
 
   const saveEmployee = e => {
@@ -143,7 +141,6 @@ function NewDailyEmployee() {
           status:       res.data.status,
           remarque:     res.data.remarque
         })
-        console.log(res.data)
       }).catch(err => {
         console.log(err)
       })

@@ -104,8 +104,6 @@ const ToolsDailyEmployee = () => {
         })
     }, [dailyemployee_id])
 
-    console.log(employee)
-
     const getMaterialNumber = (e) => {
         const min = null;
         const max = numberTool;
@@ -123,7 +121,6 @@ const ToolsDailyEmployee = () => {
           setToolDailyEmployee({...toolDailyEmployee, number: materialNumber})
         }
     
-        console.log("MTR", materialNumber);
     }
 
     const handleToolChange = (event) => {
@@ -213,8 +210,6 @@ const ToolsDailyEmployee = () => {
         },
     ];
 
-    console.log(toolDailyEmployee)
-
     const urlFull = window.location.href;
     var materialId = null
     var materialRender = null
@@ -225,7 +220,6 @@ const ToolsDailyEmployee = () => {
     if (urlSplit[2] != null) {
         var materialRender = urlSplit[2].split('=')
     }
-    console.log('material', materialId, materialRender)
     if (open === true) {
         var set = setTimeout(() => {
             setRenderNumber(materialRender[1])

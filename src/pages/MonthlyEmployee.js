@@ -23,7 +23,6 @@ function MonthlyEmployee() {
   const notification = () => {
     let url = window.location.href
     let param = url.split('?')
-    console.log(param[1])
     if(param[1] == 'inserted') {
       swal("", "Employé inseré avec succés!", "success");
     } else if(param[1] == 'deleted') {
@@ -48,7 +47,6 @@ function MonthlyEmployee() {
     getMonthlyEmployees()
   },[])
 
-  console.log(monthlyemployees)
 
   const columns = [
     { field: 'id',            headerName: 'Id',               width: 50 },

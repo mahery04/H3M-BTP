@@ -63,14 +63,12 @@ function UpdateCommonTools() {
   useEffect(() => {
     const load = async () => {
       const res = await commonToolsService.get(tool_id)
-      console.log(res.data)
       setTools(res.data)
       setLoaded(true)
     }
     if (tool_id && !loaded) load()
   }, [tool_id, loaded])
 
-  console.log(loaded)
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -94,8 +92,6 @@ function UpdateCommonTools() {
     setStatue(state);
     setTools({ ...tools, statue: state })
   };
-
-  console.log(tools.tooling_id, tools)
 
   const navigate = useNavigate()
 
@@ -127,7 +123,6 @@ function UpdateCommonTools() {
         //   responsable:            res.data.responsable,
           tooling_id:             res.data.tooling_id,
         })
-        console.log(res.data)
     }).catch(err => {
         console.log(err)
     })

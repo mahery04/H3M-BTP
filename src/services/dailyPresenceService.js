@@ -8,6 +8,10 @@ const getMonth = () => {
     return http.get(`/api/weekpresence/month`)
 }
 
+const globalView = (data) => {
+    return http.post('api/weekpresence/view', data)
+}
+
 const create = (id, data) => {
     return http.post(`/api/weekpresence/${id}`, data)
 }
@@ -49,7 +53,7 @@ const history = (id) => {
 }
 
 const exportedObject = {
-    getAll, getMonth, create, update, action, salary, getSalary, setPresence, setAbsence, nbAbsence, nbPresence, nbPresence, history
+    getAll, getMonth, globalView, create, update, action, salary, getSalary, setPresence, setAbsence, nbAbsence, nbPresence, history
 }
 
 export default exportedObject

@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { Typography, Paper, Container, Box, Button } from '@mui/material';
+import { Typography, Paper, Container, Box, Button, Link, Tooltip, IconButton } from '@mui/material';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import HistoryIcon from '@mui/icons-material/History';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
-import { Link } from 'react-router-dom';
 
 import dailyEmployeeService from '../services/dailyEmployeeService';
 
@@ -35,19 +32,19 @@ function DailyPresence() {
     { field: 'firstname', headerName: 'Nom',          width: 200 },
     { field: 'lastname',  headerName: 'Prénom',       width: 200 },
     { field: 'contact',   headerName: 'Contact',      width: 150 },
-    { field: 'post_name', headerName: 'Post occupé',  width: 100 },
-    { field: 'action',    headerName: 'Action',       width: 200, type: 'action',
+    { field: 'post_name', headerName: 'Post occupé',  width: 200 },
+    { field: 'action',    headerName: 'Action',       width: 250, type: 'action',
       renderCell: (data) => {
         return (
           <>
-            <Link to={'/presence/dailypresence-history/' + data.id}>
+            <Link underline="none" href={'/presence/dailypresence-history/' + data.id}>
               <Tooltip title="Historique">
                 <IconButton component="label">
-                  <HistoryIcon />
+                  <HistoryIcon sx={{color:'green', width:'55px'}} />
                 </IconButton>
               </Tooltip>
             </Link>
-            <Link to={'/presence/newdailypresence/' + data.id}>
+            <Link underline="none" href={'/presence/newdailypresence/' + data.id}>
               <Button
                 variant="outlined"
                 size="medium"

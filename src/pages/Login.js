@@ -23,7 +23,7 @@ const SectionStyle = styled(Card)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   margin: theme.spacing(2, 0, 2, 2),
-  backgroundColor: '#DEDDD7',
+  backgroundColor: '#F9FAFB',
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
@@ -47,10 +47,7 @@ export default function Login() {
       <RootStyle>
         {mdUp && (
           <SectionStyle>
-            <Typography variant="h2" align="center" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Bienvenue
-            </Typography>
-            <img src="/static/illustrations/logo_ergon.png" alt="login" />
+            <img src="/static/illustrations/logo_h3m.png" alt="login" />
           </SectionStyle>
         )}
 
@@ -58,9 +55,7 @@ export default function Login() {
           <ContentStyle>
             <Typography variant="h4" gutterBottom>
               Connecter à votre compte H3M-BTP
-            </Typography>
-
-            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Entrer les détails suivants</Typography>
+            </Typography> <br/>
 
             {/* <AuthSocial /> */}
 
