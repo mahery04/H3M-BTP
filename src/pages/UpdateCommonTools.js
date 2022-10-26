@@ -99,7 +99,7 @@ function UpdateCommonTools() {
     e.preventDefault()
 
     var data = {
-      purchase_date:          tools.purchase_date,
+      purchase_date:          moment(tools.purchase_date).format('YYYY-MM-DD'),
       identification_number:  tools.identification_number,
       article_name:           tools.article_name,
       assignation_place:      tools.assignation_place,

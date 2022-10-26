@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Card, CardContent, Container, TextField, Typography, FormControl, InputLabel, Select, Paper, Box } from '@mui/material'
+import { Button, Card, CardContent, Container, TextField, Typography, FormControl, InputLabel, Select, Paper, Box, Link } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'; 
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
+import Label from '../components/Label';
 import dailyPresenceService from '../services/dailyPresenceService';
 
 import moment from 'moment';
-import dayjs from 'dayjs';
 import swal from '@sweetalert/with-react';
 
 const DailyPresenceView = () => {
@@ -49,7 +44,30 @@ const DailyPresenceView = () => {
       console.log(err)
     })
   }
+
   
+    var isDisabled = false
+
+    const updateValidation = (id) => {
+      swal({
+        text: "Voulez-vous vraiment valider ?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((validate) => {     
+        if (validate) {
+          dailyPresenceService.validationUpdate(id)
+          // const valide = views.filter(view => view.weekpresence_id)
+          // console.log("VAL", valide.validation);
+          // isDisabled = true
+          window.location.reload()
+        }
+      });
+    }
+
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+
   const columns = [
     { field: 'matricule',       headerName: 'Matricule',            width: 90},
     { field: 'firstname',       headerName: 'Nom',                  width: 200},
@@ -57,16 +75,45 @@ const DailyPresenceView = () => {
     { field: 'post_name',       headerName: 'Poste occupé',         width: 150},
     { field: 'first_date',      headerName: 'Début',                width: 150},
     { field: 'last_date',       headerName: 'Fin',                  width: 150},
-    { field: 'nb_present',      headerName: 'Total présence',        width: 100},
-    { field: 'nb_absent',       headerName: 'Total absence',         width: 100},
+    { field: 'nb_present',      headerName: 'Total présence',       width: 150},
+    { field: 'nb_absent',       headerName: 'Total absence',        width: 150},
+    { field: 'validation',          headerName: 'Status',               width: 150,
+      renderCell: (data) => {
+        if (data.row.validation === 'NON VALIDE') {
+          return ( <Label variant="ghost" color='error'>{data.row.validation}</Label> )
+        } else if(data.row.validation === 'VALIDE') {
+          return ( <Label variant="ghost" color='success'>{data.row.validation}</Label> )
+        }
+      }
+    },
     { field: 'total_salary',    headerName: 'Total Salaire',        width: 100, type: 'action',
       renderCell: (data) => {
           if (data.row.total_salary) return `${data.row.total_salary} Ar`
       }
     },
     { field: 'signature',    headerName: 'Signature',        width: 100},
+    { field: 'action',    headerName: 'Action',        width: 100,type:'action',
+      renderCell: (data) => {     
+        if (userInfo.role_id === 1) {
+          if (data.row.validation === 'NON VALIDE') {
+            return (
+              <div>
+                <Button onClick={() => updateValidation(data.id)} variant="contained" color="warning" disabled={isDisabled}>Valider</Button>
+              </div>
+            )
+          } else if (data.row.validation === 'VALIDE') {
+            return (
+              <div>
+                <Button variant="contained" color="warning" disabled>Valider</Button>
+              </div>
+            )
+          }
+        } 
+      }
+    },
   ]
 
+  
   const rows = views.map(view => ({
     id:           view.weekpresence_id,
     matricule:    view.matricule,
@@ -77,6 +124,7 @@ const DailyPresenceView = () => {
     last_date:    moment(view.last_date).format('DD-MM-YYYY'),
     nb_present:   view.nb_present,
     nb_absent:    view.nb_absent,
+    validation:   view.validation,
     total_salary: view.total_salary,
   }))
 

@@ -8,8 +8,12 @@ const create = (data) => {
     return http.post('/api/posts', data)
 }
 
+const remove = (id) => {
+    return http.delete(`/api/posts/${id}`)
+}
+
 const exportedObject = {
-    getAllPosts, create
+    getAllPosts, create, remove
 }
 
 export default exportedObject

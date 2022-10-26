@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, Paper, Container, Typography, Box, Stack, Chip, Link } from '@mui/material';
+import { Button, Paper, Container, Typography, Box, Stack, Chip, Link, Modal } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 import { DataGrid } from '@mui/x-data-grid';
@@ -11,6 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 
 import moment from 'moment';
 import swal from '@sweetalert/with-react';
@@ -19,6 +20,20 @@ import monthlyEmployeeService from '../services/monthlyEmployeeService';
 import Label from '../components/Label';
 
 function MonthlyEmployee() {
+
+  const [open, setOpen] = React.useState(false);
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   const notification = () => {
     let url = window.location.href
@@ -90,16 +105,39 @@ function MonthlyEmployee() {
     { field: 'category',      headerName: 'Categorie',        width: 100 },
     { field: 'hiring_date',   headerName: 'Date d\'embauche', width: 150 },
     { field: 'motif',         headerName: 'Motif',            width: 80, type: 'action', 
-      renderCell: (data) => {
-        if (data.row.motif)
-        return (
-          <Tooltip title={data.row.motif}>
+    renderCell: (data) => {
+      if (data.row.motif)
+      return (
+        <Tooltip title={data.row.motif}>
             <InfoIcon sx={{ color: 'grey' }}/>
           </Tooltip>
         )
       }},
-    { field: 'ostie_num',     headerName: 'Ostie',            width: 150 },
-    { field: 'cnaps_num',     headerName: 'CNAPS',            width: 150 },
+    { field: 'type_contrat',  headerName: 'Type de contrat',  width: 150 },
+    { field: 'evaluation',    headerName: 'Evaluation',       width: 250,
+      renderCell: (data) => {
+        if (data.row.evaluation) {
+          return( <Label variant="ghost" color='primary'>{data.row.evaluation}</Label> )
+        }
+      }
+    },
+    { field: 'start_date',    headerName: 'Date de départ',   width: 150,
+      renderCell: (data) => {
+        if (data.row.start_date) {
+          return moment(data.row.start_date).format('YYYY-MM-DD')
+        }
+      }
+    },
+    { field: 'sanction',      headerName: 'Sanction',         width: 200,
+      renderCell: (data) => {
+        if (data.row.sanction) {
+          return( <Label variant="ghost" color='error'>{data.row.sanction}</Label> )
+        }
+      }
+    },
+    { field: 'start_motif',   headerName: 'Motif de départ',  width: 150 },
+    { field: 'ostie_num',     headerName: 'Numéro Ostie',     width: 150 },
+    { field: 'cnaps_num',     headerName: 'Numéro CNAPS',     width: 150 },
     { field: 'action',        headerName: 'Action',           width: 70, type: 'action',
       renderCell: (data) => {
         return (
@@ -128,6 +166,11 @@ function MonthlyEmployee() {
     code_chantier:monthlyemployee.code_chantier, 
     category:     monthlyemployee.category, 
     hiring_date:  moment(monthlyemployee.hiring_date).format('YYYY-MM-DD'),
+    type_contrat: monthlyemployee.type_contrat,
+    evaluation:   monthlyemployee.evaluation,
+    start_date:   monthlyemployee.start_date,
+    start_motif:  monthlyemployee.start_motif,
+    sanction:     monthlyemployee.sanction,
     motif:        monthlyemployee.motif,
     ostie_num:    monthlyemployee.ostie_num,
     cnaps_num:    monthlyemployee.cnaps_num,

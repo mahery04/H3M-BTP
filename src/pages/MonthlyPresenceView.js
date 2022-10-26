@@ -10,6 +10,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
+import Label from '../components/Label';
+
 import monthlyPresenceService from '../services/monthlyPresenceService';
 
 import moment from 'moment';
@@ -49,6 +51,28 @@ const MonthlyPresenceView = () => {
       console.log(err)
     })
   }
+
+  var isDisabled = false
+
+    const updateValidation = (id) => {
+      swal({
+        text: "Voulez-vous vraiment valider ?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((validate) => {     
+        if (validate) {
+          monthlyPresenceService.validationUpdate(id)
+          // const valide = views.filter(view => view.weekpresence_id)
+          // console.log("VAL", valide.validation);
+          // isDisabled = true
+          window.location.reload()
+        }
+      });
+    }
+
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
   
   const columns = [
     { field: 'matricule',       headerName: 'Matricule',            width: 90},
@@ -69,7 +93,35 @@ const MonthlyPresenceView = () => {
           if (data.row.total_advance) return `${data.row.total_advance} Ar`
       }
     },
+    { field: 'validation',          headerName: 'Status',               width: 150,
+      renderCell: (data) => {
+        if (data.row.validation === 'NON VALIDE') {
+          return ( <Label variant="ghost" color='error'>{data.row.validation}</Label> )
+        } else if(data.row.validation === 'VALIDE') {
+          return ( <Label variant="ghost" color='success'>{data.row.validation}</Label> )
+        }
+      }
+    },
     { field: 'signature',    headerName: 'Signature',               width: 100},
+    { field: 'action',    headerName: 'Action',        width: 100,type:'action',
+      renderCell: (data) => {     
+        if (userInfo.role_id === 1) {
+          if (data.row.validation === 'NON VALIDE') {
+            return (
+              <div>
+                <Button onClick={() => updateValidation(data.id)} variant="contained" color="warning" disabled={isDisabled}>Valider</Button>
+              </div>
+            )
+          } else if (data.row.validation === 'VALIDE') {
+            return (
+              <div>
+                <Button variant="contained" color="warning" disabled>Valider</Button>
+              </div>
+            )
+          }
+        } 
+      }
+    },
   ]
 
   const rows = views.map(view => ({
@@ -82,8 +134,9 @@ const MonthlyPresenceView = () => {
     last_date:    moment(view.last_date).format('DD-MM-YYYY'),
     nb_present:   view.nb_present,
     nb_absent:    view.nb_absent,
-    total_advance:view.total_advance,
     total_salary: view.total_salary,
+    total_advance:view.total_advance,
+    validation:   view.validation
   }))
 
   return (

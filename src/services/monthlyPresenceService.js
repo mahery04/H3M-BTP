@@ -16,6 +16,10 @@ const create = (id, data) => {
     return http.post(`/api/monthlyweekpresence/${id}`, data)
 }
 
+const validationUpdate = (id) => {
+    return http.put(`/api/monthlyweekpresence/view/${id}`)
+}
+
 const action = (id, data) => {
     return http.put(`/api/monthlypresence/${id}`, data)
 }
@@ -57,7 +61,7 @@ const history = (id) => {
 }
 
 const exportedObject = {
-    getAll, getMonth, globalView, create, action, setPresence, nbPresence, setAbsence, nbAbsence, advance, getAdvance, salary, getSalary, history
+    getAll, getMonth, globalView, create, action, setPresence, nbPresence, setAbsence, nbAbsence, advance, getAdvance, salary, getSalary, history, validationUpdate
 }
 
 export default exportedObject

@@ -43,7 +43,7 @@ function NewCommonTools() {
 
   const initialToolsState = {
     id:                     null,
-    purchase_date:          '',
+    purchase_date:          null,
     identification_number:  '',
     article_name:           '',
     assignation_place:      '',
@@ -105,7 +105,7 @@ function NewCommonTools() {
       historical:             tools.historical,
       material_number:        tools.material_number,
     }
-    if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.material_number <= 0) {
+    if(tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.material_number <= 0) {
       swal({
         title: "Un erreur est survenu!",
         text: "Veuillez remplir tous les formulaires",

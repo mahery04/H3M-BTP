@@ -1,8 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 // material
-import { Stack, Checkbox, TextField, IconButton, InputAdornment, FormControlLabel } from '@mui/material';
+import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
@@ -11,7 +10,6 @@ import swal from '@sweetalert/with-react';
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-  const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false);
   const [login, setLogin] = useState()

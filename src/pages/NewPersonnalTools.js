@@ -16,6 +16,8 @@ import FeedIcon from '@mui/icons-material/Feed';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TwoKIcon from '@mui/icons-material/TwoK';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 import moment from 'moment';
 import swal from '@sweetalert/with-react';
@@ -43,8 +45,10 @@ function NewPersonnalTools() {
 
   const initialToolsState = {
     id:                     null,
-    purchase_date:          '',
+    purchase_date:          null,
     identification_number:  '',
+    vendor:                 '',
+    invoice_number:         '',
     article_name:           '',
     assignation_place:      '',
     statue:                 statue,
@@ -68,18 +72,6 @@ function NewPersonnalTools() {
     setTools({ ...tools, purchase_date: d })
   }
 
-  const handleAffectationChange = (event) => {
-    const affectation = event.target.value
-    setAffectation(affectation);
-    setTools({ ...tools, affectation_type: affectation })
-  };
-
-  const handleResponsableChange = (event) => {
-    const employee = event.target.value
-    setResponsable(employee);
-    setTools({ ...tools, responsable: employee })
-  };
-
   const handleStatueChange = (event) => {
     const state = event.target.value
     setStatue(state);
@@ -101,6 +93,8 @@ function NewPersonnalTools() {
     var data = {
       purchase_date:          tools.purchase_date,
       identification_number:  tools.identification_number,
+      vendor:                 tools.vendor,
+      invoice_number:         tools.invoice_number,
       article_name:           tools.article_name,
       assignation_place:      tools.assignation_place,
       statue:                 tools.statue,
@@ -108,7 +102,7 @@ function NewPersonnalTools() {
       material_number:        tools.material_number,
       tooling_id:             tools.tooling_id,
     }
-    if(tools.purchase_date <= 0 || tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.material_number <= 0) {
+    if(tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.material_number <= 0) {
       swal({
         title: "Un erreur est survenu!",
         text: "Veuillez remplir tous les formulaires",
@@ -121,6 +115,8 @@ function NewPersonnalTools() {
           id:                     res.data.id,
           purchase_date:          res.data.purchase_date,
           identification_number:  res.data.identification_number,
+          vendor:                 res.data.vendor,
+          invoice_number:         res.data.invoice_number,
           article_name:           res.data.article_name,
           assignation_place:      res.data.assignation_place,
           statue:                 res.data.statue,
@@ -176,6 +172,32 @@ function NewPersonnalTools() {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <ArchiveIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <TextField 
+                      id="vendor" 
+                      value={tools.vendor} 
+                      onChange={handleInputChange} 
+                      name="vendor" 
+                      label="Fournisseur" 
+                      variant="standard" 
+                      sx={{ width: '100%' }}
+                    /><br />
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <ReceiptIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <TextField 
+                      id="invoice_number" 
+                      value={tools.invoice_number} 
+                      onChange={handleInputChange} 
+                      name="invoice_number" 
+                      label="Numéro de facture" 
+                      variant="standard" 
+                      sx={{ width: '100%' }}
+                    /><br />
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <FeedIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
                       id="article_name" 
@@ -187,52 +209,6 @@ function NewPersonnalTools() {
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
-
-                  {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <TrendingUpIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
-                          <InputLabel id="tooling_id">Type d'affectation</InputLabel>
-                          <Select
-                            labelId="tooling_id"
-                            id="tooling_id"
-                            value={affectation}
-                            onChange={handleAffectationChange}
-                            label="Age"
-                          >
-                            <MenuItem value={1}>
-                              <em>None</em>
-                            </MenuItem>
-                            <MenuItem value="Personnel">Personnel</MenuItem>
-                            <MenuItem value="Commun">Commun</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Box>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
-                          <InputLabel htmlFor="grouped-native-select" id="responable">Responsable</InputLabel>
-                          <Select 
-                            native 
-                            id="grouped-native-select" 
-                            label="Responsable"  
-                            disabled={setDisable}
-                            value={responsable}
-                            onChange={handleResponsableChange}
-                          >
-                            <option value=''></option>
-                            {employees.map(employee => (
-                              <option key={employee.matricule} value={`${employee.firstname} ${employee.lastname}`}>{employee.firstname} {employee.lastname}</option>
-                            ))}
-                          </Select>
-                        </FormControl><br />
-                      </Box>
-                    </Grid>
-                  </Grid> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />

@@ -49,7 +49,13 @@ const CommonTools = () => {
   }, [])
 
   const columns = [
-    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 100 },
+    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 150,
+      renderCell: (data) => {
+        if (data.row.purchase_date) {
+          return moment(data.row.purchase_date).format('DD-MM-YYYY')
+        } 
+      }
+    },
     { field: 'identification_number', headerName: 'Numéro d\'identification', width: 150 },
     { field: 'article_name',          headerName: 'Nom de l\'article',        width: 200 },
     { field: 'assignation_place',     headerName: 'Lieu d\'affectation',      width: 150, type: 'number' },
@@ -62,15 +68,7 @@ const CommonTools = () => {
         }
       }},
     { field: 'material_number',       headerName: 'Nombre de matériel',       width: 100, type: 'number' },
-    { field: 'historical',            headerName: 'Remarque',               width: 100, type: 'action', 
-    renderCell: (data) => {
-        if (data.row.historical)
-        return (
-          <Tooltip title={data.row.historical}>
-            <InfoIcon sx={{ color: 'grey' }}/>
-          </Tooltip>
-        )
-      }},
+    { field: 'historical',            headerName: 'Historique',               width: 300 },
     { field: 'action',                headerName: 'Action',                   width: 150, type: 'actions',
       renderCell: (data) => {
         return (
@@ -93,7 +91,7 @@ const CommonTools = () => {
 
   const rows = commontools.map(commontool => ({
     id:                     commontool.tool_id,
-    purchase_date:          moment(commontool.purchase_date).format('YYYY-MM-DD'),
+    purchase_date:          commontool.purchase_date,
     identification_number:  commontool.identification_number,
     article_name:           commontool.article_name,
     assignation_place:      commontool.assignation_place,

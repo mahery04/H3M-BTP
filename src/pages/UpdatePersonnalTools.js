@@ -10,11 +10,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import AddIcon from '@mui/icons-material/Add';
 import NumbersIcon from '@mui/icons-material/Numbers';
-import PortraitIcon from '@mui/icons-material/Portrait';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import FeedIcon from '@mui/icons-material/Feed';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TwoKIcon from '@mui/icons-material/TwoK';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 import Select from '@mui/material/Select';
 import moment from 'moment';
@@ -24,8 +25,6 @@ import personnalToolsService from '../services/personnalToolsService'
 function UpdatePersonnalTools() {
 
   const [date, setDate] = useState(null);
-  const [affectation, setAffectation] = useState('');
-  const [responsable, setResponsable] = useState('');
   const [statue, setStatue] = useState('');
   const [employees, setEmployees] = useState([]);
 
@@ -45,13 +44,13 @@ function UpdatePersonnalTools() {
     id:                     null,
     purchase_date:          date,
     identification_number:  '',
+    vendor:                 '',
+    invoice_number:         '',
     article_name:           '',
     assignation_place:      '',
     statue:                 statue,
     historical:             '',
     material_number:        '',
-    responsable:            responsable,
-    tooling_id:             affectation,
   }
 
   const findData = useParams()
@@ -81,12 +80,6 @@ function UpdatePersonnalTools() {
     setTools({ ...tools, purchase_date: d })
   }
 
-  const handleResponsableChange = (event) => {
-    const employee = event.target.value
-    setResponsable(employee);
-    setTools({ ...tools, responsable: employee })
-  };
-
   const handleStatueChange = (event) => {
     const state = event.target.value
     setStatue(state);
@@ -99,15 +92,16 @@ function UpdatePersonnalTools() {
     e.preventDefault()
 
     var data = {
-      purchase_date:          tools.purchase_date,
+      purchase_date:          moment(tools.purchase_date).format('YYYY-MM-DD'),
       identification_number:  tools.identification_number,
+      vendor:                 tools.vendor,
+      invoice_number:         tools.invoice_number,
       article_name:           tools.article_name,
       assignation_place:      tools.assignation_place,
       statue:                 tools.statue,
       historical:             tools.historical,
       material_number:        tools.material_number,
-      responsable:            tools.responsable,
-      tooling_id:             tools.tooling_id,
+      
     }
 
     personnalToolsService.update(tool_id, data).then(res => {
@@ -115,13 +109,14 @@ function UpdatePersonnalTools() {
           id:                     res.data.id,
           purchase_date:          res.data.purchase_date,
           identification_number:  res.data.identification_number,
+          vendor:                 res.data.vendor,
+          invoice_number:         res.data.invoice_number,
           article_name:           res.data.article_name,
           assignation_place:      res.data.assignation_place,
           statue:                 res.data.statue,
           historical:             res.data.historical,
           material_number:        parseInt(res.data.material_number),
-          responsable:            res.data.responsable,
-          tooling_id:             res.data.tooling_id,
+          
         })
     }).catch(err => {
         console.log(err)
@@ -137,7 +132,7 @@ function UpdatePersonnalTools() {
       </Typography>
 
       <Container maxWidth="xxl">
-        <Card sx={{ height: 820, width: '95%' }}>
+        <Card sx={{ height: 'auto', width: '95%' }}>
           <CardContent>
             <form onSubmit={updateTools} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
@@ -172,6 +167,32 @@ function UpdatePersonnalTools() {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <ArchiveIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <TextField 
+                      id="vendor" 
+                      value={tools.vendor} 
+                      onChange={handleInputChange} 
+                      name="vendor" 
+                      label="Fournisseur" 
+                      variant="standard" 
+                      sx={{ width: '100%' }}
+                    /><br />
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <ReceiptIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <TextField 
+                      id="invoice_number" 
+                      value={tools.invoice_number} 
+                      onChange={handleInputChange} 
+                      name="invoice_number" 
+                      label="Numéro de facture" 
+                      variant="standard" 
+                      sx={{ width: '100%' }}
+                    /><br />
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <FeedIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
                       id="article_name" 
@@ -183,26 +204,6 @@ function UpdatePersonnalTools() {
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
-
-                 
-                {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                    <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
-                        <InputLabel htmlFor="grouped-native-select" id="responable">Responsable</InputLabel>
-                        <Select
-                            native
-                            id="grouped-native-select"
-                            label="Responsable"
-                            value={tools.responsable}
-                            onChange={handleResponsableChange}
-                        >
-                            <option value=''></option>
-                            {employees.map(employee => (
-                                <option key={employee.matricule} value={`${employee.firstname} ${employee.lastname}`}>{employee.firstname} {employee.lastname}</option>
-                            ))}
-                        </Select>
-                    </FormControl><br />
-                </Box> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -258,6 +259,7 @@ function UpdatePersonnalTools() {
                     name="historical" 
                     label="Historique" 
                     variant="standard" 
+                    multiline
                     sx={{ width: '100%', marginTop: 4 }} 
                   />
                   <br /><br />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Card, CardContent, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Button, Card, CardContent, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl, Divider, Chip, InputAdornment } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
@@ -20,6 +20,10 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import HandshakeIcon from '@mui/icons-material/Handshake';
+import GradeIcon from '@mui/icons-material/Grade';
+import EditIcon from '@mui/icons-material/Edit';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 import moment from 'moment';
 import InputMask from 'react-input-mask';
@@ -32,9 +36,13 @@ import Post from './Post';
 function NewDailyEmployee() {
   
   const [date, setDate] = useState(null);
+  const [startdate, setStartdate] = useState(null);
   const [posts, setPost] = useState([]);
   const [postValue,setPostValue] = useState('');
   const [group,setGroup] = useState('');
+  const [contrat,setContrat] = useState('');
+  const [evaluation,setEvaluation] = useState('');
+  const [sanction,setSanction] = useState('');
   const [status,setStatus] = useState('');
 
   const getPostDailyEmployees = () => {
@@ -58,6 +66,11 @@ function NewDailyEmployee() {
     address:      '',
     contact:      '',
     post_id:      postValue,
+    type_contrat: contrat,
+    evaluation:   evaluation,
+    start_date:   startdate,
+    start_motif:  '',
+    sanction:     sanction,
     code_chantier: '',
     group:        group,
     category:     '',
@@ -89,11 +102,37 @@ function NewDailyEmployee() {
     setDailyemployee({...dailyemployee, post_id: postInput})
   };
 
+  const handleContratChange = (event) => {
+    const postInput = event.target.value
+    setContrat(postInput);
+    setDailyemployee({...dailyemployee, type_contrat: postInput})
+  };
+
+  const handleEvaluationChange = (event) => {
+    const postInput = event.target.value
+    setEvaluation(postInput);
+    setDailyemployee({...dailyemployee, evaluation: postInput})
+  };
+
   const insertDate = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
     setDate(d);
     setDailyemployee({ ...dailyemployee, hiring_date: d })
   }
+
+  const startDate = (newDate) => {
+    const d = moment(newDate).format('YYYY-MM-DD')
+    setStartdate(d);
+    setDailyemployee({ ...dailyemployee, start_date: d })
+  }
+
+  const handleSanctionChange = (event) => {
+    const postInput = event.target.value
+    setSanction(postInput);
+    setDailyemployee({...dailyemployee, sanction: postInput})
+  };
+
+  console.log(dailyemployee);
 
   const navigate = useNavigate()
 
@@ -112,6 +151,11 @@ function NewDailyEmployee() {
       group:        dailyemployee.group,
       category:     dailyemployee.category,
       hiring_date:  dailyemployee.hiring_date,
+      type_contrat: dailyemployee.type_contrat,
+      evaluation:   dailyemployee.evaluation,
+      start_date:   dailyemployee.start_date,
+      start_motif:  dailyemployee.start_motif,
+      sanction:     dailyemployee.sanction,
       status:       dailyemployee.status,
       remarque:     dailyemployee.remarque
     }
@@ -138,6 +182,8 @@ function NewDailyEmployee() {
           group:        res.data.group,   
           category:     res.data.category,
           hiring_date:  res.data.hiring_date,
+          type_contrat: res.data.type_contrat,
+          evaluation:   res.data.evaluation,
           status:       res.data.status,
           remarque:     res.data.remarque
         })
@@ -166,7 +212,7 @@ function NewDailyEmployee() {
       </Typography>
 
       <Container maxWidth="xxl">
-        <Card sx={{ height: 700, width: '95%' }}>
+        <Card sx={{ height: 'auto', width: '95%' }}>
           <CardContent>
             <form onSubmit={saveEmployee} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
@@ -225,7 +271,6 @@ function NewDailyEmployee() {
                         </Select>
                       </FormControl>
                     </Box>
-                    
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <EngineeringIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
@@ -278,7 +323,6 @@ function NewDailyEmployee() {
                         sx={{ width: '100%' }}
                       /><br />
                     </Box>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 7 }}>
@@ -374,7 +418,7 @@ function NewDailyEmployee() {
                       </FormControl>
                     </Box>
                   </Grid>
-                </Grid>
+                </Grid> 
                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                   <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                   <TextField
@@ -385,8 +429,124 @@ function NewDailyEmployee() {
                     label="Remarque"
                     variant="standard"
                     sx={{ width: '100%', mt: 7 }}
-                  /><br />
-                </Box> <br /><br /><br />
+                  />
+                </Box> <br /><br />
+                
+                <Divider>
+                  <Chip label="CONTRAT DE TRAVAIL" />
+                </Divider>
+                
+                <Grid container spacing={2} columns={12}>
+                  <Grid item xs={6}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <HandshakeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
+                        <InputLabel id="demo-simple-select-standard-label">Type de contrat</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={contrat}
+                          onChange={handleContratChange}
+                          label="Type de contrat"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="INTERIMAIRE">INTERIMAIRE</MenuItem>
+                          <MenuItem value="JOURNALIER">JOURNALIER</MenuItem>
+                          <MenuItem value="SAISONNIER">SAISONNIER</MenuItem>
+                          <MenuItem value="APPRENTISSAGE">APPRENTISSAGE</MenuItem>
+                          <MenuItem value="CDD">CDD</MenuItem>
+                          <MenuItem value="CDI">CDI</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <GradeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
+                        <InputLabel id="demo-simple-select-standard-label">Evaluation</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={evaluation}
+                          onChange={handleEvaluationChange}
+                          label="Evaluation"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="ESSAIE">ESSAIE</MenuItem>
+                          <MenuItem value="ESSAIE NON CONCLUANT">ESSAIE NON CONCLUANT</MenuItem>
+                          <MenuItem value="RENOUVELLEMENT">RENOUVELLEMENT</MenuItem>
+                          <MenuItem value="CONFIRMATION">CONFIRMATION</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        label="Date de départ"
+                        id="start_date"
+                        name="start_date"
+                        value={startdate}
+                        onChange={startDate}
+                        renderInput={(params) =>
+                          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <TextField
+                              {...params}
+                              variant="standard"
+                              sx={{ width: '100%', mt: 1 }}
+                              id="start_date"
+                              name="start_date"
+                            /><br />
+                          </Box>
+                        }
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <TrendingDownIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
+                        <InputLabel id="demo-simple-select-standard-label">Sanction</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={sanction}
+                          onChange={handleSanctionChange}
+                          label="Sanction"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="AVERTISSEMENT VERBAL">AVERTISSEMENT VERBAL</MenuItem>
+                          <MenuItem value="AVERTISSEMENT ECRIT">AVERTISSEMENT ECRIT</MenuItem>
+                          <MenuItem value="DERNIER AVERTISSEMENT">DERNIER AVERTISSEMENT</MenuItem>
+                          <MenuItem value="MISE A PIED">MISE A PIED</MenuItem>
+                          <MenuItem value="BLAME">BLAME</MenuItem>
+                          <MenuItem value="LICENCIEMENT">LICENCIEMENT</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <EditIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="start_motif"
+                        value={dailyemployee.start_motif}
+                        onChange={handleInputChange}
+                        name="start_motif"
+                        label="Motif de départ"
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      /><br />
+                    </Box>
+                  </Grid>
+                </Grid><br /><br />
 
                 <Button
                   size="medium"

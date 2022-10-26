@@ -198,28 +198,36 @@ export default function NavSection({ navConfig, ...other }) {
           {getMenus('presence')}
         </AccordionDetails>
       </Accordion>
-      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+      {/* <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
           <Typography style={category}>Contrat</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {getMenus('contrat')}
         </AccordionDetails>
-      </Accordion>
-      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+      </Accordion> */}
+      {/* <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
           <Typography style={category}>Famille</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {getMenus('family')}
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
       <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
           <Typography style={category}>Cantine</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {getMenus('cantine')}
+        </AccordionDetails>
+      </Accordion>
+      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Congé</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('conge')}
         </AccordionDetails>
       </Accordion>
     </Box>

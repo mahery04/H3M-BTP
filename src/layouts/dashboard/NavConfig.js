@@ -68,6 +68,18 @@ if (user) {
         path: '/presence/monthlypresence',
         icon: getIcon('ic:baseline-calendar-month'),
       },
+      {
+        category: 'cantine',
+        title: 'Budget cantine',
+        path: '/cantine/budget',
+        icon: getIcon('bx:money'),
+      },
+      {
+        category: 'conge',
+        title: 'Listes des congés',
+        path: '/conge/personnal',
+        icon: getIcon('bx:money'),
+      }
     ];
   } else if (user.role_id == 2) {
     navConfig = [
@@ -105,11 +117,23 @@ if (user) {
         icon: getIcon('la:users'),
       },
       {
-        category: 'cantine',
-        title: 'Cantine',
-        path: '',
-        icon: getIcon('la:utensils'),
+        category: 'employee',
+        title: 'Employé Journalier',
+        path: '/employee/dailyemployee',
+        icon: getIcon('ic:outline-today'),
       },
+      {
+        category: 'employee',
+        title: 'Employé Mensuel',
+        path: '/employee/monthlyemployee',
+        icon: getIcon('ic:baseline-calendar-month'),
+      },
+      // {
+      //   category: 'cantine',
+      //   title: 'Cantine',
+      //   path: '',
+      //   icon: getIcon('la:utensils'),
+      // },
     ];
   } else if (user.role_id == 3) {
     navConfig = [
@@ -170,8 +194,18 @@ if (user) {
         path: '/tools/common',
         icon: getIcon('la:users'),
       },
+      {
+        category: 'cantine',
+        title: 'Budget cantine',
+        path: '/cantine/budget',
+        icon: getIcon('bx:money'),
+      },
+      {
+        category: 'conge',
+        title: 'Listes des congés',
+        path: '/conge/personnal',
+        icon: getIcon('bx:money'),
+      }
     ];
   }
 }
-
-

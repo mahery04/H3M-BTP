@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Card, CardContent, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Button, Card, CardContent, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl, Divider, Chip } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
@@ -20,6 +20,10 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import HandshakeIcon from '@mui/icons-material/Handshake';
+import GradeIcon from '@mui/icons-material/Grade';
+import EditIcon from '@mui/icons-material/Edit';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 import moment from 'moment';
 import InputMask from 'react-input-mask'
@@ -31,11 +35,15 @@ import Post from './Post';
 
 function NewMonthlyEmployee() {
 
-  const [date, setDate] = useState(null);
+  const [hiringdate, setHiringdate] = useState(null);
+  const [startdate, setStartdate] = useState(null);
   const [posts, setPost] = useState([]);
   const [postValue,setPostValue] = useState('');
   const [group,setGroup] = useState('');
   const [status,setStatus] = useState('');
+  const [contrat,setContrat] = useState('');
+  const [evaluation,setEvaluation] = useState('');
+  const [sanction,setSanction] = useState('');
 
   const getPostDailyEmployees = () => {
     postDailyEmployeeService.getAllPosts().then((res) => {
@@ -62,8 +70,12 @@ function NewMonthlyEmployee() {
     status:       '',
     code_chantier: '',
     category:     '',
-    hiring_date:  date,
-    motif:        '',
+    hiring_date:  hiringdate,
+    type_contrat: contrat,
+    evaluation:   evaluation,
+    start_date:   startdate,
+    start_motif:  '',
+    sanction:     sanction,
     ostie_num:    '',
     cnaps_num:    '',
   }
@@ -91,10 +103,34 @@ function NewMonthlyEmployee() {
     setMonthlyemployee({...monthlyemployee, post_id: postInput})
   };
 
-  const insertDate = (newDate) => {
+  const handleContratChange = (event) => {
+    const postInput = event.target.value
+    setContrat(postInput);
+    setMonthlyemployee({...monthlyemployee, type_contrat: postInput})
+  };
+
+  const handleEvaluationChange = (event) => {
+    const postInput = event.target.value
+    setEvaluation(postInput);
+    setMonthlyemployee({...monthlyemployee, evaluation: postInput})
+  };
+
+  const handleSanctionChange = (event) => {
+    const postInput = event.target.value
+    setSanction(postInput);
+    setMonthlyemployee({...monthlyemployee, sanction: postInput})
+  };
+
+  const hiringDate = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
-    setDate(d);
+    setHiringdate(d);
     setMonthlyemployee({ ...monthlyemployee, hiring_date: d })
+  }
+
+  const startDate = (newDate) => {
+    const d = moment(newDate).format('YYYY-MM-DD')
+    setStartdate(d);
+    setMonthlyemployee({ ...monthlyemployee, start_date: d })
   }
 
   const navigate = useNavigate()
@@ -115,12 +151,16 @@ function NewMonthlyEmployee() {
       code_chantier:  monthlyemployee.code_chantier,
       category:       monthlyemployee.category,
       hiring_date:    monthlyemployee.hiring_date,
-      motif:          monthlyemployee.motif,
+      type_contrat:   monthlyemployee.type_contrat,
+      evaluation:     monthlyemployee.evaluation,
+      start_date:     monthlyemployee.start_date,
+      start_motif:    monthlyemployee.start_motif,
+      sanction:       monthlyemployee.sanction,
       ostie_num:      monthlyemployee.ostie_num,
       cnaps_num:      monthlyemployee.cnaps_num,
     } 
 
-    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.group.length <= 0 || data.post_id.length <= 0 || data.status.length <= 0 || data.code_chantier.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.ostie_num.length <= 0 || data.cnaps_num.length <= 0) {
+    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.group.length <= 0 || data.post_id.length <= 0 || data.status.length <= 0 || data.code_chantier.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.type_contrat.length <= 0 || data.evaluation.length <= 0 || data.ostie_num.length <= 0 || data.cnaps_num.length <= 0) {
       swal({
         title: "Un erreur est survenue!",
         text: "Veuillez remplir tous les formulaires",
@@ -143,7 +183,11 @@ function NewMonthlyEmployee() {
           code_chantier:  res.data.code_chantier,
           category:       res.data.category,
           hiring_date:    res.data.hiring_date,
-          motif:          res.data.motif,
+          type_contrat:   res.data.type_contrat,
+          evaluation:     res.data.evaluation,
+          start_date:     res.data.start_date,
+          start_motif:    res.data.start_motif,
+          sanction:       res.data.sanction,
           ostie_num:      res.data.ostie_num,
           cnaps_num:      res.data.cnaps_num,
         })
@@ -243,21 +287,27 @@ function NewMonthlyEmployee() {
                     </Box>
 
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                      <EngineeringIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <TextField
-                        id="code_chantier"
-                        value={monthlyemployee.code_chantier}
-                        onChange={handleInputChange}
-                        name="code_chantier"
-                        label="Code"
-                        variant="standard"
-                        sx={{ width: '100%' }}
-                      /><br />
+                      <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 5 }}>
+                        <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={status}
+                          onChange={handleStatusChange}
+                          label="Status"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="Actif">Actif</MenuItem>
+                          <MenuItem value="Congé">Congé</MenuItem>
+                          <MenuItem value="Démission">Démission</MenuItem>
+                        </Select>
+                      </FormControl>
                     </Box>
-
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
@@ -296,10 +346,9 @@ function NewMonthlyEmployee() {
                         sx={{ width: '100%' }}
                       /><br />
                     </Box>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 7 }}>
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 6 }}>
                         <InputLabel id="demo-simple-select-standard-label">Groupe</InputLabel>
                         <Select
                           labelId="demo-simple-select-standard-label"
@@ -317,7 +366,6 @@ function NewMonthlyEmployee() {
                         </Select>
                       </FormControl>
                     </Box>
-
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
 
@@ -352,7 +400,6 @@ function NewMonthlyEmployee() {
                         />}
                       </InputMask>
                       <br />
-
                     </Box>
 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -360,8 +407,8 @@ function NewMonthlyEmployee() {
                         label="Date d'embauche"
                         id="hiring_date"
                         name="hiring_date"
-                        value={date}
-                        onChange={insertDate}
+                        value={hiringdate}
+                        onChange={hiringDate}
                         renderInput={(params) =>
                           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                             <TextField
@@ -375,30 +422,21 @@ function NewMonthlyEmployee() {
                         }
                       />
                     </LocalizationProvider>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                      <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 7 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-standard-label"
-                          id="demo-simple-select-standard"
-                          value={status}
-                          onChange={handleStatusChange}
-                          label="Status"
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value="Actif">Actif</MenuItem>
-                          <MenuItem value="Congé">Congé</MenuItem>
-                          <MenuItem value="Démission">Démission</MenuItem>
-                        </Select>
-                      </FormControl>
+                      <EngineeringIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="code_chantier"
+                        value={monthlyemployee.code_chantier}
+                        onChange={handleInputChange}
+                        name="code_chantier"
+                        label="Code"
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      /><br />
                     </Box>
-
                   </Grid>
-                </Grid><br />
+                </Grid>
+                
                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                   <Grid item xs={6}>
                     <TextField
@@ -408,9 +446,8 @@ function NewMonthlyEmployee() {
                       name="ostie_num"
                       label="Numéro OSTIE"
                       variant="standard"
-                      sx={{ width: '100%' }}
+                      sx={{ width: '100%', mt:3 }}
                     />
-
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
@@ -420,7 +457,7 @@ function NewMonthlyEmployee() {
                       name="cnaps_num"
                       label="Numéro CNAPS"
                       variant="standard"
-                      sx={{ width: '100%' }}
+                      sx={{ width: '100%', mt:3 }}
                     />
                   </Grid>
                 </Grid>
@@ -440,6 +477,122 @@ function NewMonthlyEmployee() {
                 </Box>
                 : ''}
                 <br /><br /><br />
+
+                <Divider>
+                  <Chip label="CONTRAT DE TRAVAIL" />
+                </Divider>
+                
+                <Grid container spacing={2} columns={12}>
+                  <Grid item xs={6}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <HandshakeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
+                        <InputLabel id="demo-simple-select-standard-label">Type de contrat</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={contrat}
+                          onChange={handleContratChange}
+                          label="Type de contrat"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="INTERIMAIRE">INTERIMAIRE</MenuItem>
+                          <MenuItem value="JOURNALIER">JOURNALIER</MenuItem>
+                          <MenuItem value="SAISONNIER">SAISONNIER</MenuItem>
+                          <MenuItem value="APPRENTISSAGE">APPRENTISSAGE</MenuItem>
+                          <MenuItem value="CDD">CDD</MenuItem>
+                          <MenuItem value="CDI">CDI</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <GradeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
+                        <InputLabel id="demo-simple-select-standard-label">Evaluation</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={evaluation}
+                          onChange={handleEvaluationChange}
+                          label="Evaluation"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="ESSAIE">ESSAIE</MenuItem>
+                          <MenuItem value="ESSAIE NON CONCLUANT">ESSAIE NON CONCLUANT</MenuItem>
+                          <MenuItem value="RENOUVELLEMENT">RENOUVELLEMENT</MenuItem>
+                          <MenuItem value="CONFIRMATION">CONFIRMATION</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        label="Date de départ"
+                        id="start_date"
+                        name="start_date"
+                        value={startdate}
+                        onChange={startDate}
+                        renderInput={(params) =>
+                          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <TextField
+                              {...params}
+                              variant="standard"
+                              sx={{ width: '100%', mt: 1 }}
+                              id="start_date"
+                              name="start_date"
+                            /><br />
+                          </Box>
+                        }
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <TrendingDownIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
+                        <InputLabel id="demo-simple-select-standard-label">Sanction</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={sanction}
+                          onChange={handleSanctionChange}
+                          label="Sanction"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="AVERTISSEMENT VERBAL">AVERTISSEMENT VERBAL</MenuItem>
+                          <MenuItem value="AVERTISSEMENT ECRIT">AVERTISSEMENT ECRIT</MenuItem>
+                          <MenuItem value="DERNIER AVERTISSEMENT">DERNIER AVERTISSEMENT</MenuItem>
+                          <MenuItem value="MISE A PIED">MISE A PIED</MenuItem>
+                          <MenuItem value="BLAME">BLAME</MenuItem>
+                          <MenuItem value="LICENCIEMENT">LICENCIEMENT</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <EditIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="start_motif"
+                        value={monthlyemployee.start_motif}
+                        onChange={handleInputChange}
+                        name="start_motif"
+                        label="Motif de départ"
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      /><br />
+                    </Box>
+                  </Grid>
+                </Grid><br /><br />
 
                 <Button
                   size="medium"

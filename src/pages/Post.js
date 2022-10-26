@@ -1,5 +1,9 @@
-import React, { useState } from 'react'
-import { Box, Button, InputAdornment, Modal, TextField, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, InputAdornment, Modal, Paper, TextField, Typography } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import { DataGrid } from '@mui/x-data-grid';
+// import { GridToolbar } from '@mui/x-data-grid-premium';
 import postDailyEmployeeService from '../services/postDailyEmployeeService';
 
 const style = {
@@ -51,6 +55,48 @@ const Post = () => {
         window.location.reload()
     }
 
+    const [postlists, setPostlists] = useState([])
+
+    const getPostlists = () => {
+        postDailyEmployeeService.getAllPosts().then(res => {
+            setPostlists(res.data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    useEffect(() => {
+        getPostlists()
+    }, [])
+
+    const columns = [
+        { field: 'post_name',   headerName: 'Nom du poste', width: 180 },
+        { field: 'salary',      headerName: 'Salaire (Ar)', width: 100 },
+        { field: 'action',      headerName: '',             width: 50, type: 'action',
+            renderCell: (data) => {
+                return (
+                    <>
+                        <IconButton component="label" onClick={() => deletePostlist(data.id)}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </>
+                )
+            }
+        },
+    ]
+
+    const rows = postlists.map(postlist => ({
+        id:         postlist.post_id,
+        post_name:  postlist.post_name,
+        salary:     postlist.salary
+    }))
+
+    const deletePostlist = (id) => {
+        postDailyEmployeeService.remove(id)
+        const newTabsList = postlists.filter(postlist => postlist.post_id !== id)
+        setPostlists(newTabsList)
+    }
+
     return (
         <>
             <Button
@@ -98,7 +144,20 @@ const Post = () => {
                                 variant="outlined"
                             /><br /><br />
                             <Button onClick={saveTool} variant="contained" sx={{ width: '100%' }}>Enregistrer</Button>
-                        </form>
+                        </form><br />
+                        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                            <Box sx={{ height: 300, width: '100%' }}>
+                                <DataGrid
+                                rows={rows}
+                                columns={columns}
+                                // components={{ Toolbar: GridToolbar }}
+                                pageSize={5}
+                                rowsPerPageOptions={[5]}
+                                // checkboxSelection
+                                disableSelectionOnClick
+                                />
+                            </Box>
+                            </Paper>
                     </Typography>
                 </Box>
             </Modal>

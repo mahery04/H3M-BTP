@@ -67,7 +67,6 @@ const ToolsDailyEmployee = () => {
         number:             '',
         loan_date:          '',
         delivery_date:      '',
-        observation:        ''
     }
     
     const navigate = useNavigate()
@@ -146,8 +145,7 @@ const ToolsDailyEmployee = () => {
         article_name:   toolList.article_name,
         number:         toolList.number,
         loan_date:      moment(toolList.loan_date).format('YYYY-MM-DD'),
-        delivery_date:  moment(toolList.delivery_date).format('YYYY-MM-DD'),
-        observation:    toolList.observation,
+        delivery_date:  toolList.delivery_date,
     }))
 
     const saveTools = e => {
@@ -159,7 +157,6 @@ const ToolsDailyEmployee = () => {
             number:             toolDailyEmployee.number,
             loan_date:          toolDailyEmployee.loan_date,
             delivery_date:      toolDailyEmployee.delivery_date,
-            observation:        toolDailyEmployee.observation
         }
 
         if (data.tool_id.length <= 0 || data.number.length <= 0 || data.loan_date.length <= 0) {
@@ -184,15 +181,13 @@ const ToolsDailyEmployee = () => {
         { field: 'article_name',    headerName: 'Nom du matériel',      width: 200, align: 'center' },
         { field: 'number',          headerName: 'Nombre',               width: 100,  align: 'center' },
         { field: 'loan_date',       headerName: 'Date d\'emprunt',      width: 200, align: 'center' },
-        { field: 'delivery_date',   headerName: 'Date de remise',       width: 200, align: 'center' },
-        { field: 'observation',     headerName: 'Observation',          width: 100, align: 'center', type: 'action',
+        { field: 'delivery_date',   headerName: 'Date de remise',       width: 200, align: 'center', type: 'action', 
             renderCell: (data) => {
-                if (data.row.observation)
-                return (
-                    <Tooltip title={data.row.observation}>
-                        <InfoIcon sx={{ color: 'grey' }}/>
-                    </Tooltip>
-                )
+                if (!data.row.delivery_date) {
+                    return ''
+                } else {
+                    return moment(data.row.delivery_date).format('YYYY-MM-DD')
+                }
             }
         },
         { field: 'action',          headerName: 'Rendre',               width: 90, type: 'action',
@@ -314,13 +309,13 @@ const ToolsDailyEmployee = () => {
 
           <Grid container spacing={2}>
               <Grid item xs={8}>
-                  <Box sx={{ height: 420, width: '100%', backgroundColor: 'white' }}>
+                  <Box sx={{ height: 380, width: '100%', backgroundColor: 'white' }}>
                       <DataGrid
                           rows={rows}
                           columns={columns_tools}
                           components={{ Toolbar: GridToolbar }}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
+                          pageSize={4}
+                          rowsPerPageOptions={[4]}
                           disableSelectionOnClick
                       />
                   </Box>
@@ -405,19 +400,7 @@ const ToolsDailyEmployee = () => {
                                       }
                                   />
                               </LocalizationProvider><br />
-                              <Box sx={{ display: 'flex', alignItems: 'flex-end', lineHeight: 5 }}>
-                                  <FilterTiltShiftIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                  <TextField
-                                      id="observation"
-                                      name="observation"
-                                      value={toolValue}
-                                      label="Observation"
-                                      multiline
-                                      onChange={handleToolChange}
-                                      variant="standard"
-                                      sx={{ width: '100%' }}
-                                  />
-                              </Box>
+
                           </CardContent>
                           <CardActions>
                               <Button size="small" onClick={saveTools}>Enregistrer</Button>

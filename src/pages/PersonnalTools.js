@@ -51,8 +51,16 @@ function PersonnalTools() {
   },[])
 
   const columns = [
-    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 150 },
-    { field: 'identification_number', headerName: 'Numéro d\'identification', width: 200 },
+    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 150,
+      renderCell: (data) => {
+        if (data.row.purchase_date) {
+          return moment(data.row.purchase_date).format('DD-MM-YYYY')
+        } 
+      }
+    },
+    { field: 'identification_number', headerName: 'Numéro d\'identification', width: 150 },
+    { field: 'vendor',                headerName: 'Fournisseur',              width: 150 },
+    { field: 'invoice_number',        headerName: 'Numéro de facture',        width: 150 },
     { field: 'article_name',          headerName: 'Nom de l\'article',        width: 200 },
     { field: 'statue',                headerName: 'Etat',                     width: 80, type: 'action',
     renderCell: (data) => {
@@ -63,15 +71,7 @@ function PersonnalTools() {
       }
     }},
     { field: 'material_number',       headerName: 'Nombre de matériel',       width: 150, type: 'number' },
-    { field: 'historical',            headerName: 'Historique',               width: 100, type: 'action', 
-    renderCell: (data) => {
-        if (data.row.historical)
-        return (
-          <Tooltip title={data.row.historical}>
-            <InfoIcon sx={{ color: 'grey' }}/>
-          </Tooltip>
-        )
-      }},
+    { field: 'historical',            headerName: 'Historique',               width: 300 },
     { field: 'assignation_place',     headerName: 'Lieu d\'affectation',      width: 150, type: 'number' },
     { field: 'action',                headerName: 'Action',                   width: 200, type: 'actions',
       renderCell: (data) => {
@@ -96,8 +96,10 @@ function PersonnalTools() {
   
   const rows = personnaltools.map(personnaltool => ({
     id:                     personnaltool.tool_id,
-    purchase_date:          moment(personnaltool.purchase_date).format('YYYY-MM-DD'),
+    purchase_date:          personnaltool.purchase_date,
     identification_number:  personnaltool.identification_number,
+    vendor:                 personnaltool.vendor,
+    invoice_number:         personnaltool.invoice_number,
     article_name:           personnaltool.article_name,
     assignation_place:      personnaltool.assignation_place,
     statue:                 personnaltool.statue,

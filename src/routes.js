@@ -32,6 +32,11 @@ import DailyPresenceHistory from './pages/DailyPresenceHistory';
 import DailyPresenceView from './pages/DailyPresenceView';
 import MonthlyPresenceHistory from './pages/MonthlyPresenceHistory';
 import MonthlyPresenceView from './pages/MonthlyPresenceView';
+import Cantine from './pages/Cantine';
+import NewCantine from './pages/NewCantine';
+import Conge from './pages/Conge';
+import NewConge from './pages/NewConge';
+import UpdateConge from './pages/UpdateConge';
 
 
 // ----------------------------------------------------------------------
@@ -92,6 +97,22 @@ export default function Router() {
         { path: 'dailypresence-view', element: !user? <Navigate to="/login" /> : <DailyPresenceView /> },
         { path: 'monthlypresence-history/:id', element: !user? <Navigate to="/login" /> : <MonthlyPresenceHistory /> },
         { path: 'monthlypresence-view', element: !user? <Navigate to="/login" /> : <MonthlyPresenceView /> },
+      ]
+    },
+    {
+      path: '/cantine', element: <DashboardLayout />,
+      children: [
+        { path: 'budget', element: !user? <Navigate to="/login" /> : <Cantine /> },
+        { path: 'new', element: !user? <Navigate to="/login" /> : <NewCantine /> },
+      ]
+    },
+
+    {
+      path: '/conge', element: <DashboardLayout />,
+      children: [
+        { path: 'personnal', element: !user? <Navigate to="/login" /> : <Conge /> },
+        { path: 'new', element: !user? <Navigate to="/login" /> : <NewConge /> },
+        { path: 'update-conge/:id', element: !user? <Navigate to="/login" /> : <UpdateConge /> },
       ]
     },
     // { path: '*', element: <Navigate to="/404" replace /> },
