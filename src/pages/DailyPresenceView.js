@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+ import React, { useState, useEffect } from 'react'
 import { Button, Card, CardContent, Container, TextField, Typography, FormControl, InputLabel, Select, Paper, Box, Link } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -69,14 +69,18 @@ const DailyPresenceView = () => {
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
   const columns = [
-    { field: 'matricule',       headerName: 'Matricule',            width: 90},
+    { field: 'month',           headerName: 'Mois',                 width: 100},
+    { field: 'date',            headerName: 'Date',                 width: 150},
     { field: 'firstname',       headerName: 'Nom',                  width: 200},
     { field: 'lastname',        headerName: 'Prénom',               width: 200},
+    { field: 'matricule',       headerName: 'Matricule',            width: 90},
     { field: 'post_name',       headerName: 'Poste occupé',         width: 150},
-    { field: 'first_date',      headerName: 'Début',                width: 150},
-    { field: 'last_date',       headerName: 'Fin',                  width: 150},
-    { field: 'nb_present',      headerName: 'Total présence',       width: 150},
-    { field: 'nb_absent',       headerName: 'Total absence',        width: 150},
+    // { field: 'first_date',      headerName: 'Début',                width: 150},
+    // { field: 'last_date',       headerName: 'Fin',                  width: 150},
+    { field: 'nb_present',      headerName: 'Nombre de jour travaillés',       width: 200},
+    // { field: 'nb_absent',       headerName: 'Total absence',        width: 150},
+    { field: 'salary',           headerName: 'Montant',                 width: 90},
+
     { field: 'validation',          headerName: 'Status',               width: 150,
       renderCell: (data) => {
         if (data.row.validation === 'NON VALIDE') {

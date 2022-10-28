@@ -9,6 +9,7 @@ import { GridToolbar } from '@mui/x-data-grid-premium';
 import InfoIcon from '@mui/icons-material/Info';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HandshakeIcon from '@mui/icons-material/Handshake';
@@ -103,7 +104,13 @@ function MonthlyEmployee() {
       }},
     { field: 'code_chantier', headerName: 'Code Chantier',    width: 150 },
     { field: 'category',      headerName: 'Categorie',        width: 100 },
-    { field: 'hiring_date',   headerName: 'Date d\'embauche', width: 150 },
+    { field: 'hiring_date',   headerName: 'Date d\'embauche', width: 150,
+      renderCell: (data) => {
+        if (data.row.hiring_date) {
+          return moment(data.row.hiring_date).format('YYYY-MM-DD')
+        }
+      }
+    },
     { field: 'motif',         headerName: 'Motif',            width: 80, type: 'action', 
     renderCell: (data) => {
       if (data.row.motif)
@@ -138,7 +145,7 @@ function MonthlyEmployee() {
     { field: 'start_motif',   headerName: 'Motif de départ',  width: 150 },
     { field: 'ostie_num',     headerName: 'Numéro Ostie',     width: 150 },
     { field: 'cnaps_num',     headerName: 'Numéro CNAPS',     width: 150 },
-    { field: 'action',        headerName: 'Action',           width: 70, type: 'action',
+    { field: 'action',        headerName: 'Action',           width: 150, type: 'action',
       renderCell: (data) => {
         return (
           <>
@@ -147,6 +154,9 @@ function MonthlyEmployee() {
                 <EditIcon />
               </IconButton>
             </Link>
+            <IconButton component="label" onClick={() => deleteMonthlyemployee(data.id)}>
+              <DeleteIcon />
+            </IconButton>
           </>
         )
       }},
@@ -165,7 +175,7 @@ function MonthlyEmployee() {
     status:       monthlyemployee.status, 
     code_chantier:monthlyemployee.code_chantier, 
     category:     monthlyemployee.category, 
-    hiring_date:  moment(monthlyemployee.hiring_date).format('YYYY-MM-DD'),
+    hiring_date:  monthlyemployee.hiring_date,
     type_contrat: monthlyemployee.type_contrat,
     evaluation:   monthlyemployee.evaluation,
     start_date:   monthlyemployee.start_date,
@@ -220,7 +230,6 @@ function MonthlyEmployee() {
               components={{ Toolbar: GridToolbar }}
               pageSize={5}
               rowsPerPageOptions={[5]}
-              // checkboxSelection
               disableSelectionOnClick
             />
           </Box>

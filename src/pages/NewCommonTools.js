@@ -14,6 +14,8 @@ import PortraitIcon from '@mui/icons-material/Portrait';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import FeedIcon from '@mui/icons-material/Feed';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ArchiveIcon from '@mui/icons-material/Archive';
+
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TwoKIcon from '@mui/icons-material/TwoK';
 
@@ -45,8 +47,10 @@ function NewCommonTools() {
     id:                     null,
     purchase_date:          null,
     identification_number:  '',
+    vendor:                 '',
+    num_fact:         '',
     article_name:           '',
-    assignation_place:      '',
+    // assignation_place:      '',
     statue:                 statue,
     historical:             '',
     material_number:        '',
@@ -99,13 +103,15 @@ function NewCommonTools() {
     var data = {
       purchase_date:          tools.purchase_date,
       identification_number:  tools.identification_number,
+      vendor:                 tools.vendor,
+      num_fact:               tools.num_fact,
       article_name:           tools.article_name,
-      assignation_place:      tools.assignation_place,
+      // assignation_place:      tools.assignation_place,
       statue:                 tools.statue,
       historical:             tools.historical,
       material_number:        tools.material_number,
     }
-    if(tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.material_number <= 0) {
+    if(tools.identification_number <= 0 ||  tools.article_name <= 0 || tools.statue <= 0 ||  tools.material_number <= 0) {
       swal({
         title: "Un erreur est survenu!",
         text: "Veuillez remplir tous les formulaires",
@@ -117,9 +123,11 @@ function NewCommonTools() {
         setTools({
           id:                     res.data.id,
           purchase_date:          res.data.purchase_date,
+          vendor:                 res.data.vendor,
+          num_fact:               res.data.num_fact,
           identification_number:  res.data.identification_number,
           article_name:           res.data.article_name,
-          assignation_place:      res.data.assignation_place,
+          // assignation_place:      res.data.assignation_place,
           statue:                 res.data.statue,
           historical:             res.data.historical,
           material_number:        parseInt(res.data.material_number),
@@ -158,6 +166,18 @@ function NewCommonTools() {
                       }
                     />
                   </LocalizationProvider>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <TextField 
+                      id="num_fact" 
+                      value={tools.num_fact} 
+                      onChange={handleInputChange} 
+                      name="num_fact" 
+                      label="Numéro facture" 
+                      variant="standard" 
+                      sx={{ width: '100%' }}
+                    /><br />
+                  </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -167,6 +187,19 @@ function NewCommonTools() {
                       onChange={handleInputChange} 
                       name="identification_number" 
                       label="Numéro d'identification" 
+                      variant="standard" 
+                      sx={{ width: '100%' }}
+                    /><br />
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <ArchiveIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <TextField 
+                      id="vendor" 
+                      value={tools.vendor} 
+                      onChange={handleInputChange} 
+                      name="vendor" 
+                      label="Fournisseur" 
                       variant="standard" 
                       sx={{ width: '100%' }}
                     /><br />
@@ -231,7 +264,7 @@ function NewCommonTools() {
                     </Grid>
                   </Grid> */}
 
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                  {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
                       id="assignation_place" 
@@ -242,7 +275,7 @@ function NewCommonTools() {
                       variant="standard" 
                       sx={{ width: '100%' }}
                     /><br />
-                  </Box>
+                  </Box> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <MoreHorizIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -283,7 +316,9 @@ function NewCommonTools() {
                     value={tools.historical}
                     onChange={handleInputChange}
                     name="historical" 
-                    label="Remarque" 
+                    label="Lieu d'affectation" 
+                    multiline
+                    rows={4}
                     variant="standard" 
                     sx={{ width: '100%', marginTop: 4 }} 
                   />

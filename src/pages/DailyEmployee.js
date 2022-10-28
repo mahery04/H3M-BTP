@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button, Paper, Container, Chip, Stack, Box, Typography, Link, Modal } from '@mui/material'
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 
-import { Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
+
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InfoIcon from '@mui/icons-material/Info';
-import HandshakeIcon from '@mui/icons-material/Handshake';
-
-import { teal } from '@mui/material/colors';
 
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
@@ -24,7 +23,7 @@ import Label from '../components/Label';
 
 function DailyEmployee() {
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -68,42 +67,52 @@ function DailyEmployee() {
   },[])
 
   const columns = [
-    { field: 'id',            headerName: 'Id',               width: 50 },
-    { field: 'matricule',     headerName: 'Matricule',        width: 100 },
-    { field: 'firstname',     headerName: 'Nom',              width: 150 },
-    { field: 'lastname',      headerName: 'Prénom',           width: 200 },
-    { field: 'cin',           headerName: 'Numéro CIN',       width: 150, type: 'number' },
-    { field: 'address',       headerName: 'Adresse',          width: 200 },
-    { field: 'post_name',     headerName: 'Poste occupé',     width: 150 },
-    { field: 'code_chantier', headerName: 'Code Chantier',    width: 150 },
-    { field: 'group',         headerName: 'Groupe',           width: 100 },
-    { field: 'contact',       headerName: 'Contact',          width: 150 },
-    { field: 'category',      headerName: 'Catégorie',        width: 100 },
-    { field: 'hiring_date',   headerName: 'Date d\'embauche', width: 150 },
-    { field: 'type_contrat',  headerName: 'Type de contrat',  width: 150 },
-    { field: 'evaluation',    headerName: 'Evaluation',       width: 250,
+    { field: 'id', headerName: 'Id', width: 50 },
+    { field: 'matricule', headerName: 'Matricule', width: 100 },
+    { field: 'firstname', headerName: 'Nom', width: 150 },
+    { field: 'lastname', headerName: 'Prénom', width: 200 },
+    { field: 'cin', headerName: 'Numéro CIN', width: 150, type: 'number' },
+    { field: 'address', headerName: 'Adresse', width: 200 },
+    { field: 'post_name', headerName: 'Poste occupé', width: 150 },
+    { field: 'code_chantier', headerName: 'Code Chantier', width: 150 },
+    { field: 'group', headerName: 'Groupe', width: 100 },
+    { field: 'contact', headerName: 'Contact', width: 150 },
+    { field: 'category', headerName: 'Catégorie', width: 100 },
+    { field: 'hiring_date', headerName: 'Date d\'embauche', width: 150, 
+      renderCell: (data) => {
+        if (data.row.hiring_date) {
+          return moment(data.row.hiring_date).format('YYYY-MM-DD') 
+        }
+      }
+    },
+    { field: 'type_contrat', headerName: 'Type de contrat', width: 150 },
+    {
+      field: 'evaluation', headerName: 'Evaluation', width: 250,
       renderCell: (data) => {
         if (data.row.evaluation) {
           return( <Label variant="ghost" color='primary'>{data.row.evaluation}</Label> )
         }
       }
     },
-    { field: 'start_date',    headerName: 'Date de départ',   width: 150,
+    {
+      field: 'start_date', headerName: 'Date de départ', width: 150,
       renderCell: (data) => {
         if (data.row.start_date) {
           return moment(data.row.start_date).format('YYYY-MM-DD')
         }
       }
     },
-    { field: 'sanction',      headerName: 'Sanction',         width: 200,
+    {
+      field: 'sanction', headerName: 'Sanction', width: 200,
       renderCell: (data) => {
         if (data.row.sanction) {
           return( <Label variant="ghost" color='error'>{data.row.sanction}</Label> )
         }
       }
     },
-    { field: 'start_motif',   headerName: 'Motif de départ',  width: 150 },
-    { field: 'status',        headerName: 'Status',           width: 150,
+    { field: 'start_motif', headerName: 'Motif de départ', width: 150 },
+    {
+      field: 'status', headerName: 'Status', width: 150,
       renderCell: (data) => {
         if (data.row.status==='Actif') {
           return( <Label variant="ghost" color='success'>Actif</Label> )
@@ -112,7 +121,8 @@ function DailyEmployee() {
         }
       }
     },
-    { field: 'tools',       headerName: 'Matériels empruntés', width: 150 ,type: 'action',
+    {
+      field: 'tools', headerName: 'Matériels empruntés', width: 150, type: 'action',
       renderCell: (data) => {
         return (
           <>
@@ -130,7 +140,8 @@ function DailyEmployee() {
           </>
         )
       }},
-    { field: 'remarque',    headerName: 'Remarque',         width: 100, type: 'action',
+    {
+      field: 'remarque', headerName: 'Remarque', width: 100, type: 'action',
       renderCell: (data) => {
         if (data.row.remarque)
         return (
@@ -139,7 +150,8 @@ function DailyEmployee() {
           </Tooltip>
         )
       }},
-    { field: 'action',      headerName: 'Action',           width: 70, type: 'action',
+    {
+      field: 'action', headerName: 'Action', width: 100, type: 'action',
       renderCell: (data) => {
         return (
           <>
@@ -148,6 +160,9 @@ function DailyEmployee() {
                 <EditIcon />
               </IconButton>
             </Link>
+            <IconButton component="label" onClick={() => deleteDailyemployee(data.id)}>
+              <DeleteIcon />
+            </IconButton>
           </>
         )
       }
@@ -166,7 +181,7 @@ function DailyEmployee() {
     code_chantier:dailyemployee.code_chantier,
     group:        dailyemployee.group,
     category:     dailyemployee.category, 
-    hiring_date:  moment(dailyemployee.hiring_date).format('YYYY-MM-DD'),
+    hiring_date:  dailyemployee.hiring_date,
     type_contrat: dailyemployee.type_contrat,
     evaluation:   dailyemployee.evaluation,
     start_date:   dailyemployee.start_date,
@@ -175,6 +190,8 @@ function DailyEmployee() {
     sanction:     dailyemployee.sanction,
     remarque:     dailyemployee.remarque
   }))
+
+  const navigate = useNavigate()
 
   const deleteDailyemployee = (id) => {
     swal({
@@ -186,9 +203,10 @@ function DailyEmployee() {
     .then((willDelete) => {
       if(willDelete) { 
         dailyEmployeeService.remove(id)
-        const newTabList = dailyemployees.filter((dailyemployee) => dailyemployee.id !== id)
+        const newTabList = dailyemployees.filter((dailyemployee) => dailyemployee.dailyemployee_id !== id)
         setDailyemployees(newTabList)
-        document.location.reload(true)
+        // document.location.reload(true)
+        navigate('/employee/dailyemployee?deleted')
       }
     });
   }

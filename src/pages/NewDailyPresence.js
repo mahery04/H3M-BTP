@@ -116,7 +116,7 @@ function NewDailyPresence() {
   }, [dailyemployee_id])
 
   const columns = [
-    { field: 'date',            headerName: 'Fait le',  width: 150, type: 'action',
+    { field: 'date',            headerName: 'Date',  width: 150, type: 'action',
       renderCell: (data) => {
         if (!data.row.date) {
           return ''
@@ -125,8 +125,8 @@ function NewDailyPresence() {
         }
       }
     },
-    { field: 'day_text',        headerName: 'Jour',     width: 150 },
-    { field: 'status',          headerName: 'Status',   width: 150, type: 'action',
+    // { field: 'day_text',        headerName: 'Jour',     width: 150 },
+    { field: 'status',          headerName: 'Status',   width: 300, type: 'action',
       renderCell: (data) => {
         if (data.row.status==='1') {
           return( <Label variant="ghost" color='success'>Présent</Label> )
@@ -137,7 +137,7 @@ function NewDailyPresence() {
         }
       }
     },
-    { field: 'presence_salary', headerName: 'Salaire',  width: 150, type: 'action', 
+    { field: 'presence_salary', headerName: 'Salaire',  width: 250, type: 'action', 
       renderCell: (data) => {
         if (!data.row.presence_salary) {
           return ''
@@ -262,7 +262,7 @@ function NewDailyPresence() {
                       maxDate={dayjs('2023-06-01')}
                       value={month}
                       onChange={insertMonth}
-                      renderInput={(params) => <TextField sx={{ mt: 5 }} variant="standard" {...params} helperText={null} />}
+                      renderInput={(params) => <TextField sx={{ mt: 5, width: '100%' }} variant="standard" {...params} helperText={null} />}
                     />
                   </LocalizationProvider>
                 </Grid>
@@ -334,12 +334,13 @@ function NewDailyPresence() {
                 <Grid item xs>
                   <Box sx={{ minWidth: 120 }}>
                     <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">Jour</InputLabel>
+                      <InputLabel id="demo-simple-select-standard-label">Date</InputLabel>
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={dayValue}
-                        label="Jour"
+                        label="Date"
+                        variant="outlined"
                         onChange={insertDay}
                       >
                         <MenuItem value={1}>Lundi</MenuItem>

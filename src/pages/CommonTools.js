@@ -56,9 +56,11 @@ const CommonTools = () => {
         } 
       }
     },
-    { field: 'identification_number', headerName: 'Numéro d\'identification', width: 150 },
+    { field: 'identification_number', headerName: 'Numéro d\'identification', width: 200 },
+    { field: 'vendor', headerName: 'Fournisseur', width: 150 },
+    { field: 'num_fact', headerName: 'Numéro facture', width: 150 },
     { field: 'article_name',          headerName: 'Nom de l\'article',        width: 200 },
-    { field: 'assignation_place',     headerName: 'Lieu d\'affectation',      width: 150, type: 'number' },
+    // { field: 'assignation_place',     headerName: 'Lieu d\'affectation',      width: 150, type: 'number' },
     { field: 'statue',                headerName: 'Etat',                     width: 80, type: 'action',
       renderCell: (data) => {
         if (data.row.statue === 'Nouveau') {
@@ -67,8 +69,17 @@ const CommonTools = () => {
           return (<Label variant="ghost" color='warning'>Occasion</Label>)
         }
       }},
-    { field: 'material_number',       headerName: 'Nombre de matériel',       width: 100, type: 'number' },
-    { field: 'historical',            headerName: 'Historique',               width: 300 },
+    { field: 'material_number',       headerName: 'Nombre de matériel',       width: 150, type: 'number' },
+    { field: 'historical',            headerName: 'Lieu d\'affectation',               width: 200,
+      renderCell: (data) => {
+        if (data.row.historical)
+        return (
+          <Tooltip title={data.row.historical}>
+            <InfoIcon sx={{ color: 'grey' }}/>
+          </Tooltip>
+        )
+      }
+    },
     { field: 'action',                headerName: 'Action',                   width: 150, type: 'actions',
       renderCell: (data) => {
         return (
@@ -93,8 +104,10 @@ const CommonTools = () => {
     id:                     commontool.tool_id,
     purchase_date:          commontool.purchase_date,
     identification_number:  commontool.identification_number,
+    vendor:                 commontool.vendor,
+    num_fact:               commontool.num_fact,
     article_name:           commontool.article_name,
-    assignation_place:      commontool.assignation_place,
+    // assignation_place:      commontool.assignation_place,
     statue:                 commontool.statue,
     material_number:        commontool.material_number,
     etat:                   commontool.etat,

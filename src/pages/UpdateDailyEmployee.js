@@ -33,8 +33,10 @@ import dailyEmployeeService from '../services/dailyEmployeeService';
 import postDailyEmployeeService from '../services/postDailyEmployeeService';
 
 function UpdateDailyEmployee(props) {
+
+  var proposedDate = "T00:00:00.000Z";
   
-  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
+  const [date, setDate] = useState(null);
   const [startdate, setStartdate] = useState(null);
   const [posts, setPost] = useState([]);
   const [postValue,setPostValue] = useState('');
@@ -129,7 +131,7 @@ function UpdateDailyEmployee(props) {
   };
 
   const insertDate = (newDate) => {
-    const d = moment(newDate).format('YYYY-MM-DD')
+    const d = moment(newDate).format('YYYY-MM-DD')+proposedDate
     setDate(d);
     setDailyemployee({ ...dailyemployee, hiring_date: d })
   }
@@ -148,6 +150,8 @@ function UpdateDailyEmployee(props) {
 
   const navigate = useNavigate()
 
+  
+
   const saveEmployee = e => {
     e.preventDefault()
 
@@ -162,17 +166,17 @@ function UpdateDailyEmployee(props) {
       code_chantier:dailyemployee.code_chantier,
       group:        dailyemployee.group,
       category:     dailyemployee.category,
-      hiring_date:  dailyemployee.hiring_date,
+      hiring_date:  moment(dailyemployee.hiring_date).format('YYYY-MM-DD') + proposedDate ,
       type_contrat: dailyemployee.type_contrat,
       evaluation:   dailyemployee.evaluation,
-      start_date:   moment(dailyemployee.start_date).format('YYYY-MM-DD'),
+      start_date:   moment(dailyemployee.start_date).format('YYYY-MM-DD') + proposedDate ,
       start_motif:  dailyemployee.start_motif,
       sanction:     dailyemployee.sanction,
       status:       dailyemployee.status,
       remarque:     dailyemployee.remarque
     }
 
-    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.post_id.length <= 0 || data.code_chantier.length <= 0 || data.group.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.type_contrat.length <= 0 || data.evaluation.length <= 0 || data.status.length <= 0) {
+    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.post_id.length <= 0 || data.group.length <= 0 || data.status.length <= 0) {
       swal({
         title: "Un erreur est survenue!",
         text: "Des formulaires requis sont vides.",
@@ -208,6 +212,8 @@ function UpdateDailyEmployee(props) {
       navigate('/employee/dailyemployee?updated')
     }
   }
+
+  console.log(date)
 
   return (
     <div>
@@ -286,8 +292,6 @@ function UpdateDailyEmployee(props) {
                       </FormControl>
                     </Box>
 
-                    
-                    
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <EngineeringIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
@@ -340,8 +344,6 @@ function UpdateDailyEmployee(props) {
                         sx={{ width: '100%' }}
                       /><br />
                     </Box>
-
-                    
 
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -576,7 +578,7 @@ function UpdateDailyEmployee(props) {
                   startIcon={<AddIcon />}
                   onClick={saveEmployee}
                 >
-                  Enregistrer
+                  Modifier
                 </Button>
               </Box>
             </form>

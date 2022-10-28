@@ -127,7 +127,7 @@ const Cantine = () => {
             navigate('/cantine/budget?deleted')
           }
         });
-      }
+    }
 
     return (
         <>

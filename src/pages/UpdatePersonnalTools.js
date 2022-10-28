@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, Card, CardContent, Container, Typography, Box, InputLabel, MenuItem, FormControl} from '@mui/material';
+import { Button, Card, CardContent, Container, Typography, Box, InputLabel, MenuItem, FormControl, TextareaAutosize } from '@mui/material';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { TextField } from '@mui/material';
@@ -10,6 +10,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import AddIcon from '@mui/icons-material/Add';
 import NumbersIcon from '@mui/icons-material/Numbers';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import FeedIcon from '@mui/icons-material/Feed';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -38,19 +39,19 @@ function UpdatePersonnalTools() {
 
   useEffect(() => {
     getEmployee()
-  },[])
+  }, [])
 
   const initialToolsState = {
-    id:                     null,
-    purchase_date:          date,
-    identification_number:  '',
-    vendor:                 '',
-    invoice_number:         '',
-    article_name:           '',
-    assignation_place:      '',
-    statue:                 statue,
-    historical:             '',
-    material_number:        '',
+    id: null,
+    purchase_date: date,
+    identification_number: '',
+    vendor: '',
+    invoice_number: '',
+    article_name: '',
+    // assignation_place: '',
+    statue: statue,
+    historical: '',
+    material_number: '',
   }
 
   const findData = useParams()
@@ -92,36 +93,36 @@ function UpdatePersonnalTools() {
     e.preventDefault()
 
     var data = {
-      purchase_date:          moment(tools.purchase_date).format('YYYY-MM-DD'),
-      identification_number:  tools.identification_number,
-      vendor:                 tools.vendor,
-      invoice_number:         tools.invoice_number,
-      article_name:           tools.article_name,
-      assignation_place:      tools.assignation_place,
-      statue:                 tools.statue,
-      historical:             tools.historical,
-      material_number:        tools.material_number,
-      
+      purchase_date: moment(tools.purchase_date).format('YYYY-MM-DD'),
+      identification_number: tools.identification_number,
+      vendor: tools.vendor,
+      invoice_number: tools.invoice_number,
+      article_name: tools.article_name,
+      // assignation_place: tools.assignation_place,
+      statue: tools.statue,
+      historical: tools.historical,
+      material_number: tools.material_number,
+
     }
 
     personnalToolsService.update(tool_id, data).then(res => {
-        setTools({
-          id:                     res.data.id,
-          purchase_date:          res.data.purchase_date,
-          identification_number:  res.data.identification_number,
-          vendor:                 res.data.vendor,
-          invoice_number:         res.data.invoice_number,
-          article_name:           res.data.article_name,
-          assignation_place:      res.data.assignation_place,
-          statue:                 res.data.statue,
-          historical:             res.data.historical,
-          material_number:        parseInt(res.data.material_number),
-          
-        })
+      setTools({
+        id: res.data.id,
+        purchase_date: res.data.purchase_date,
+        identification_number: res.data.identification_number,
+        vendor: res.data.vendor,
+        invoice_number: res.data.invoice_number,
+        article_name: res.data.article_name,
+        // assignation_place: res.data.assignation_place,
+        statue: res.data.statue,
+        historical: res.data.historical,
+        material_number: parseInt(res.data.material_number),
+
+      })
     }).catch(err => {
-        console.log(err)
+      console.log(err)
     })
-      navigate('/tools/personnal?updated')
+    navigate('/tools/personnal?updated')
 
   }
 
@@ -129,6 +130,16 @@ function UpdatePersonnalTools() {
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
         Modification de l'outil
+        <Button
+          size="medium"
+          variant="outlined"
+          color="primary"
+          sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
+          startIcon={<ArrowBackIcon />}
+          href='/tools/personnal'
+        >
+          Retour
+        </Button>
       </Typography>
 
       <Container maxWidth="xxl">
@@ -155,68 +166,68 @@ function UpdatePersonnalTools() {
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField 
-                      id="identification_number" 
-                      value={tools.identification_number} 
-                      onChange={handleInputChange} 
-                      name="identification_number" 
-                      label="Numéro d'identification" 
-                      variant="standard" 
+                    <TextField
+                      id="identification_number"
+                      value={tools.identification_number}
+                      onChange={handleInputChange}
+                      name="identification_number"
+                      label="Numéro d'identification"
+                      variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <ArchiveIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField 
-                      id="vendor" 
-                      value={tools.vendor} 
-                      onChange={handleInputChange} 
-                      name="vendor" 
-                      label="Fournisseur" 
-                      variant="standard" 
+                    <TextField
+                      id="vendor"
+                      value={tools.vendor}
+                      onChange={handleInputChange}
+                      name="vendor"
+                      label="Fournisseur"
+                      variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <ReceiptIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField 
-                      id="invoice_number" 
-                      value={tools.invoice_number} 
-                      onChange={handleInputChange} 
-                      name="invoice_number" 
-                      label="Numéro de facture" 
-                      variant="standard" 
+                    <TextField
+                      id="invoice_number"
+                      value={tools.invoice_number}
+                      onChange={handleInputChange}
+                      name="invoice_number"
+                      label="Numéro de facture"
+                      variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <FeedIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField 
-                      id="article_name" 
+                    <TextField
+                      id="article_name"
                       value={tools.article_name}
                       onChange={handleInputChange}
-                      name="article_name" 
-                      label="Nom article" 
-                      variant="standard" 
+                      name="article_name"
+                      label="Nom article"
+                      variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
 
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                  {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField 
-                      id="assignation_place" 
+                    <TextField
+                      id="assignation_place"
                       value={tools.assignation_place}
                       onChange={handleInputChange}
-                      name="assignation_place" 
-                      label="Lieu d'affectation" 
-                      variant="standard" 
+                      name="assignation_place"
+                      label="Lieu d'affectation"
+                      variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
-                  </Box>
+                  </Box> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <MoreHorizIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -240,27 +251,28 @@ function UpdatePersonnalTools() {
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <TwoKIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField 
+                    <TextField
                       type="number"
-                      id="material_number" 
+                      id="material_number"
                       value={tools.material_number}
                       onChange={handleInputChange}
-                      name="material_number" 
-                      label="Nombre de matériels" 
-                      variant="standard" 
+                      name="material_number"
+                      label="Nombre de matériels"
+                      variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
 
-                  <TextField 
-                    id="historical" 
+                  <TextField
+                    id="historical"
                     value={tools.historical}
                     onChange={handleInputChange}
-                    name="historical" 
-                    label="Historique" 
-                    variant="standard" 
+                    name="historical"
+                    label="Historique"
+                    variant="standard"
                     multiline
-                    sx={{ width: '100%', marginTop: 4 }} 
+                    rows={4}
+                    sx={{ width: '100%', marginTop: 4 }}
                   />
                   <br /><br />
 
@@ -274,15 +286,11 @@ function UpdatePersonnalTools() {
                   >
                     Modifier
                   </Button>
-
                 </Container>
-
               </Box>
             </form>
           </CardContent>
         </Card>
-
-
       </Container>
     </div>
   )

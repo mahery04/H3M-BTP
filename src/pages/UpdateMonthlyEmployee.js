@@ -31,7 +31,6 @@ import swal from '@sweetalert/with-react';
 
 import monthlyEmployeeService from '../services/monthlyEmployeeService'
 import postDailyEmployeeService from '../services/postDailyEmployeeService';
-import MonthlyEmployee from './MonthlyEmployee';
 
 function UpdateMonthlyEmployee(props) {
 
@@ -45,7 +44,7 @@ function UpdateMonthlyEmployee(props) {
   const [evaluation,setEvaluation] = useState('');
   const [sanction,setSanction] = useState('');
 
-  const getPostDailyEmployees = () => {
+  const getMonthlyDailyEmployees = () => {
     postDailyEmployeeService.getAllPosts().then((res) => {
       setPost(res.data)
     }).catch(err => {
@@ -54,7 +53,7 @@ function UpdateMonthlyEmployee(props) {
   }
 
   useEffect(() => {
-    getPostDailyEmployees()
+    getMonthlyDailyEmployees()
   },[])
 
   const initialEmployeeState = {
@@ -171,7 +170,7 @@ function UpdateMonthlyEmployee(props) {
       hiring_date:  monthlyemployee.hiring_date,
       type_contrat: monthlyemployee.type_contrat,
       evaluation:   monthlyemployee.evaluation,
-      start_date:   moment(monthlyemployee.start_date).format('YYYY-MM-DD'),
+      start_date:   monthlyemployee.start_date,
       start_motif:  monthlyemployee.start_motif,
       sanction:     monthlyemployee.sanction,
       motif:        monthlyemployee.motif,
@@ -179,7 +178,7 @@ function UpdateMonthlyEmployee(props) {
       cnaps_num:    monthlyemployee.cnaps_num,
     }
 
-    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.group.length <= 0 || data.post_id.length <= 0 || data.status.length <= 0 || data.code_chantier.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.type_contrat.length <= 0 || data.evaluation.length <= 0 || data.ostie_num.length <= 0 || data.cnaps_num.length <= 0) {
+    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.group.length <= 0 || data.post_id.length <= 0 || data.status.length <= 0) {
       swal({
         title: "Un erreur est survenue!",
         text: "Des formulaires requis sont vides.",
@@ -623,7 +622,7 @@ function UpdateMonthlyEmployee(props) {
                   startIcon={<AddIcon />}
                   onClick={updateEmployee}
                 >
-                  Enregistrer
+                  Modifier
                 </Button>
               </Box>
             </form>

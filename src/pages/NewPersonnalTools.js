@@ -50,7 +50,7 @@ function NewPersonnalTools() {
     vendor:                 '',
     invoice_number:         '',
     article_name:           '',
-    assignation_place:      '',
+    // assignation_place:      '',
     statue:                 statue,
     historical:             '',
     material_number:        '',
@@ -96,13 +96,13 @@ function NewPersonnalTools() {
       vendor:                 tools.vendor,
       invoice_number:         tools.invoice_number,
       article_name:           tools.article_name,
-      assignation_place:      tools.assignation_place,
+      // assignation_place:      tools.assignation_place,
       statue:                 tools.statue,
       historical:             tools.historical,
       material_number:        tools.material_number,
       tooling_id:             tools.tooling_id,
     }
-    if(tools.identification_number <= 0 ||  tools.article_name <= 0 ||  tools.assignation_place <= 0 ||  tools.statue <= 0 ||  tools.material_number <= 0) {
+    if(tools.identification_number <= 0 ||  tools.article_name <= 0 || tools.statue <= 0 ||  tools.material_number <= 0) {
       swal({
         title: "Un erreur est survenu!",
         text: "Veuillez remplir tous les formulaires",
@@ -118,7 +118,7 @@ function NewPersonnalTools() {
           vendor:                 res.data.vendor,
           invoice_number:         res.data.invoice_number,
           article_name:           res.data.article_name,
-          assignation_place:      res.data.assignation_place,
+          // assignation_place:      res.data.assignation_place,
           statue:                 res.data.statue,
           historical:             res.data.historical,
           material_number:        parseInt(res.data.material_number),
@@ -210,7 +210,7 @@ function NewPersonnalTools() {
                     /><br />
                   </Box>
 
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                  {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField 
                       id="assignation_place" 
@@ -221,7 +221,7 @@ function NewPersonnalTools() {
                       variant="standard" 
                       sx={{ width: '100%' }}
                     /><br />
-                  </Box>
+                  </Box> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <MoreHorizIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -264,6 +264,8 @@ function NewPersonnalTools() {
                     name="historical" 
                     label="Historique" 
                     variant="standard" 
+                    multiline
+                    rows={4}
                     sx={{ width: '100%', marginTop: 4 }} 
                   />
                   <br /><br />

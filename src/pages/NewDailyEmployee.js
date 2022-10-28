@@ -66,15 +66,15 @@ function NewDailyEmployee() {
     address:      '',
     contact:      '',
     post_id:      postValue,
+    code_chantier: '',
+    group:        group,
+    category:     '',
+    hiring_date:  date,
     type_contrat: contrat,
     evaluation:   evaluation,
     start_date:   startdate,
     start_motif:  '',
     sanction:     sanction,
-    code_chantier: '',
-    group:        group,
-    category:     '',
-    hiring_date:  date,
     status:       '',
     remarque:     ''
   }
@@ -134,6 +134,8 @@ function NewDailyEmployee() {
 
   console.log(dailyemployee);
 
+  var proposedDate = "T00:00:00.000Z";
+
   const navigate = useNavigate()
 
   const saveEmployee = e => {
@@ -150,7 +152,7 @@ function NewDailyEmployee() {
       code_chantier:dailyemployee.code_chantier,
       group:        dailyemployee.group,
       category:     dailyemployee.category,
-      hiring_date:  dailyemployee.hiring_date,
+      hiring_date:   dailyemployee.hiring_date,
       type_contrat: dailyemployee.type_contrat,
       evaluation:   dailyemployee.evaluation,
       start_date:   dailyemployee.start_date,
@@ -160,7 +162,7 @@ function NewDailyEmployee() {
       remarque:     dailyemployee.remarque
     }
 
-    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.post_id.length <= 0 || data.code_chantier.length <= 0 || data.group.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.status.length <= 0) {
+    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.post_id.length <= 0 || data.group.length <= 0 || data.status.length <= 0) {
       swal({
         title: "Un erreur est survenue!",
         text: "Des formulaires requis sont vides.",
