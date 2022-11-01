@@ -65,35 +65,68 @@ function MonthlyEmployee() {
 
 
   const columns = [
-    { field: 'id',            headerName: 'Id',               width: 50 },
-    { field: 'matricule',     headerName: 'Matricule',        width: 100 },
-    { field: 'firstname',     headerName: 'Nom',              width: 200 },
-    { field: 'lastname',      headerName: 'Prénom',           width: 200 },
-    { field: 'cin',           headerName: 'Numéro CIN',       width: 150, type: 'number' },
-    { field: 'address',       headerName: 'Adresse',          width: 100 },
-    { field: 'contact',       headerName: 'Contact',          width: 150 },
-    { field: 'group',         headerName: 'Groupe',           width: 100 },
-    { field: 'post_name',     headerName: 'Poste occupé',     width: 150 },
-    { field: 'status',        headerName: 'Status',           width: 150, type: 'action',
+    { field: 'id', headerName: 'Id', width: 50 },
+    { field: 'matricule', headerName: 'Matricule', width: 100 },
+    { field: 'firstname', headerName: 'Nom', width: 200 },
+    { field: 'lastname', headerName: 'Prénom', width: 200 },
+    { field: 'cin', headerName: 'Numéro CIN', width: 150, type: 'number' },
+    { field: 'address', headerName: 'Adresse', width: 200 },
+    { field: 'contact', headerName: 'Contact', width: 150 },
+    { field: 'group', headerName: 'Groupe', width: 100 },
+    { field: 'post_name', headerName: 'Poste occupé', width: 150 },
+    { field: 'code_chantier', headerName: 'Code Chantier', width: 150 },
+    { field: 'category', headerName: 'Categorie', width: 100 },
+    {
+      field: 'hiring_date', headerName: 'Date d\'embauche', width: 150,
       renderCell: (data) => {
-        if (data.row.status==='Actif') {
-          return( <Label variant="ghost" color='success'>Actif</Label> )
-        } else if(data.row.status==='Démission') {
-          return( <Label variant="ghost" color='error'>Démission</Label> )
-        } else if (data.row.status === 'Congé') {
-          return( <Label variant="ghost" color='warning'>Congé</Label> )
+        if (data.row.hiring_date) {
+          return moment(data.row.hiring_date).format('DD-MM-YYYY')
         }
-      }},
-    {field: 'tools',       headerName: 'Matériels empruntés', width: 150 ,type: 'action',
+      }
+    },
+    {
+      field: 'contrat', headerName: 'Contrat', width: 150, type: 'action',
+      renderCell: (data) => {
+        return (
+          <>
+            <Stack direction="row">
+              <Link underline="none" href={'/employee/contrat-monthly-employee/' + data.id}>
+                <Chip 
+                  icon={<AddCircleIcon/>} 
+                  label="Voir contrat"
+                  sx={{cursor:'pointer'}}
+                  variant="outlined"
+                  color="warning"
+                />
+              </Link>
+            </Stack>
+          </>
+        )
+      }
+    },
+    {
+      field: 'status', headerName: 'Status', width: 150, type: 'action',
+      renderCell: (data) => {
+        if (data.row.status === 'Actif') {
+          return (<Label variant="ghost" color='success'>Actif</Label>)
+        } else if (data.row.status === 'Démission') {
+          return (<Label variant="ghost" color='error'>Démission</Label>)
+        } //else if (data.row.status === 'Congé') {
+          //return (<Label variant="ghost" color='warning'>Congé</Label>)
+        // }
+      }
+    },
+    {
+      field: 'tools', headerName: 'Matériels empruntés', width: 150, type: 'action',
       renderCell: (data) => {
         return (
           <>
             <Stack direction="row">
               <Link underline="none" href={'/employee/toolsmonthlyemployee/' + data.id}>
-                <Chip 
-                  icon={<AddCircleIcon/>} 
+                <Chip
+                  icon={<AddCircleIcon />}
                   label="Voir"
-                  sx={{cursor:'pointer'}}
+                  sx={{ cursor: 'pointer' }}
                   variant="outlined"
                   color="primary"
                 />
@@ -101,51 +134,23 @@ function MonthlyEmployee() {
             </Stack>
           </>
         )
-      }},
-    { field: 'code_chantier', headerName: 'Code Chantier',    width: 150 },
-    { field: 'category',      headerName: 'Categorie',        width: 100 },
-    { field: 'hiring_date',   headerName: 'Date d\'embauche', width: 150,
-      renderCell: (data) => {
-        if (data.row.hiring_date) {
-          return moment(data.row.hiring_date).format('YYYY-MM-DD')
-        }
       }
     },
-    { field: 'motif',         headerName: 'Motif',            width: 80, type: 'action', 
-    renderCell: (data) => {
-      if (data.row.motif)
-      return (
-        <Tooltip title={data.row.motif}>
-            <InfoIcon sx={{ color: 'grey' }}/>
-          </Tooltip>
-        )
-      }},
-    { field: 'type_contrat',  headerName: 'Type de contrat',  width: 150 },
-    { field: 'evaluation',    headerName: 'Evaluation',       width: 250,
-      renderCell: (data) => {
-        if (data.row.evaluation) {
-          return( <Label variant="ghost" color='primary'>{data.row.evaluation}</Label> )
-        }
-      }
-    },
-    { field: 'start_date',    headerName: 'Date de départ',   width: 150,
-      renderCell: (data) => {
-        if (data.row.start_date) {
-          return moment(data.row.start_date).format('YYYY-MM-DD')
-        }
-      }
-    },
-    { field: 'sanction',      headerName: 'Sanction',         width: 200,
-      renderCell: (data) => {
-        if (data.row.sanction) {
-          return( <Label variant="ghost" color='error'>{data.row.sanction}</Label> )
-        }
-      }
-    },
-    { field: 'start_motif',   headerName: 'Motif de départ',  width: 150 },
-    { field: 'ostie_num',     headerName: 'Numéro Ostie',     width: 150 },
-    { field: 'cnaps_num',     headerName: 'Numéro CNAPS',     width: 150 },
-    { field: 'action',        headerName: 'Action',           width: 150, type: 'action',
+    // {
+    //   field: 'motif', headerName: 'Motif', width: 80, type: 'action',
+    //   renderCell: (data) => {
+    //     if (data.row.motif)
+    //       return (
+    //         <Tooltip title={data.row.motif}>
+    //           <InfoIcon sx={{ color: 'grey' }} />
+    //         </Tooltip>
+    //       )
+    //   }
+    // },
+    { field: 'ostie_num', headerName: 'Numéro Ostie', width: 150 },
+    { field: 'cnaps_num', headerName: 'Numéro CNAPS', width: 150 },
+    {
+      field: 'action', headerName: 'Action', width: 150, type: 'action',
       renderCell: (data) => {
         return (
           <>
@@ -159,7 +164,8 @@ function MonthlyEmployee() {
             </IconButton>
           </>
         )
-      }},
+      }
+    },
   ];
   
   const rows = monthlyemployees.map(monthlyemployee => ({ 
@@ -176,11 +182,6 @@ function MonthlyEmployee() {
     code_chantier:monthlyemployee.code_chantier, 
     category:     monthlyemployee.category, 
     hiring_date:  monthlyemployee.hiring_date,
-    type_contrat: monthlyemployee.type_contrat,
-    evaluation:   monthlyemployee.evaluation,
-    start_date:   monthlyemployee.start_date,
-    start_motif:  monthlyemployee.start_motif,
-    sanction:     monthlyemployee.sanction,
     motif:        monthlyemployee.motif,
     ostie_num:    monthlyemployee.ostie_num,
     cnaps_num:    monthlyemployee.cnaps_num,
@@ -217,11 +218,9 @@ function MonthlyEmployee() {
           >
             Nouveau employé
           </Button>
-      
       </Typography>
 
       <Container maxWidth="xxl">
-
         <Paper sx={{ width: '95%', overflow: 'hidden' }}>
           <Box sx={{ height: 520, width: '100%' }}>
             <DataGrid
@@ -234,7 +233,6 @@ function MonthlyEmployee() {
             />
           </Box>
         </Paper>
-
       </Container>
     </div>
   )

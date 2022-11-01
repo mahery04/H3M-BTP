@@ -1,8 +1,0 @@
-- loading before getAll
-- global view in daily presence
-- export pdf in global view
-- monthly presence concept
-- ...
-- contrat/famille crud
-- login/signup
-- 

@@ -7,10 +7,7 @@ import { Link } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArticleIcon from '@mui/icons-material/Article';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import FilterTiltShiftIcon from '@mui/icons-material/FilterTiltShift';
-import EditIcon from '@mui/icons-material/Edit';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import InfoIcon from '@mui/icons-material/Info';
 
 import { Box, Breadcrumbs, Button, Card, CardActions, CardContent, FormControl, Grid, IconButton, InputLabel, Modal, Select, Stack, TextField, Tooltip, Typography } from '@mui/material'
 
@@ -26,7 +23,7 @@ import swal from '@sweetalert/with-react';
 
 import personnalToolsService from '../services/personnalToolsService';
 import toolsDailyEmployee from '../services/toolsDailyEmployee';
-import dailyEmployeeService from '../services/dailyEmployeeService'
+import dailyEmployeeService from '../services/dailyEmployeeService';
 
 const style = {
     position: 'absolute',

@@ -49,7 +49,8 @@ const CommonTools = () => {
   }, [])
 
   const columns = [
-    { field: 'purchase_date',         headerName: 'Date d\'achat',            width: 150,
+    {
+      field: 'purchase_date', headerName: 'Date d\'achat', width: 150,
       renderCell: (data) => {
         if (data.row.purchase_date) {
           return moment(data.row.purchase_date).format('DD-MM-YYYY')
@@ -59,9 +60,9 @@ const CommonTools = () => {
     { field: 'identification_number', headerName: 'Numéro d\'identification', width: 200 },
     { field: 'vendor', headerName: 'Fournisseur', width: 150 },
     { field: 'num_fact', headerName: 'Numéro facture', width: 150 },
-    { field: 'article_name',          headerName: 'Nom de l\'article',        width: 200 },
-    // { field: 'assignation_place',     headerName: 'Lieu d\'affectation',      width: 150, type: 'number' },
-    { field: 'statue',                headerName: 'Etat',                     width: 80, type: 'action',
+    { field: 'article_name', headerName: 'Nom de l\'article', width: 200 },
+    {
+      field: 'statue', headerName: 'Etat', width: 80, type: 'action',
       renderCell: (data) => {
         if (data.row.statue === 'Nouveau') {
           return (<Label variant="ghost" color='success'>Nouveau</Label>)
@@ -69,8 +70,9 @@ const CommonTools = () => {
           return (<Label variant="ghost" color='warning'>Occasion</Label>)
         }
       }},
-    { field: 'material_number',       headerName: 'Nombre de matériel',       width: 150, type: 'number' },
-    { field: 'historical',            headerName: 'Lieu d\'affectation',               width: 200,
+    { field: 'material_number', headerName: 'Nombre de matériel', width: 150, type: 'number' },
+    {
+      field: 'historical', headerName: 'Lieu d\'affectation', width: 200,
       renderCell: (data) => {
         if (data.row.historical)
         return (
@@ -80,7 +82,8 @@ const CommonTools = () => {
         )
       }
     },
-    { field: 'action',                headerName: 'Action',                   width: 150, type: 'actions',
+    {
+      field: 'action', headerName: 'Action', width: 150, type: 'actions',
       renderCell: (data) => {
         return (
           <>
@@ -107,7 +110,6 @@ const CommonTools = () => {
     vendor:                 commontool.vendor,
     num_fact:               commontool.num_fact,
     article_name:           commontool.article_name,
-    // assignation_place:      commontool.assignation_place,
     statue:                 commontool.statue,
     material_number:        commontool.material_number,
     etat:                   commontool.etat,
@@ -134,35 +136,33 @@ const CommonTools = () => {
   return (
       <div>
           <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-              Outillages Communs
-              <Button
-                  size="medium"
-                  variant="outlined"
-                  color="primary"
-                  sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
-                  startIcon={<AddIcon />}
-                  href='/tools/newcommontool'
-              >
-                  Nouveau outil
-              </Button>
+            Outillages Communs
+            <Button
+                size="medium"
+                variant="outlined"
+                color="primary"
+                sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
+                startIcon={<AddIcon />}
+                href='/tools/newcommontool'
+            >
+                Nouveau outil
+            </Button>
           </Typography>
 
           <Container maxWidth="xxl">
-
-              <Paper sx={{ width: '95%', overflow: 'hidden' }}>
-                  <Box sx={{ height: 500, width: '100%' }}>
-                      <DataGrid
-                          rows={rows}
-                          columns={columns}
-                          components={{ Toolbar: GridToolbar }}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
-                          // checkboxSelection
-                          disableSelectionOnClick
-                      />
-                  </Box>
-              </Paper>
-
+            <Paper sx={{ width: '95%', overflow: 'hidden' }}>
+                <Box sx={{ height: 500, width: '100%' }}>
+                    <DataGrid
+                      rows={rows}
+                      columns={columns}
+                      components={{ Toolbar: GridToolbar }}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                      // checkboxSelection
+                      disableSelectionOnClick
+                    />
+                </Box>
+            </Paper>
           </Container>
       </div>
   )

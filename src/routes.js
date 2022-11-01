@@ -37,6 +37,9 @@ import NewCantine from './pages/NewCantine';
 import Conge from './pages/Conge';
 import NewConge from './pages/NewConge';
 import UpdateConge from './pages/UpdateConge';
+import ContratDailyEmployee from './pages/ContratDailyEmployee';
+import UpdateContratDailyEmployee from './pages/UpdateContratDailyEmployee';
+import ContratMonthlyEmployee from './pages/ContratMonthlyEmployee';
 
 
 // ----------------------------------------------------------------------
@@ -72,6 +75,11 @@ export default function Router() {
         { path: 'updatemonthlyemployee/:id', element: !user? <Navigate to="/login" /> : <UpdateMonthlyEmployee /> },
         { path: 'toolsdailyemployee/:id', element: !user? <Navigate to="/login" /> : <ToolsDailyEmployee /> },
         { path: 'toolsmonthlyemployee/:id', element: !user? <Navigate to="/login" /> : <ToolsMonthlyEmployee /> },
+        { path: 'contrat-daily-employee/:id', element: !user? <Navigate to="/login" /> : <ContratDailyEmployee /> },
+        { path: 'update-contrat-daily-employee/:id', element: !user? <Navigate to="/login" /> : <UpdateContratDailyEmployee /> },
+        { path: 'contrat-monthly-employee/:id', element: !user? <Navigate to="/login" /> : <ContratMonthlyEmployee /> },
+
+
       ]
     },
     {

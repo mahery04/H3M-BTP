@@ -17,47 +17,12 @@ import InfoIcon from '@mui/icons-material/Info';
 
 import { Link } from 'react-router-dom';
 
-import {
-  randomInt,
-  randomUserName,
-  randomArrayItem,
-} from '@mui/x-data-grid-generator';
-
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
 
 import personnalToolsService from '../services/personnalToolsService'
 import Label from '../components/Label';
 
-
-const ExpandableCell = ({ value }) => {
-  const [expanded, setExpanded] = React.useState(false);
-
-  return (
-    <Box>
-      {expanded ? value : value.slice(0, 200)}&nbsp;
-      {value.length > 200 && (
-        // eslint-disable-next-line jsx-a11y/anchor-is-valid
-        <Link
-          type="button"
-          component="button"
-          sx={{ fontSize: 'inherit' }}
-          onClick={() => setExpanded(!expanded)}
-        >
-          {expanded ? 'view less' : 'view more'}
-        </Link>
-      )}
-    </Box>
-  );
-};
-
-ExpandableCell.propTypes = {
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.any,
-};
 
 
 function PersonnalTools() {
@@ -116,7 +81,7 @@ function PersonnalTools() {
       }
     },
     { field: 'material_number', headerName: 'Nombre de matériel', width: 150, type: 'number' },
-    { field: 'historical', headerName: 'Historique', width: 100, 
+    { field: 'historical', headerName: 'Lieu d\'affectation', width: 150, 
       renderCell: (data) => {
         if (data.row.historical)
         return (

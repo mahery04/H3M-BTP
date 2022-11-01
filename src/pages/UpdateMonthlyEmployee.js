@@ -70,11 +70,6 @@ function UpdateMonthlyEmployee(props) {
     code_chantier: '',
     category:     '',
     hiring_date:  hiringdate,
-    type_contrat: contrat,
-    evaluation:   evaluation,
-    start_date:   startdate,
-    start_motif:  '',
-    sanction:     sanction,
     ostie_num:    '',
     cnaps_num:    '',
   }
@@ -118,35 +113,12 @@ function UpdateMonthlyEmployee(props) {
     setMonthlyemployee({...monthlyemployee, post_id: postInput})
   };
 
-  const handleContratChange = (event) => {
-    const postInput = event.target.value
-    setContrat(postInput);
-    setMonthlyemployee({...monthlyemployee, type_contrat: postInput})
-  };
-
-  const handleEvaluationChange = (event) => {
-    const postInput = event.target.value
-    setEvaluation(postInput);
-    setMonthlyemployee({...monthlyemployee, evaluation: postInput})
-  };
-
-  const handleSanctionChange = (event) => {
-    const postInput = event.target.value
-    setSanction(postInput);
-    setMonthlyemployee({...monthlyemployee, sanction: postInput})
-  };
-
   const hiringDate = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
     setHiringdate(d);
     setMonthlyemployee({ ...monthlyemployee, hiring_date: d })
   }
 
-  const startDate = (newDate) => {
-    const d = moment(newDate).format('YYYY-MM-DD')
-    setStartdate(d);
-    setMonthlyemployee({ ...monthlyemployee, start_date: d })
-  }
 
   console.log(monthlyemployee);
 
@@ -155,28 +127,42 @@ function UpdateMonthlyEmployee(props) {
   const updateEmployee = e => {
     e.preventDefault();
 
-    var data = {
-      matricule:    monthlyemployee.matricule,
-      firstname:    monthlyemployee.firstname,
-      lastname:     monthlyemployee.lastname,
-      cin:          monthlyemployee.cin,
-      address:      monthlyemployee.address,
-      contact:      monthlyemployee.contact,
-      group:        monthlyemployee.group,
-      post_id:      monthlyemployee.post_id,
-      status:       monthlyemployee.status,
-      code_chantier:monthlyemployee.code_chantier,
-      category:     monthlyemployee.category,
-      hiring_date:  monthlyemployee.hiring_date,
-      type_contrat: monthlyemployee.type_contrat,
-      evaluation:   monthlyemployee.evaluation,
-      start_date:   monthlyemployee.start_date,
-      start_motif:  monthlyemployee.start_motif,
-      sanction:     monthlyemployee.sanction,
-      motif:        monthlyemployee.motif,
-      ostie_num:    monthlyemployee.ostie_num,
-      cnaps_num:    monthlyemployee.cnaps_num,
+    if (!monthlyemployee.hiring_date) {
+      var data = {
+        matricule:    monthlyemployee.matricule,
+        firstname:    monthlyemployee.firstname,
+        lastname:     monthlyemployee.lastname,
+        cin:          monthlyemployee.cin,
+        address:      monthlyemployee.address,
+        contact:      monthlyemployee.contact,
+        group:        monthlyemployee.group,
+        post_id:      monthlyemployee.post_id,
+        status:       monthlyemployee.status,
+        code_chantier:monthlyemployee.code_chantier,
+        category:     monthlyemployee.category,
+        hiring_date:  null,
+        ostie_num:    monthlyemployee.ostie_num,
+        cnaps_num:    monthlyemployee.cnaps_num,
+      }
+    } else {
+      var data = {
+        matricule:    monthlyemployee.matricule,
+        firstname:    monthlyemployee.firstname,
+        lastname:     monthlyemployee.lastname,
+        cin:          monthlyemployee.cin,
+        address:      monthlyemployee.address,
+        contact:      monthlyemployee.contact,
+        group:        monthlyemployee.group,
+        post_id:      monthlyemployee.post_id,
+        status:       monthlyemployee.status,
+        code_chantier:monthlyemployee.code_chantier,
+        category:     monthlyemployee.category,
+        hiring_date:  moment(Date.parse(monthlyemployee.hiring_date)).format("YYYY-MM-DD"),
+        ostie_num:    monthlyemployee.ostie_num,
+        cnaps_num:    monthlyemployee.cnaps_num,
+      }
     }
+
 
     if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.group.length <= 0 || data.post_id.length <= 0 || data.status.length <= 0) {
       swal({
@@ -201,12 +187,6 @@ function UpdateMonthlyEmployee(props) {
               code_chantier:res.data.code_chantier,
               category:     res.data.category,
               hiring_date:  res.data.hiring_date,
-              type_contrat: res.data.type_contrat,
-              evaluation:   res.data.evaluation,
-              start_date:   res.data.start_date,
-              start_motif:  res.data.start_motif,
-              sanction:     res.data.sanction,
-              motif:        res.data.motif,
               ostie_num:    res.data.ostie_num,
               cnaps_num:    res.data.cnaps_num,
           })
@@ -243,15 +223,12 @@ function UpdateMonthlyEmployee(props) {
       </Typography>
 
       <Container maxWidth="xxl">
-
         <Card sx={{ height: '100%', width: '95%' }}>
           <CardContent>
-
             <form onSubmit={updateEmployee} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ lineHeight: 6 }}>
                   <Grid item xs={2} sm={4} md={4}>
-
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
@@ -497,122 +474,6 @@ function UpdateMonthlyEmployee(props) {
                 </Box>
                 : ''}
                 <br /><br /><br />
-
-                <Divider>
-                  <Chip label="CONTRAT DE TRAVAIL" />
-                </Divider>
-                
-                <Grid container spacing={2} columns={12}>
-                  <Grid item xs={6}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                      <HandshakeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
-                        <InputLabel id="demo-simple-select-standard-label">Type de contrat</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-standard-label"
-                          id="demo-simple-select-standard"
-                          value={monthlyemployee.type_contrat}
-                          onChange={handleContratChange}
-                          label="Type de contrat"
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value="INTERIMAIRE">INTERIMAIRE</MenuItem>
-                          <MenuItem value="JOURNALIER">JOURNALIER</MenuItem>
-                          <MenuItem value="SAISONNIER">SAISONNIER</MenuItem>
-                          <MenuItem value="APPRENTISSAGE">APPRENTISSAGE</MenuItem>
-                          <MenuItem value="CDD">CDD</MenuItem>
-                          <MenuItem value="CDI">CDI</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                      <GradeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
-                        <InputLabel id="demo-simple-select-standard-label">Evaluation</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-standard-label"
-                          id="demo-simple-select-standard"
-                          value={monthlyemployee.evaluation}
-                          onChange={handleEvaluationChange}
-                          label="Evaluation"
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value="ESSAIE">ESSAIE</MenuItem>
-                          <MenuItem value="ESSAIE NON CONCLUANT">ESSAIE NON CONCLUANT</MenuItem>
-                          <MenuItem value="RENOUVELLEMENT">RENOUVELLEMENT</MenuItem>
-                          <MenuItem value="CONFIRMATION">CONFIRMATION</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        label="Date de départ"
-                        id="start_date"
-                        name="start_date"
-                        value={monthlyemployee.start_date}
-                        onChange={startDate}
-                        renderInput={(params) =>
-                          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                            <TextField
-                              {...params}
-                              variant="standard"
-                              sx={{ width: '100%', mt: 1 }}
-                              id="start_date"
-                              name="start_date"
-                            /><br />
-                          </Box>
-                        }
-                      />
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                      <TrendingDownIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <FormControl variant="standard" sx={{ m: 1, width: '100%' }}>
-                        <InputLabel id="demo-simple-select-standard-label">Sanction</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-standard-label"
-                          id="demo-simple-select-standard"
-                          value={monthlyemployee.sanction}
-                          onChange={handleSanctionChange}
-                          label="Sanction"
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value="AVERTISSEMENT VERBAL">AVERTISSEMENT VERBAL</MenuItem>
-                          <MenuItem value="AVERTISSEMENT ECRIT">AVERTISSEMENT ECRIT</MenuItem>
-                          <MenuItem value="DERNIER AVERTISSEMENT">DERNIER AVERTISSEMENT</MenuItem>
-                          <MenuItem value="MISE A PIED">MISE A PIED</MenuItem>
-                          <MenuItem value="BLAME">BLAME</MenuItem>
-                          <MenuItem value="LICENCIEMENT">LICENCIEMENT</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                      <EditIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <TextField
-                        id="start_motif"
-                        value={monthlyemployee.start_motif}
-                        onChange={handleInputChange}
-                        name="start_motif"
-                        label="Motif de départ"
-                        variant="standard"
-                        sx={{ width: '100%' }}
-                      /><br />
-                    </Box>
-                  </Grid>
-                </Grid><br /><br />
 
                 <Button
                   size="medium"
