@@ -8,6 +8,10 @@ const getMonth = () => {
     return http.get(`/api/monthlyweekpresence/month`)
 }
 
+const getLastDate = (id) => {
+    return http.get(`/api/monthlyweekpresence/lastdate/${id}`)
+}
+
 const globalView = (data) => {
     return http.post('api/monthlyweekpresence/view', data)
 }
@@ -21,7 +25,7 @@ const validationUpdate = (id) => {
 }
 
 const action = (id, data) => {
-    return http.put(`/api/monthlypresence/${id}`, data)
+    return http.post(`/api/monthlypresence/${id}`, data)
 }
 
 const setPresence = (id) => {
@@ -61,7 +65,7 @@ const history = (id) => {
 }
 
 const exportedObject = {
-    getAll, getMonth, globalView, create, action, setPresence, nbPresence, setAbsence, nbAbsence, advance, getAdvance, salary, getSalary, history, validationUpdate
+    getAll, getMonth, getLastDate, globalView, create, action, setPresence, nbPresence, setAbsence, nbAbsence, advance, getAdvance, salary, getSalary, history, validationUpdate
 }
 
 export default exportedObject

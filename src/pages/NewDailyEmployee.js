@@ -160,7 +160,7 @@ function NewDailyEmployee() {
       remarque:     dailyemployee.remarque
     }
 
-    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.cin.length <= 0 || data.address.length <= 0 || data.contact.length <= 0 || data.post_id.length <= 0 || data.code_chantier.length <= 0 || data.group.length <= 0 || data.category.length <= 0 || data.hiring_date.length <= 0 || data.status.length <= 0) {
+    if(!data.matricule || !data.firstname || !data.lastname || !data.post_id || !data.group || !data.status) {
       swal({
         title: "Un erreur est survenue!",
         text: "Des formulaires requis sont vides.",

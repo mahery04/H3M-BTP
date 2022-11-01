@@ -79,7 +79,13 @@ function DailyEmployee() {
     { field: 'group',         headerName: 'Groupe',           width: 100 },
     { field: 'contact',       headerName: 'Contact',          width: 150 },
     { field: 'category',      headerName: 'Catégorie',        width: 100 },
-    { field: 'hiring_date',   headerName: 'Date d\'embauche', width: 150 },
+    { field: 'hiring_date',   headerName: 'Date d\'embauche', width: 150,
+      renderCell: (data) => {
+        if (data.row.hiring_date) {
+          return moment(data.row.hiring_date).format('YYYY-MM-DD')
+        }
+      } 
+    },
     { field: 'type_contrat',  headerName: 'Type de contrat',  width: 150 },
     { field: 'evaluation',    headerName: 'Evaluation',       width: 250,
       renderCell: (data) => {
