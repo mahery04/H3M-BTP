@@ -37,13 +37,13 @@ function DailyPresence() {
       renderCell: (data) => {
         return (
           <>
-            <Link underline="none" href={'/presence/dailypresence-history/' + data.id}>
+            {/* <Link underline="none" href={'/presence/dailypresence-history/' + data.id}>
               <Tooltip title="Historique">
                 <IconButton component="label">
                   <HistoryIcon sx={{color:'green', width:'55px'}} />
                 </IconButton>
               </Tooltip>
-            </Link>
+            </Link> */}
             <Link underline="none" href={'/presence/newdailypresence/' + data.id}>
               <Button
                 variant="outlined"

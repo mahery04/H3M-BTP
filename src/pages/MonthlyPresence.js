@@ -32,18 +32,18 @@ const MonthlyPresence = () => {
     { field: 'firstname', headerName: 'Nom',          width: 200 },
     { field: 'lastname',  headerName: 'Prénom',       width: 200 },
     { field: 'contact',   headerName: 'Contact',      width: 150 },
-    { field: 'post_name', headerName: 'Post occupé',  width: 100 },
+    { field: 'post_name', headerName: 'Post occupé',  width: 150 },
     { field: 'action',    headerName: 'Action',       width: 250, type: 'action',
       renderCell: (data) => {
         return (
           <>
-            <Link underline="none" href={'/presence/monthlypresence-history/' + data.id}>
+            {/* <Link underline="none" href={'/presence/monthlypresence-history/' + data.id}>
               <Tooltip title="Historique">
                 <IconButton component="label">
                   <HistoryIcon sx={{color:'green', width:'55px'}} />
                 </IconButton>
               </Tooltip>
-            </Link>
+            </Link> */}
             <Link underline="none" href={'/presence/newmonthlypresence/' + data.id}>
               <Button 
                 variant="outlined" 

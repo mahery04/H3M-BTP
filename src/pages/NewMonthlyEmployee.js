@@ -20,10 +20,6 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import HandshakeIcon from '@mui/icons-material/Handshake';
-import GradeIcon from '@mui/icons-material/Grade';
-import EditIcon from '@mui/icons-material/Edit';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 import moment from 'moment';
 import InputMask from 'react-input-mask'
@@ -180,7 +176,7 @@ function NewMonthlyEmployee() {
         >
           Retour
         </Button>
-        <Post />
+        {/* <Post /> */}
       </Typography>
 
       <Container maxWidth="xxl">
@@ -201,6 +197,7 @@ function NewMonthlyEmployee() {
                         onChange={handleInputChange}
                         name="matricule"
                         label="Numéro matricule"
+                        required
                         variant="standard"
                         sx={{ width: '100%' }}
                       /><br />
@@ -250,17 +247,17 @@ function NewMonthlyEmployee() {
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 5 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
+                        <InputLabel id="demo-simple-select-standard-label">Status *</InputLabel>
                         <Select
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
                           value={status}
                           onChange={handleStatusChange}
-                          label="Status"
+                          label="Status *"
                         >
-                          <MenuItem value="">
+                          {/* <MenuItem value="">
                             <em>None</em>
-                          </MenuItem>
+                          </MenuItem> */}
                           <MenuItem value="Actif">Actif</MenuItem>
                           <MenuItem value="Congé">Congé</MenuItem>
                           <MenuItem value="Démission">Démission</MenuItem>
@@ -273,6 +270,7 @@ function NewMonthlyEmployee() {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
                         id="firstname"
+                        required
                         value={monthlyemployee.firstname}
                         onChange={handleInputChange}
                         name="firstname"
@@ -310,17 +308,17 @@ function NewMonthlyEmployee() {
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 6 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Groupe</InputLabel>
+                        <InputLabel id="demo-simple-select-standard-label">Groupe *</InputLabel>
                         <Select
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
                           value={group}
                           onChange={handleGroupChange}
-                          label="Groupe"
+                          label="Groupe *"
                         >
-                          <MenuItem value="">
+                          {/* <MenuItem value="">
                             <em>None</em>
-                          </MenuItem>
+                          </MenuItem> */}
                           <MenuItem value="BTP">BTP</MenuItem>
                           <MenuItem value="SIP">SIP</MenuItem>
                           <MenuItem value="Parapharmaceutique">Parapharmaceutique</MenuItem>
@@ -334,6 +332,7 @@ function NewMonthlyEmployee() {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
                         id="lastname"
+                        required
                         value={monthlyemployee.lastname}
                         onChange={handleInputChange}
                         name="lastname"

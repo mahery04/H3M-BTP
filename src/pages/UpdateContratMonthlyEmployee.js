@@ -19,16 +19,16 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import moment from 'moment';
 import swal from '@sweetalert/with-react';
 
-import contratDailyEmployeeService from '../services/contratDailyEmployeeService';
+import contratMonthlyEmployeeService from '../services/contratMonthlyEmployeeService';
 
-function UpdateContratDailyEmployee() {
+function UpdateContratMonthlyEmployee() {
 
   const [startdate, setStartdate] = useState(null);
   const [contrat,setContrat] = useState('');
   const [evaluation,setEvaluation] = useState('');
   const [sanction,setSanction] = useState('');
 
-  const initialDailyContratState = {
+  const initialMonthlyContratState = {
     id:           null,
     type_contrat:  contrat,
     evaluation:   evaluation,
@@ -41,12 +41,12 @@ function UpdateContratDailyEmployee() {
   const contrat_id = findData.id
 
   const [loaded, setLoaded] = useState(false)
-  const [contratDailyEmployee, setContratDailyEmployee] = useState(initialDailyContratState)
+  const [contratMonthlyEmployee, setContratMonthlyEmployee] = useState(initialMonthlyContratState)
 
   useEffect(() => {
     const load = async () => {
-      const res = await contratDailyEmployeeService.get(contrat_id)
-      setContratDailyEmployee(res.data)
+      const res = await contratMonthlyEmployeeService.get(contrat_id)
+      setContratMonthlyEmployee(res.data)
       setLoaded(true)
     }
     if (contrat_id && !loaded) {
@@ -56,31 +56,31 @@ function UpdateContratDailyEmployee() {
   
   const handleInputChange = e => {
     const { name, value } = e.target
-    setContratDailyEmployee({ ...contratDailyEmployee, [name]: value })
+    setContratMonthlyEmployee({ ...contratMonthlyEmployee, [name]: value })
   }
 
   const handleContratChange = (event) => {
     const postInput = event.target.value
     setContrat(postInput);
-    setContratDailyEmployee({...contratDailyEmployee, type_contrat: postInput})
+    setContratMonthlyEmployee({...contratMonthlyEmployee, type_contrat: postInput})
   }
 
   const handleEvaluationChange = (event) => {
     const postInput = event.target.value
     setEvaluation(postInput);
-    setContratDailyEmployee({...contratDailyEmployee, evaluation: postInput})
+    setContratMonthlyEmployee({...contratMonthlyEmployee, evaluation: postInput})
   }
 
   const handleSanctionChange = (event) => {
     const postInput = event.target.value
     setSanction(postInput);
-    setContratDailyEmployee({...contratDailyEmployee, sanction: postInput})
+    setContratMonthlyEmployee({...contratMonthlyEmployee, sanction: postInput})
   }
 
   const startDate = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
     setStartdate(d);
-    setContratDailyEmployee({ ...contratDailyEmployee, start_date: d })
+    setContratMonthlyEmployee({ ...contratMonthlyEmployee, start_date: d })
   }
 
   const navigate = useNavigate()
@@ -89,12 +89,12 @@ function UpdateContratDailyEmployee() {
     e.preventDefault()
 
     var data = {
-      id: contratDailyEmployee.id,
-      type_contrat: contratDailyEmployee.type_contrat,
-      evaluation: contratDailyEmployee.evaluation,
-      start_date: contratDailyEmployee.start_date,
-      start_motif: contratDailyEmployee.start_motif,
-      sanction: contratDailyEmployee.sanction,
+      id: contratMonthlyEmployee.id,
+      type_contrat: contratMonthlyEmployee.type_contrat,
+      evaluation: contratMonthlyEmployee.evaluation,
+      start_date: contratMonthlyEmployee.start_date,
+      start_motif: contratMonthlyEmployee.start_motif,
+      sanction: contratMonthlyEmployee.sanction,
     }
 
     // if (data.contrat_id.length <= 0 || data.type_contrat.length <= 0 || data.start_date.length <= 0 || data.evaluation.length <= 0 || data.start_motif.length <= 0 || data.sanction.length <= 0) {
@@ -105,8 +105,8 @@ function UpdateContratDailyEmployee() {
     //     button: "OK",
     //   });
     // } else {
-      contratDailyEmployeeService.update(contrat_id, data).then(res => {
-        setContratDailyEmployee({
+      contratMonthlyEmployeeService.update(contrat_id, data).then(res => {
+        setContratMonthlyEmployee({
           id: res.data.contrat_id,
           type_contrat: res.data.type_contrat,
           evaluation: res.data.evaluation,
@@ -117,7 +117,7 @@ function UpdateContratDailyEmployee() {
           console.log(err);
         })
       })
-      navigate(`/employee/contrat-daily-employee/${contratDailyEmployee.id}`)
+      navigate(`/employee/contrat-monthly-employee/${contratMonthlyEmployee.id}`)
     // }
   }
 
@@ -131,7 +131,7 @@ function UpdateContratDailyEmployee() {
           color="primary"
           sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
           startIcon={<ArrowBackIcon />}
-          href='/employee/dailyemployee'
+          href='/employee/monthlyemployee'
         >
           Retour
         </Button>
@@ -147,7 +147,7 @@ function UpdateContratDailyEmployee() {
                     <Select
                       labelId="demo-simple-select-standard-label"
                       id="demo-simple-select-standard"
-                      value={contratDailyEmployee.type_contrat}
+                      value={contratMonthlyEmployee.type_contrat}
                       onChange={handleContratChange}
                       label="Type de contrat"
                     >
@@ -170,7 +170,7 @@ function UpdateContratDailyEmployee() {
                     <Select
                       labelId="demo-simple-select-standard-label"
                       id="demo-simple-select-standard"
-                      value={contratDailyEmployee.evaluation}
+                      value={contratMonthlyEmployee.evaluation}
                       onChange={handleEvaluationChange}
                       label="Evaluation"
                     >
@@ -190,7 +190,7 @@ function UpdateContratDailyEmployee() {
                     label="Date de départ"
                     id="start_date"
                     name="start_date"
-                    value={contratDailyEmployee.start_date}
+                    value={contratMonthlyEmployee.start_date}
                     onChange={startDate}
                     renderInput={(params) =>
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -213,7 +213,7 @@ function UpdateContratDailyEmployee() {
                     <Select
                       labelId="demo-simple-select-standard-label"
                       id="demo-simple-select-standard"
-                      value={contratDailyEmployee.sanction}
+                      value={contratMonthlyEmployee.sanction}
                       onChange={handleSanctionChange}
                       label="Sanction"
                     >
@@ -233,7 +233,7 @@ function UpdateContratDailyEmployee() {
                   <EditIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                   <TextField
                     id="start_motif"
-                    value={contratDailyEmployee.start_motif}
+                    value={contratMonthlyEmployee.start_motif}
                     onChange={handleInputChange}
                     name="start_motif"
                     label="Motif de départ"
@@ -254,4 +254,4 @@ function UpdateContratDailyEmployee() {
   )
 }
 
-export default UpdateContratDailyEmployee
+export default UpdateContratMonthlyEmployee

@@ -2,11 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Button, Card, CardContent, Container, TextField, Typography, FormControl, InputLabel, Select, Paper, Box } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'; 
-
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
@@ -75,25 +70,34 @@ const MonthlyPresenceView = () => {
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
   
   const columns = [
+    { field: 'month',           headerName: 'Mois',                 width: 150},
     { field: 'matricule',       headerName: 'Matricule',            width: 90},
     { field: 'firstname',       headerName: 'Nom',                  width: 200},
     { field: 'lastname',        headerName: 'Prénom',               width: 200},
-    { field: 'post_name',       headerName: 'Poste occupé',         width: 150},
-    { field: 'first_date',      headerName: 'Début',                width: 150},
-    { field: 'last_date',       headerName: 'Fin',                  width: 150},
+    // { field: 'post_name',       headerName: 'Poste occupé',         width: 150},
+    // { field: 'first_date',      headerName: 'Début',                width: 150},
+    // { field: 'last_date',       headerName: 'Fin',                  width: 150},
+    { field: 'day1',        headerName: 'Jour 1',               width: 120},
+    { field: 'day2',        headerName: 'Jour 2',               width: 120},
+    { field: 'day3',        headerName: 'Jour 3',               width: 120},
+    { field: 'day4',        headerName: 'Jour 4',               width: 120},
+    { field: 'day5',        headerName: 'Jour 5',               width: 120},
+    { field: 'day6',        headerName: 'Jour 6',               width: 120},
+    { field: 'day7',        headerName: 'Jour 7',               width: 120},
     { field: 'nb_present',      headerName: 'Total present',        width: 100},
+    // { field: 'nb_half_day',      headerName: 'N/bre demi-journée',       width: 150},
     { field: 'nb_absent',       headerName: 'Total absent',         width: 100},
+    { field: 'total_advance',         headerName: 'Avance Salaire',         width: 150, type: 'action',
+      renderCell: (data) => {
+        if (data.row.total_advance) return `${data.row.total_advance} Ar`
+      }
+    },
     { field: 'total_salary',    headerName: 'Total Salaire',        width: 100, type: 'action',
       renderCell: (data) => {
           if (data.row.total_salary) return `${data.row.total_salary} Ar`
       }
     },
-    { field: 'total_advance',   headerName: 'Total Advance',        width: 150, type: 'action',
-      renderCell: (data) => {
-          if (data.row.total_advance) return `${data.row.total_advance} Ar`
-      }
-    },
-    { field: 'validation',          headerName: 'Status',               width: 150,
+    { field: 'validation',          headerName: 'Status',           width: 150,
       renderCell: (data) => {
         if (data.row.validation === 'NON VALIDE') {
           return ( <Label variant="ghost" color='error'>{data.row.validation}</Label> )
@@ -126,16 +130,24 @@ const MonthlyPresenceView = () => {
 
   const rows = views.map(view => ({
     id:           view.monthlyweekpresence_id,
+    month: view.month,
     matricule:    view.matricule,
     firstname:    view.firstname,
     lastname:     view.lastname,
-    post_name:    view.post_name,
-    first_date:   moment(view.first_date).format('DD-MM-YYYY'),
-    last_date:    moment(view.last_date).format('DD-MM-YYYY'),
+    // post_name:    view.post_name,
+    // first_date:   moment(view.first_date).format('DD-MM-YYYY'),
+    // last_date:    moment(view.last_date).format('DD-MM-YYYY'),
+    day1: view.full_date.split(' ')[0],
+    day2: view.full_date.split(' ')[1],
+    day3: view.full_date.split(' ')[2],
+    day4: view.full_date.split(' ')[3],
+    day5: view.full_date.split(' ')[4],
+    day6: view.full_date.split(' ')[5],
+    day7: view.full_date.split(' ')[6],
     nb_present:   view.nb_present,
     nb_absent:    view.nb_absent,
-    total_salary: view.total_salary,
     total_advance:view.total_advance,
+    total_salary: view.total_salary,
     validation:   view.validation
   }))
 

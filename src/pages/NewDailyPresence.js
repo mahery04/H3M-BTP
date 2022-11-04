@@ -41,14 +41,12 @@ function NewDailyPresence() {
 
   // insert new week
   const [month, setMonth] = useState(dayjs())
-  const [firstdate, setFirstdate] = useState(null)
-  const [lastdate, setLastdate] = useState(null)
+  const [startdate, setStartdate] = useState(null)
 
   const initialWeekState = {
     id:                 null,
     month:              moment(month.$d).format('MMMM YYYY'),
-    first_date:         firstdate,
-    last_date:          lastdate,
+    start_date:         startdate,
     dailyemployee_id:   dailyemployee_id
   }
   const [week, setWeek] = useState(initialWeekState)
@@ -59,27 +57,20 @@ function NewDailyPresence() {
     setWeek({ ...week, month: m })
   }
 
-  const insertFirstdate = (newFirstdate) => {
-    const f = moment(newFirstdate).format('YYYY-MM-DD')
-    setFirstdate(f)
-    setWeek({ ...week, first_date: f })
-  }
-
-  const insertLastdate = (newLastdate) => {
-    const l = moment(newLastdate).format('YYYY-MM-DD')
-    setLastdate(l)
-    setWeek({ ...week, last_date: l })
+  const insertStartdate = (newStartdate) => {
+    const f = moment(newStartdate).format('YYYY-MM-DD')
+    setStartdate(f)
+    setWeek({ ...week, start_date: f })
   }
 
   const saveWeek = e => {
     e.preventDefault()
     var data = {
       month:            week.month,
-      first_date:       week.first_date,
-      last_date:        week.last_date,
+      start_date:       week.start_date,
       dailyemployee_id: week.dailyemployee_id,
     }
-    if (!data.first_date || !data.last_date) {
+    if (!data.start_date) {
       swal({
         title: "Un erreur est survenue!",
         text: "Des formulaires requis sont vides.",
@@ -91,8 +82,7 @@ function NewDailyPresence() {
         setWeek({
           id:               res.data.id,
           month:            res.data.month,
-          first_date:       res.data.firstdate,
-          last_date:        res.data.last_date,
+          start_date:       res.data.startdate,
           dailyemployee_id: res.data.dailyemployee_id,
         })
         window.location.reload(true)
@@ -116,13 +106,10 @@ function NewDailyPresence() {
   }, [dailyemployee_id])
 
   const columns = [
-    { field: 'date',            headerName: 'Date',  width: 150, type: 'action',
+
+    { field: 'date',headerName: 'Date',  width: 250, type: 'action',
       renderCell: (data) => {
-        if (!data.row.date) {
-          return ''
-        } else {
-          return moment(data.row.date).format('YYYY-MM-DD')
-        }
+        if (data.row.date) return moment(data.row.date).format('YYYY-MM-DD')
       }
     },
     // { field: 'day_text',        headerName: 'Jour',     width: 150 },
@@ -157,21 +144,21 @@ function NewDailyPresence() {
   }))
 
   //insert new presence
-  const [dayValue, setDayValue] = useState('')
+  const [date, setDate] = useState(null)
   const [statusValue, setStatusValue] = useState('')
   const [salary, setSalary] = useState(0)
 
   const initialPresenceState = {
     id:     null,
-    day_id: dayValue,
+    date:   date,
     status: statusValue,
   }
   const [presence, setPresence] = useState(initialPresenceState)
 
-  const insertDay = e => {
-    const dayInput = e.target.value
-    setDayValue(dayInput)
-    setPresence({ ...presence, day_id: dayInput })
+  const insertDate = newDate => {
+    const dateInput = moment(newDate).format('YYYY-MM-DD')
+    setDate(dateInput)
+    setPresence({ ...presence, date: dateInput })
   }
 
   const insertStatus = e => {
@@ -192,11 +179,11 @@ function NewDailyPresence() {
     e.preventDefault()
 
     var data = {
-      day_id: presence.day_id,
+      date: presence.date,
       status: presence.status,
     }
 
-    if (!data.day_id) {
+    if (!data.date) {
       swal({
         title: "Un erreur est survenue!",
         text: "Des formulaires requis sont vides.",
@@ -208,16 +195,19 @@ function NewDailyPresence() {
         dailyPresenceService.salary(dailyemployee_id)
         dailyPresenceService.setPresence(dailyemployee_id)
         dailyPresenceService.setAbsence(dailyemployee_id)
+        dailyPresenceService.setHalfday(dailyemployee_id)
         window.location.reload(true)
       })
     }
   }
 
+  
   //show dashboard
   const [totalSalary, setTotalSalary] = useState(0)
   const [nbPresence, setNbPresence] = useState(0)
+  const [nbHalfday, setNbHalfday] = useState(0)
   const [nbAbsence, setNbAbsence] = useState(0)
-
+  
   const getSalary = () => {
     dailyPresenceService.getSalary(dailyemployee_id).then((res) => { setTotalSalary(res.data.total_salary) }).catch(err => { console.log(err) })
   }
@@ -225,7 +215,11 @@ function NewDailyPresence() {
   const getNbPresence = () => {
     dailyPresenceService.nbPresence(dailyemployee_id).then((res) => { setNbPresence(res.data.nb_presence) }).catch(err => { console.log(err) })
   }
-
+  
+  const getNbHalfday = () => {
+    dailyPresenceService.nbHalfday(dailyemployee_id).then((res) => { setNbHalfday(res.data.nb_half_day) }).catch(err => { console.log(err) })
+  }
+  
   const getNbAbsence = () => {
     dailyPresenceService.nbAbsence(dailyemployee_id).then((res) => { setNbAbsence(res.data.nb_absence) }).catch(err => { console.log(err) })
   }
@@ -234,10 +228,33 @@ function NewDailyPresence() {
     getSalary()
     getNbPresence()
     getNbAbsence()
+    getNbHalfday()
   })
 
+  //get last date
+  const [lastdate, setLastDate] = useState(null)
+
+  const getLastDate = () => {
+    dailyPresenceService.getLastDate(dailyemployee_id).then((res) => { setLastDate(res.data.start_date) }).catch(err => { console.log(err) })
+  }
+
+  useEffect(() => {
+    getLastDate()
+  }, [])
+
+  var title
+  if (lastdate) {
+    title = `Début de semaine : le ${moment(lastdate).format('DD-MM-YYYY')}`
+  } else {
+    title = 'Semaine non spécifié'
+  }
+
   return (
-    <div>
+    <>
+      <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
+        {title}
+      </Typography>
+
       <Container maxWidth="xxl">
         <Card sx={{ height: '100%', width: '100%' }}>
           <Box sx={{ flexGrow: 1 }}>
@@ -272,8 +289,8 @@ function NewDailyPresence() {
                       label="Date de début"
                       id="start_date"
                       name="start_date"
-                      value={firstdate}
-                      onChange={insertFirstdate}
+                      value={startdate}
+                      onChange={insertStartdate}
                       renderInput={(params) =>
                         <Box sx={{ mt: 5 }}>
                           <TextField
@@ -287,27 +304,7 @@ function NewDailyPresence() {
                     />
                   </LocalizationProvider>
                 </Grid>
-                <Grid item xs={2}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                      label="Date de fin"
-                      id="end_date"
-                      name="end_date"
-                      value={lastdate}
-                      onChange={insertLastdate}
-                      renderInput={(params) =>
-                        <Box sx={{ mt: 5 }}>
-                          <TextField
-                            {...params}
-                            variant="standard"
-                            id="end_date"
-                            name="end_date"
-                          /><br />
-                        </Box>
-                      }
-                    />
-                  </LocalizationProvider>
-                </Grid>
+                
                 <Grid item xs={2}>
                   <Button sx={{ mt: 5 }} onClick={saveWeek} variant="contained" size='large'>Enregistrer</Button>
                 </Grid>
@@ -332,27 +329,28 @@ function NewDailyPresence() {
             <form onSubmit={savePresence} noValidate autoComplete='off'>
               <Grid container spacing={3}>
                 <Grid item xs>
-                  <Box sx={{ minWidth: 120 }}>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-standard-label">Date</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={dayValue}
+                  <Box sx={{ minWidth: 120, width: '100%' }}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
                         label="Date"
-                        variant="outlined"
-                        onChange={insertDay}
-                      >
-                        <MenuItem value={1}>Lundi</MenuItem>
-                        <MenuItem value={2}>Mardi</MenuItem>
-                        <MenuItem value={3}>Mercredi</MenuItem>
-                        <MenuItem value={4}>Jeudi</MenuItem>
-                        <MenuItem value={5}>Vendredi</MenuItem>
-                        <MenuItem value={6}>Samedi</MenuItem>
-                        <MenuItem value={7}>Dimanche</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
+                        id="start_date"
+                        name="start_date"
+                        value={date}
+                        onChange={insertDate}
+                        renderInput={(params) =>
+                          <Box>
+                            <TextField
+                              {...params}
+                              variant="outlined"
+                              id="start_date"
+                              name="start_date"
+                              sx={{ width: '100%' }}
+                            /><br />
+                          </Box>
+                        }
+                      />
+                    </LocalizationProvider>
+                    </Box>
                 </Grid>
                 <Grid item xs>
                   <Box sx={{ minWidth: 120 }}>
@@ -394,7 +392,11 @@ function NewDailyPresence() {
 
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} md={3}>
-                <AppWidgetSummary title="TOTAL NOMBRE DE JOURS TRAVAILLES" total={nbPresence} color="warning" icon={'ant-design:shopping-filled'} />
+                <AppWidgetSummary title="TOTAL NOMBRE DE JOURS TRAVAILLES" total={nbPresence} color="info" icon={'ant-design:shopping-filled'} />
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary title="TOTAL DEMI-JOURNEE DE TRAVAIL" total={nbHalfday} color="warning" icon={'ant-design:shopping-filled'} />
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
@@ -409,7 +411,7 @@ function NewDailyPresence() {
 
         </Card>
       </Container>
-    </div>
+    </>
   )
 }
 

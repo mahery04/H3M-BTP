@@ -187,6 +187,7 @@ function NewDailyEmployee() {
                         value={dailyemployee.matricule}
                         onChange={handleInputChange}
                         name="matricule"
+                        required
                         label="Numéro matricule"
                         variant="standard"
                         sx={{ width: '100%' }}
@@ -216,17 +217,17 @@ function NewDailyEmployee() {
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 6 }}>
-                        <InputLabel htmlFor="grouped-native-select" id="post">Poste occupé</InputLabel>
+                        <InputLabel htmlFor="grouped-native-select" id="post">Poste occupé *</InputLabel>
                         <Select
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
                           value={postValue}
                           onChange={handlePostChange}
-                          label="Post occupé"
+                          label="Post occupé *"
                         >
-                          <MenuItem value="">
+                          {/* <MenuItem value="">
                             <em>None</em>
-                          </MenuItem>
+                          </MenuItem> */}
                           {posts.map(post => (
                             <MenuItem key={post.post_id} value={`${post.post_id}`}>{post.post_name}</MenuItem>
                           ))}
@@ -251,6 +252,7 @@ function NewDailyEmployee() {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
                         id="firstname"
+                        required
                         value={dailyemployee.firstname}
                         onChange={handleInputChange}
                         name="firstname"
@@ -288,17 +290,17 @@ function NewDailyEmployee() {
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 7 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Groupe</InputLabel>
+                        <InputLabel id="demo-simple-select-standard-label">Groupe *</InputLabel>
                         <Select
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
                           value={group}
                           onChange={handleGroupChange}
-                          label="Groupe"
+                          label="Groupe *"
                         >
-                          <MenuItem value="">
+                          {/* <MenuItem value="">
                             <em>None</em>
-                          </MenuItem>
+                          </MenuItem> */}
                           <MenuItem value="BTP">BTP</MenuItem>
                           <MenuItem value="SIP">SIP</MenuItem>
                           <MenuItem value="Parapharmaceutique">Parapharmaceutique</MenuItem>
@@ -311,6 +313,7 @@ function NewDailyEmployee() {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
                         id="lastname"
+                        required
                         value={dailyemployee.lastname}
                         onChange={handleInputChange}
                         name="lastname"
@@ -363,17 +366,14 @@ function NewDailyEmployee() {
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 7 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
+                        <InputLabel id="demo-simple-select-standard-label">Status *</InputLabel>
                         <Select
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
                           value={status}
                           onChange={handleStatusChange}
-                          label="Status"
+                          label="Status *"
                         >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
                           <MenuItem value="Actif">Actif</MenuItem>
                           <MenuItem value="Démission">Démission</MenuItem>
                         </Select>

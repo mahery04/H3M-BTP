@@ -40,6 +40,7 @@ import UpdateConge from './pages/UpdateConge';
 import ContratDailyEmployee from './pages/ContratDailyEmployee';
 import UpdateContratDailyEmployee from './pages/UpdateContratDailyEmployee';
 import ContratMonthlyEmployee from './pages/ContratMonthlyEmployee';
+import UpdateContratMonthlyEmployee from './pages/UpdateContratMonthlyEmployee';
 
 
 // ----------------------------------------------------------------------
@@ -78,7 +79,7 @@ export default function Router() {
         { path: 'contrat-daily-employee/:id', element: !user? <Navigate to="/login" /> : <ContratDailyEmployee /> },
         { path: 'update-contrat-daily-employee/:id', element: !user? <Navigate to="/login" /> : <UpdateContratDailyEmployee /> },
         { path: 'contrat-monthly-employee/:id', element: !user? <Navigate to="/login" /> : <ContratMonthlyEmployee /> },
-
+        { path: 'update-contrat-monthly-employee/:id', element: !user? <Navigate to="/login" /> : <UpdateContratMonthlyEmployee /> },
 
       ]
     },

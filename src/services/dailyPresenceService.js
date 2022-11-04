@@ -1,11 +1,19 @@
 import http from '../http-common'
 
+const getAllPresence = () => {
+    return http.get(`/api/weekpresence/allpresence`)
+}
+
 const getAll = (id) => {
     return http.get(`/api/weekpresence/${id}`)
 }
 
 const getMonth = () => {
     return http.get(`/api/weekpresence/month`)
+}
+
+const getLastDate = (id) => {
+    return http.get(`/api/weekpresence/lastdate/${id}`)
 }
 
 const globalView = (data) => {
@@ -26,7 +34,7 @@ const validationUpdate = (id) => {
 
 
 const action = (id, data) => {
-    return http.put(`/api/dailypresence/${id}`, data)
+    return http.post(`/api/dailypresence/${id}`, data)
 }
 
 const salary = (id) => {
@@ -53,12 +61,20 @@ const nbAbsence = (id) => {
     return http.get(`/api/weekpresence/absence/${id}`)
 }
 
+const setHalfday = (id) => {
+    return http.put(`/api/weekpresence/halfday/${id}`)
+}
+
+const nbHalfday = (id) => {
+    return http.get(`/api/weekpresence/halfday/${id}`)
+}
+
 const history = (id) => {
     return http.get(`/api/weekpresence/history/${id}`)
 }
 
 const exportedObject = {
-    getAll, getMonth, globalView, create, update, action, salary, getSalary, setPresence, setAbsence, nbAbsence, nbPresence, history, validationUpdate
+    getAllPresence, getAll, getMonth, getLastDate, globalView, create, update, action, salary, getSalary, setPresence, setAbsence, nbAbsence, setHalfday, nbHalfday, nbPresence, history, validationUpdate
 }
 
 export default exportedObject

@@ -153,7 +153,7 @@ const ContratMonthlyEmployee = () => {
             renderCell: (data) => {
                 return (
                 <>
-                    <Link href={'/employee/update-contrat-daily-employee/' + data.id}>
+                    <Link href={'/employee/update-contrat-monthly-employee/' + data.id}>
                     <IconButton component="label">
                         <EditIcon />
                     </IconButton>
