@@ -22,6 +22,8 @@ function ServiceProvider() {
         { field: 'start_contract', headerName: 'Début de contrat', width: 150 },
         { field: 'end_contract', headerName: 'Fin de contrat', width: 150 },
         { field: 'number_days', headerName: 'Nombre de jours', width: 200 },
+        { field: 'post', headerName: 'Poste occupé', width: 200 },
+        { field: 'salary', headerName: 'Salaire', width: 200 },
         { field: 'action', headerName: 'Action', width: 200, type: 'action',
             // renderCell: (data) => {
             //     if (userInfo.role_id === 1) {

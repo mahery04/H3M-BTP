@@ -56,6 +56,7 @@ function PersonnalTools() {
     getPersonnalTools()
   }, [])
 
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
   const columns = [
     {
@@ -95,19 +96,31 @@ function PersonnalTools() {
     {
       field: 'action', headerName: 'Action', width: 200, type: 'actions',
       renderCell: (data) => {
-        return (
-          <>
-            <Link to={'/tools/updatepersonnal/' + data.id}>
-              <IconButton component="label">
-                <EditIcon />
+        if (userInfo.role_id === 1) {
+          return (
+            <>
+              <Link to={'/tools/updatepersonnal/' + data.id}>
+                <IconButton component="label">
+                  <EditIcon />
+                </IconButton>
+              </Link>
+  
+              <IconButton component="label" onClick={() => deleteTool(data.id)}>
+                <DeleteIcon />
               </IconButton>
-            </Link>
-
-            <IconButton component="label" onClick={() => deleteTool(data.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </>
-        )
+            </>
+          )         
+        } else {
+          return (
+            <>
+              <Link to={'/tools/updatepersonnal/' + data.id}>
+                <IconButton component="label">
+                  <EditIcon />
+                </IconButton>
+              </Link>
+            </>
+          )         
+        }
       }
     },
   ];
