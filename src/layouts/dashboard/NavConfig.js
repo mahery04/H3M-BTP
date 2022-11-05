@@ -79,6 +79,12 @@ if (user) {
         title: 'Listes des congés',
         path: '/conge/personnal',
         icon: getIcon('bx:money'),
+      },
+      {
+        category: 'service-provider',
+        title: 'Préstataire H3M',
+        path: '/service-provider/personnal',
+        icon: getIcon('la:user'),
       }
     ];
   } else if (user.role_id == 2) {
@@ -207,5 +213,5 @@ if (user) {
         icon: getIcon('bx:money'),
       }
     ];
-  }
+  } 
 }

@@ -66,6 +66,8 @@ function DailyEmployee() {
     getDailyemployees()
   },[])
 
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+
   const columns = [
     { field: 'id', headerName: 'Id', width: 50 },
     { field: 'matricule', headerName: 'Matricule', width: 100 },
@@ -147,18 +149,30 @@ function DailyEmployee() {
     {
       field: 'action', headerName: 'Action', width: 100, type: 'action',
       renderCell: (data) => {
-        return (
-          <>
-            <Link href={'/employee/updatedailyemployee/' + data.id}>
-              <IconButton component="label">
-                <EditIcon />
+        if (userInfo.role_id === 1) {
+          return (
+            <>
+              <Link href={'/employee/updatedailyemployee/' + data.id}>
+                <IconButton component="label">
+                  <EditIcon />
+                </IconButton>
+              </Link>
+              <IconButton component="label" onClick={() => deleteDailyemployee(data.id)}>
+                <DeleteIcon />
               </IconButton>
-            </Link>
-            <IconButton component="label" onClick={() => deleteDailyemployee(data.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </>
-        )
+            </>
+          )
+        } else {
+          return (
+            <>
+              <Link href={'/employee/updatedailyemployee/' + data.id}>
+                <IconButton component="label">
+                  <EditIcon />
+                </IconButton>
+              </Link>
+            </>
+          )
+        }
       }
     },
   ];

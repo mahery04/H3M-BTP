@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Card, CardContent, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl, Divider, Chip, InputAdornment, Stack, Breadcrumbs } from '@mui/material';
+import { Button, Card, CardContent, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl, Divider, Chip, InputAdornment } from '@mui/material';
 
 import { Grid, TextField } from '@mui/material';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import PortraitIcon from '@mui/icons-material/Portrait';
+
+import { useNavigate, useParams } from 'react-router-dom';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -14,12 +16,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
 import congeService from '../services/congeService'
-import { useNavigate, useParams } from 'react-router-dom';
 
 function UpdateConge() {
 
-    const [employee, setEmployee] = useState('')
-    const [employees, setEmployees] = useState([{ matricule: '', firstname: '', lastname: '' }])
+    const [monthlyEmployees, setMonthlyEmployee] = useState('')
+    const [employees, setEmployees] = useState([])
     const [startconge, setStartconge] = useState(null)
     const [endconge, setEndconge] = useState(null)
 
@@ -40,16 +41,17 @@ function UpdateConge() {
     
     const initialCongeState = {
         id:             null,
-        employee:       employee,
+        monthlyemployee_id:       monthlyEmployees,
         start_conge:    '',
         end_conge:      '',
+        // number_days: null,
     }
 
     const findData = useParams()
     const conge_id = findData.id
 
-
     const [loaded, setLoaded] = useState(false)
+    
     const [conge, setConge] = useState(initialCongeState)
 
     useEffect(() => {
@@ -62,11 +64,13 @@ function UpdateConge() {
           load();
         }
       }, [conge_id, loaded])
+
+      console.log(conge_id);
     
     const handleEmployeeChange = e => {
         const employeeValue = e.target.value
-        setEmployee(employeeValue)
-        setConge({ ...conge, employee: employeeValue })
+        setMonthlyEmployee(employeeValue)
+        setConge({ ...conge, monthlyemployee_id: employeeValue })
     }
 
     const insertStartconge = newDate => {
@@ -84,13 +88,24 @@ function UpdateConge() {
     const saveConge = e => {
         e.preventDefault()
 
-        var data = {
-            employee: conge.employee,
-            start_conge: conge.start_conge,
-            end_conge: conge.end_conge
+        if (!conge.start_conge) {
+            var data = {
+                monthlyemployee_id: conge.monthlyemployee_id,
+                start_conge: null,
+                end_conge: null,
+                // number_days: conge.number_days
+            }
+        } else {
+            var data = {
+                monthlyemployee_id: conge.monthlyemployee_id,
+                start_conge: moment(Date.parse(conge.start_conge)).format("YYYY-MM-DD"),
+                end_conge: moment(Date.parse(conge.end_conge)).format("YYYY-MM-DD"),
+                // number_days: conge.number_days
+            }
         }
 
-        if (!data.employee || !data.start_conge || !data.end_conge) {
+
+        if (!data.start_conge || !data.end_conge) {
             swal({
                 title: "Un erreur est survenue!",
                 text: "Des formulaires requis sont vides.",
@@ -101,9 +116,10 @@ function UpdateConge() {
             congeService.update(conge_id,data).then(res => {
                 setConge({
                     id: res.data.id,
-                    employee: res.data.employee,
+                    monthlyemployee_id: res.data.monthlyemployee_id,
                     start_conge: res.data.start_conge,
-                    end_conge: res.data.end_conge
+                    end_conge: res.data.end_conge,
+                    // number_days: res.data.number_days
                 })
             }).catch(err => {
                 console.log(err)
@@ -112,23 +128,12 @@ function UpdateConge() {
         }
     }
 
-    console.log(conge);
-
-    const breadcrumbs = [
-        <Typography key="1">
-            {conge.employee}
-        </Typography>,
-    ];
+    console.log("CONGES ", conge);
 
   return (
     <div>
         <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-            Modification congé
-            <Stack spacing={2}>
-                <Breadcrumbs separator="." aria-label="breadcrumb">
-                    {breadcrumbs}
-                </Breadcrumbs>
-            </Stack>
+           Modification de congé
             <Button
             size="medium"
             variant="outlined"
@@ -146,7 +151,7 @@ function UpdateConge() {
                     <form onSubmit={saveConge} noValidate autoComplete='off'>
                         <Box sx={{ flexGrow: 1 }}>
                             <Container maxWidth="xl" sx={{ lineHeight: 5 }}>
-                                {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                     <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                                     <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
                                     <InputLabel id="statue">Employée</InputLabel>
@@ -154,21 +159,19 @@ function UpdateConge() {
                                         labelId="employee"
                                         id="employee"
                                         onChange={handleEmployeeChange}
-                                        label="Age"
+                                        label="Employé"
+                                        disabled
                                     >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
                                         {employees.map(employee => (
-                                            <MenuItem key={employee.matricule} value={`${employee.matricule} - ${employee.firstname} ${employee.lastname}`}>{employee.matricule} - {employee.firstname} {employee.lastname}</MenuItem>
+                                            <MenuItem key={employee.monthlyemployee_id} value={employee.monthlyemployee_id}>{employee.matricule} - {employee.firstname} {employee.lastname}</MenuItem>
                                         ))}
                                     </Select>
                                     </FormControl>
-                                </Box> */}
+                                </Box>
 
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label="Début du congé"
+                                        label="Début de congé"
                                         id="start_conge"
                                         name="start_conge"
                                         value={conge.start_conge}
@@ -183,7 +186,7 @@ function UpdateConge() {
 
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label="Fin du congé"
+                                        label="Fin de congé"
                                         id="end_conge"
                                         name="end_conge"
                                         value={conge.end_conge}
@@ -196,7 +199,6 @@ function UpdateConge() {
                                     />
                                 </LocalizationProvider>
                                 <br />
-
                                 <Button
                                     size="medium"
                                     variant="outlined"

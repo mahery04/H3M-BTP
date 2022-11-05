@@ -137,6 +137,8 @@ const ContratDailyEmployee = () => {
         // }
     }
 
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+
     const columns_tools = [
         { field: 'type_contrat', headerName: 'Type de contrat', width: 200 },
         { field: 'evaluation', headerName: 'Evaluation', width: 200},
@@ -151,18 +153,30 @@ const ContratDailyEmployee = () => {
         { field: 'start_motif', headerName: 'Motif de départ', width: 200 },
         { field: 'action', headerName: 'Action', width: 150,
             renderCell: (data) => {
-                return (
-                <>
-                    <Link href={'/employee/update-contrat-daily-employee/' + data.id}>
-                    <IconButton component="label">
-                        <EditIcon />
-                    </IconButton>
-                    </Link>
-                    <IconButton component="label" onClick={() => deleteDailyContrat(data.id)}>
-                        <DeleteIcon />
-                    </IconButton>
-                </>
-                )
+                if (userInfo.role_id === 1) {
+                    return (
+                    <>
+                        <Link href={'/employee/update-contrat-daily-employee/' + data.id}>
+                        <IconButton component="label">
+                            <EditIcon />
+                        </IconButton>
+                        </Link>
+                        <IconButton component="label" onClick={() => deleteDailyContrat(data.id)}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </>
+                    )    
+                } else {
+                    return (
+                        <>
+                            <Link href={'/employee/update-contrat-daily-employee/' + data.id}>
+                            <IconButton component="label">
+                                <EditIcon />
+                            </IconButton>
+                            </Link>
+                        </>
+                    )    
+                }
             }
         },
     ];

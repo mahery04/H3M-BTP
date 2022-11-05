@@ -18,8 +18,8 @@ import { useNavigate } from 'react-router-dom';
 
 function NewConge() {
 
-    const [employee, setEmployee] = useState('')
-    const [employees, setEmployees] = useState([{ matricule: '', firstname: '', lastname: '' }])
+    const [monthlyEmployees, setMonthlyEmployee] = useState('')
+    const [employees, setEmployees] = useState([])
     const [startconge, setStartconge] = useState(null)
     const [endconge, setEndconge] = useState(null)
 
@@ -40,17 +40,18 @@ function NewConge() {
     
     const initialCongeState = {
         id:             null,
-        employee:       employee,
+        monthlyemployee_id:       monthlyEmployees,
         start_conge:    '',
         end_conge:      '',
+        // number_days: null,
     }
     
     const [conge, setConge] = useState(initialCongeState)
     
     const handleEmployeeChange = e => {
         const employeeValue = e.target.value
-        setEmployee(employeeValue)
-        setConge({ ...conge, employee: employeeValue })
+        setMonthlyEmployee(employeeValue)
+        setConge({ ...conge, monthlyemployee_id: employeeValue })
     }
 
     const insertStartconge = newDate => {
@@ -69,12 +70,13 @@ function NewConge() {
         e.preventDefault()
 
         var data = {
-            employee: conge.employee,
+            monthlyemployee_id: conge.monthlyemployee_id,
             start_conge: conge.start_conge,
-            end_conge: conge.end_conge
+            end_conge: conge.end_conge,
+            // number_days: conge.number_days
         }
 
-        if (!data.employee || !data.start_conge || !data.end_conge) {
+        if (!data.monthlyemployee_id || !data.start_conge || !data.end_conge) {
             swal({
                 title: "Un erreur est survenue!",
                 text: "Des formulaires requis sont vides.",
@@ -85,9 +87,10 @@ function NewConge() {
             congeService.create(data).then(res => {
                 setConge({
                     id: res.data.id,
-                    employee: res.data.employee,
+                    monthlyemployee_id: res.data.monthlyemployee_id,
                     start_conge: res.data.start_conge,
-                    end_conge: res.data.end_conge
+                    end_conge: res.data.end_conge,
+                    // number_days: res.data.number_days
                 })
             }).catch(err => {
                 console.log(err)
@@ -127,11 +130,11 @@ function NewConge() {
                                         onChange={handleEmployeeChange}
                                         label="Age"
                                     >
-                                        <MenuItem value="">
+                                        {/* <MenuItem value="">
                                             <em>None</em>
-                                        </MenuItem>
+                                        </MenuItem> */}
                                         {employees.map(employee => (
-                                            <MenuItem key={employee.matricule} value={`${employee.matricule} - ${employee.firstname} ${employee.lastname}`}>{employee.matricule} - {employee.firstname} {employee.lastname}</MenuItem>
+                                            <MenuItem key={employee.monthlyemployee_id} value={employee.monthlyemployee_id}>{employee.matricule} - {employee.firstname} {employee.lastname}</MenuItem>
                                         ))}
                                     </Select>
                                     </FormControl>
@@ -139,7 +142,7 @@ function NewConge() {
 
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label="Début du congé"
+                                        label="Début de congé"
                                         id="start_conge"
                                         name="start_conge"
                                         value={startconge}
@@ -154,7 +157,7 @@ function NewConge() {
 
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label="Fin du congé"
+                                        label="Fin de congé"
                                         id="end_conge"
                                         name="end_conge"
                                         value={endconge}
@@ -167,7 +170,6 @@ function NewConge() {
                                     />
                                 </LocalizationProvider>
                                 <br />
-
                                 <Button
                                     size="medium"
                                     variant="outlined"

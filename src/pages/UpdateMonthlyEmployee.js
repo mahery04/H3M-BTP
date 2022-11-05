@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button, Card, CardContent, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl, Divider, Chip } from '@mui/material';
+import CurrencyTextField from '@unicef/material-ui-currency-textfield';
+
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
@@ -20,10 +22,6 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import HandshakeIcon from '@mui/icons-material/Handshake';
-import GradeIcon from '@mui/icons-material/Grade';
-import EditIcon from '@mui/icons-material/Edit';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 import moment from 'moment';
 import InputMask from 'react-input-mask'
@@ -65,7 +63,7 @@ function UpdateMonthlyEmployee(props) {
     address:      '',
     contact:      '',
     group:        group,
-    post_id:      postValue,
+    post_occupe:      postValue,
     status:       '',
     code_chantier: '',
     category:     '',
@@ -110,7 +108,7 @@ function UpdateMonthlyEmployee(props) {
   const handlePostChange = (event) => {
     const postInput = event.target.value
     setPostValue(postInput);
-    setMonthlyemployee({...monthlyemployee, post_id: postInput})
+    setMonthlyemployee({...monthlyemployee, post_occupe: postInput})
   };
 
   const hiringDate = (newDate) => {
@@ -136,7 +134,8 @@ function UpdateMonthlyEmployee(props) {
         address:      monthlyemployee.address,
         contact:      monthlyemployee.contact,
         group:        monthlyemployee.group,
-        post_id:      monthlyemployee.post_id,
+        post_occupe:  monthlyemployee.post_occupe,
+        salary:      monthlyemployee.salary,
         status:       monthlyemployee.status,
         code_chantier:monthlyemployee.code_chantier,
         category:     monthlyemployee.category,
@@ -153,7 +152,8 @@ function UpdateMonthlyEmployee(props) {
         address:      monthlyemployee.address,
         contact:      monthlyemployee.contact,
         group:        monthlyemployee.group,
-        post_id:      monthlyemployee.post_id,
+        post_occupe:      monthlyemployee.post_occupe,
+        salary:      monthlyemployee.salary,
         status:       monthlyemployee.status,
         code_chantier:monthlyemployee.code_chantier,
         category:     monthlyemployee.category,
@@ -164,7 +164,7 @@ function UpdateMonthlyEmployee(props) {
     }
 
 
-    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.group.length <= 0 || data.post_id.length <= 0 || data.status.length <= 0) {
+    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.group.length <= 0 || data.post_occupe.length <= 0 || data.status.length <= 0) {
       swal({
         title: "Un erreur est survenue!",
         text: "Des formulaires requis sont vides.",
@@ -182,7 +182,8 @@ function UpdateMonthlyEmployee(props) {
               address:      res.data.address,
               contact:      res.data.contact,
               group:        res.data.group,
-              post_id:      res.data.post_id,
+              post_occupe:      res.data.post_occupe,
+              salary:      res.data.salary,
               status:       res.data.status,
               code_chantier:res.data.code_chantier,
               category:     res.data.category,
@@ -225,7 +226,7 @@ function UpdateMonthlyEmployee(props) {
       <Container maxWidth="xxl">
         <Card sx={{ height: '100%', width: '95%' }}>
           <CardContent>
-            <form onSubmit={updateEmployee} noValidate autoComplete='off'>
+          <form onSubmit={updateEmployee} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ lineHeight: 6 }}>
                   <Grid item xs={2} sm={4} md={4}>
@@ -237,6 +238,7 @@ function UpdateMonthlyEmployee(props) {
                         onChange={handleInputChange}
                         name="matricule"
                         label="Numéro matricule"
+                        required
                         variant="standard"
                         sx={{ width: '100%' }}
                       /><br />
@@ -264,42 +266,55 @@ function UpdateMonthlyEmployee(props) {
 
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 6 }}>
-                        <InputLabel htmlFor="grouped-native-select" id="post">Poste occupé</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-standard-label"
-                          id="demo-simple-select-standard"
-                          value={monthlyemployee.post_id}
-                          onChange={handlePostChange}
-                          label="Post occupé"
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          {posts.map(post => (
-                            <MenuItem key={post.post_id} value={`${post.post_id}`}>{post.post_name}</MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
+                      <TextField
+                        id="post_occupe"
+                        value={monthlyemployee.post_occupe}
+                        onChange={handleInputChange}
+                        name="post_occupe"
+                        label="Poste occupé"
+                        required
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      /><br />
                     </Box>
 
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 5 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%',mt:7 }}>
+                        <InputLabel id="demo-simple-select-standard-label">Status *</InputLabel>
                         <Select
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
                           value={monthlyemployee.status}
                           onChange={handleStatusChange}
-                          label="Status"
+                          label="Status *"
                         >
-                          <MenuItem value="">
+                          {/* <MenuItem value="">
                             <em>None</em>
-                          </MenuItem>
+                          </MenuItem> */}
                           <MenuItem value="Actif">Actif</MenuItem>
                           <MenuItem value="Congé">Congé</MenuItem>
                           <MenuItem value="Démission">Démission</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 5 }}>
+                        <InputLabel id="demo-simple-select-standard-label">Groupe *</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={monthlyemployee.group}
+                          onChange={handleGroupChange}
+                          label="Groupe *"
+                        >
+                          {/* <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem> */}
+                          <MenuItem value="BTP">BTP</MenuItem>
+                          <MenuItem value="SIP">SIP</MenuItem>
+                          <MenuItem value="Parapharmaceutique">Parapharmaceutique</MenuItem>
                         </Select>
                       </FormControl>
                     </Box>
@@ -309,6 +324,7 @@ function UpdateMonthlyEmployee(props) {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
                         id="firstname"
+                        required
                         value={monthlyemployee.firstname}
                         onChange={handleInputChange}
                         name="firstname"
@@ -332,36 +348,44 @@ function UpdateMonthlyEmployee(props) {
                     </Box>
 
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <CurrencyTextField
+                        label="Salaire *"
+                        variant="standard"
+                        value={monthlyemployee.salary}
+                        currencySymbol="Ar"
+                        //minimumValue="0"
+                        outputFormat="string"
+                        decimalCharacter="."
+                        digitGroupSeparator=","
+                        onChange={(event, value)=> setMonthlyemployee({...monthlyemployee, salary: value })}
+                        style={{width: '100%', marginTop: '10%'}}
+                      />
+                    </Box>
+
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                       <ClassIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
                         id="category"
                         value={monthlyemployee.category}
                         onChange={handleInputChange}
                         name="category"
-                        label="Categorie"
+                        label="Catégorie"
                         variant="standard"
                         sx={{ width: '100%' }}
                       /><br />
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                      <GroupsIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                      <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 6 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Groupe</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-standard-label"
-                          id="demo-simple-select-standard"
-                          value={monthlyemployee.group}
-                          onChange={handleGroupChange}
-                          label="Groupe"
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value="BTP">BTP</MenuItem>
-                          <MenuItem value="SIP">SIP</MenuItem>
-                          <MenuItem value="Parapharmaceutique">Parapharmaceutique</MenuItem>
-                        </Select>
-                      </FormControl>
+                    <ClassIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="ostie_num"
+                        value={monthlyemployee.ostie_num}
+                        onChange={handleInputChange}
+                        name="ostie_num"
+                        label="Numéro OSTIE"
+                        variant="standard"
+                        sx={{ width: '100%',mt:7 }}
+                      />
                     </Box>
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
@@ -370,6 +394,7 @@ function UpdateMonthlyEmployee(props) {
                       <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                       <TextField
                         id="lastname"
+                        required
                         value={monthlyemployee.lastname}
                         onChange={handleInputChange}
                         name="lastname"
@@ -404,7 +429,7 @@ function UpdateMonthlyEmployee(props) {
                         label="Date d'embauche"
                         id="hiring_date"
                         name="hiring_date"
-                        value={monthlyemployee.hiring_date}
+                        value={hiringdate}
                         onChange={hiringDate}
                         renderInput={(params) =>
                           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -431,34 +456,21 @@ function UpdateMonthlyEmployee(props) {
                         sx={{ width: '100%' }}
                       /><br />
                     </Box>
+                    <Box  sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <ClassIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="cnaps_num"
+                        value={monthlyemployee.cnaps_num}
+                        onChange={handleInputChange}
+                        name="cnaps_num"
+                        label="Numéro CNAPS"
+                        variant="standard"
+                        sx={{ width: '100%', mt:8 }}
+                      />
+                    </Box>
                   </Grid>
                 </Grid>
-                
-                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                  <Grid item xs={6}>
-                    <TextField
-                      id="ostie_num"
-                      value={monthlyemployee.ostie_num}
-                      onChange={handleInputChange}
-                      name="ostie_num"
-                      label="Numéro OSTIE"
-                      variant="standard"
-                      sx={{ width: '100%', mt:3 }}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      id="cnaps_num"
-                      value={monthlyemployee.cnaps_num}
-                      onChange={handleInputChange}
-                      name="cnaps_num"
-                      label="Numéro CNAPS"
-                      variant="standard"
-                      sx={{ width: '100%', mt:3 }}
-                    />
-                  </Grid>
-                </Grid>
-                
+              
                 {!showMotif ? 
                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                   <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />

@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
 import { Button, Paper, Container, Typography, Box, Stack, Chip, Link, Modal } from '@mui/material';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 
-import InfoIcon from '@mui/icons-material/Info';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import HandshakeIcon from '@mui/icons-material/Handshake';
 
 import moment from 'moment';
 import swal from '@sweetalert/with-react';
@@ -63,6 +60,7 @@ function MonthlyEmployee() {
     getMonthlyEmployees()
   },[])
 
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
   const columns = [
     { field: 'id', headerName: 'Id', width: 50 },
@@ -73,7 +71,14 @@ function MonthlyEmployee() {
     { field: 'address', headerName: 'Adresse', width: 200 },
     { field: 'contact', headerName: 'Contact', width: 150 },
     { field: 'group', headerName: 'Groupe', width: 100 },
-    { field: 'post_name', headerName: 'Poste occupé', width: 150 },
+    { field: 'post_occupe', headerName: 'Poste occupé', width: 150 },
+    { field: 'salary', headerName: 'Salaire', width: 150,
+      renderCell: (data) => {
+        if (data.row.salary) {
+          return data.row.salary + " Ar"
+        }
+      }
+    },
     { field: 'code_chantier', headerName: 'Code Chantier', width: 150 },
     { field: 'category', headerName: 'Categorie', width: 100 },
     {
@@ -152,18 +157,30 @@ function MonthlyEmployee() {
     {
       field: 'action', headerName: 'Action', width: 150, type: 'action',
       renderCell: (data) => {
-        return (
-          <>
-            <Link href={'/employee/updatemonthlyemployee/' + data.id}>
-              <IconButton component="label">
-                <EditIcon />
+        if (userInfo.role_id === 1) {
+          return (
+            <>
+              <Link href={'/employee/updatemonthlyemployee/' + data.id}>
+                <IconButton component="label">
+                  <EditIcon />
+                </IconButton>
+              </Link>
+              <IconButton component="label" onClick={() => deleteMonthlyemployee(data.id)}>
+                <DeleteIcon />
               </IconButton>
-            </Link>
-            <IconButton component="label" onClick={() => deleteMonthlyemployee(data.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </>
-        )
+            </>
+          )
+        } else {
+          return (
+            <>
+              <Link href={'/employee/updatemonthlyemployee/' + data.id}>
+                <IconButton component="label">
+                  <EditIcon />
+                </IconButton>
+              </Link>
+            </>
+          )
+        }
       }
     },
   ];
@@ -177,12 +194,13 @@ function MonthlyEmployee() {
     address:      monthlyemployee.address, 
     contact:      monthlyemployee.contact,
     group:        monthlyemployee.group,
-    post_name:    monthlyemployee.post_name, 
+    post_occupe:  monthlyemployee.post_occupe,
+    salary:       monthlyemployee.salary, 
     status:       monthlyemployee.status, 
     code_chantier:monthlyemployee.code_chantier, 
     category:     monthlyemployee.category, 
     hiring_date:  monthlyemployee.hiring_date,
-    motif:        monthlyemployee.motif,
+    // motif:        monthlyemployee.motif,
     ostie_num:    monthlyemployee.ostie_num,
     cnaps_num:    monthlyemployee.cnaps_num,
   }))

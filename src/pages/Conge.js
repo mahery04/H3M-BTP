@@ -53,45 +53,87 @@ function Conge() {
             buttons: true,
             dangerMode: true,
         })
-            .then((willDelete) => {
-                if (willDelete) {
-                    congeService.remove(id)
-                    const newTabList = conges.filter(conge => conge.conge_id !== id)
-                    setConges(newTabList)
-                    navigate('/conge/personnal?deleted')
-                }
-            });
+        .then((willDelete) => {
+            if (willDelete) {
+                congeService.remove(id)
+                const newTabList = conges.filter(conge => conge.conge_id !== id)
+                setConges(newTabList)
+                navigate('/conge/personnal?deleted')
+            }
+        });
     }
 
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+
     const columns = [
-        { field: 'employee', headerName: 'Employé', width: 450 },
+        { field: 'matricule', headerName: 'Matricule', width: 100 },
+        { field: 'firstname', headerName: 'Nom', width: 200 },
+        { field: 'lastname', headerName: 'Prénom', width: 200 },
+        { field: 'post_occupe', headerName: 'Poste occupé', width: 200 },
         { field: 'start_conge', headerName: 'Début de congé', width: 250 },
         { field: 'end_conge', headerName: 'Fin de congé', width: 250 },
+        { field: 'number_days', headerName: 'Nombre de congés', width: 250,
+            renderCell: (data) => {
+                if (data.row.number_days) {
+                return data.row.number_days + " jours"
+                }
+            }
+        },
+        { field: 'salary', headerName: 'Salaire', width: 250,
+            renderCell: (data) => {
+                if (data.row.salary) {
+                  return data.row.salary + " Ar"
+                }
+            }
+        },
+        { field: 'montant', headerName: 'Montant', width: 250,
+            // renderCell: (data) => {
+                
+            // }
+        },
         { field: 'action', headerName: 'Action', width: 250, type: 'action',
             renderCell: (data) => {
-                return (
-                <>
-                    <Link href={'/conge/update-conge/' + data.id}>
+                if (userInfo.role_id === 1) {
+                    return (
+                    <>
+                        <Link href={'/conge/update-conge/' + data.id}>
+                            <IconButton component="label">
+                                <EditIcon />
+                            </IconButton>
+                        </Link>
                         <IconButton component="label" onClick={() => deleteConge(data.id)}>
-                            <EditIcon />
+                            <DeleteIcon />
                         </IconButton>
-                    </Link>
-                    <IconButton component="label" onClick={() => deleteConge(data.id)}>
-                        <DeleteIcon />
-                    </IconButton>
-                </>
-                )
+                    </>
+                    ) 
+                } else {
+                    return (
+                        <>
+                            <Link href={'/conge/update-conge/' + data.id}>
+                                <IconButton component="label">
+                                    <EditIcon />
+                                </IconButton>
+                            </Link>
+                        </>
+                    ) 
+                }
             }
         },
     ]
 
     const rows = conges.map(conge => ({
         id: conge.conge_id,
-        employee: conge.employee,
+        matricule: conge.matricule,
+        firstname: conge.firstname,
+        lastname: conge.lastname,
+        post_occupe: conge.post_occupe,
         start_conge: moment(conge.start_conge).format('DD-MM-YYYY'),
         end_conge: moment(conge.end_conge).format('DD-MM-YYYY'),
+        number_days: conge.number_days,
+        salary: conge.salary,
     }))
 
+    console.log("CONGES ", conges);
 
   return (
     <div>

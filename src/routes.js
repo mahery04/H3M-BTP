@@ -41,6 +41,9 @@ import ContratDailyEmployee from './pages/ContratDailyEmployee';
 import UpdateContratDailyEmployee from './pages/UpdateContratDailyEmployee';
 import ContratMonthlyEmployee from './pages/ContratMonthlyEmployee';
 import UpdateContratMonthlyEmployee from './pages/UpdateContratMonthlyEmployee';
+import ServiceProvider from './pages/ServiceProvider';
+import NewServiceProvider from './pages/NewServiceProvider';
+import UpdateServiceProvider from './pages/UpdateServiceProvider';
 
 
 // ----------------------------------------------------------------------
@@ -122,6 +125,14 @@ export default function Router() {
         { path: 'personnal', element: !user? <Navigate to="/login" /> : <Conge /> },
         { path: 'new', element: !user? <Navigate to="/login" /> : <NewConge /> },
         { path: 'update-conge/:id', element: !user? <Navigate to="/login" /> : <UpdateConge /> },
+      ]
+    },
+    {
+      path: '/service-provider', element: <DashboardLayout />,
+      children: [
+        { path: 'personnal', element: !user? <Navigate to="/login" /> : <ServiceProvider /> },
+        { path: 'new', element: !user? <Navigate to="/login" /> : <NewServiceProvider /> },
+        { path: 'update-service-provider/:id', element: !user? <Navigate to="/login" /> : <UpdateServiceProvider /> },
       ]
     },
     // { path: '*', element: <Navigate to="/404" replace /> },

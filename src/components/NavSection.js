@@ -230,6 +230,14 @@ export default function NavSection({ navConfig, ...other }) {
           {getMenus('conge')}
         </AccordionDetails>
       </Accordion>
+      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Préstataire</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('service-provider')}
+        </AccordionDetails>
+      </Accordion>
     </Box>
   );
 }
