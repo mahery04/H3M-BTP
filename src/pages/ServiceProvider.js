@@ -3,15 +3,51 @@ import { Button, Paper, Container, Chip, Stack, Box, Typography, Link, Modal } f
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
+import { useNavigate } from 'react-router-dom';
+
+import swal from '@sweetalert/with-react';
 
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import moment from 'moment'
+import serviceProviderService from '../services/serviceProviderService';
+
 
 function ServiceProvider() {
 
+    const notification = () => {
+        let url = window.location.href
+        let param = url.split('?')
+        if(param[1] === 'inserted') {
+          swal("", "Prestataire enregistré !", "success");
+        } else if(param[1] === 'deleted') {
+          swal("", "Prestataire supprimé avec succés!", "success");
+        } else if(param[1] === 'updated') {
+          swal("", "Prestataire modifié avec succés!", "success");
+        }
+    }
+
+    notification()
+
+    const navigate = useNavigate()
+    const [providers, setproviders] = useState([])
+
+    const getListsServiceProvider = () => {
+        serviceProviderService.getAll().then((res) => {
+            setproviders(res.data)
+        }).catch(err => {
+            console.log(err)
+        }) 
+    }
+
+    useEffect(() => {
+      getListsServiceProvider()
+    }, [])
+    
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
     const columns = [
         { field: 'firstname', headerName: 'Nom', width: 200 },
@@ -21,41 +57,83 @@ function ServiceProvider() {
         { field: 'contact', headerName: 'Contact', width: 150 },
         { field: 'start_contract', headerName: 'Début de contrat', width: 150 },
         { field: 'end_contract', headerName: 'Fin de contrat', width: 150 },
-        { field: 'number_days', headerName: 'Nombre de jours', width: 200 },
-        { field: 'post', headerName: 'Poste occupé', width: 200 },
-        { field: 'salary', headerName: 'Salaire', width: 200 },
+        { field: 'number_days', headerName: 'Nombre de jours', width: 150,
+            renderCell: (data) => {
+                if (data.row.number_days) {
+                return data.row.number_days + " jours"
+                }
+            }
+        },
+        { field: 'post_occupe', headerName: 'Poste occupé', width: 200 },
+        { field: 'salary', headerName: 'Salaire', width: 200,
+            renderCell: (data) => {
+                if (data.row.salary) {
+                return data.row.salary + " Ar"
+                }
+            }
+        },
         { field: 'action', headerName: 'Action', width: 200, type: 'action',
-            // renderCell: (data) => {
-            //     if (userInfo.role_id === 1) {
-            //         return (
-            //         <>
-            //             <Link href={'/conge/update-conge/' + data.id}>
-            //                 <IconButton component="label">
-            //                     <EditIcon />
-            //                 </IconButton>
-            //             </Link>
-            //             <IconButton component="label" onClick={() => deleteConge(data.id)}>
-            //                 <DeleteIcon />
-            //             </IconButton>
-            //         </>
-            //         ) 
-            //     } else {
-            //         return (
-            //             <>
-            //                 <Link href={'/conge/update-conge/' + data.id}>
-            //                     <IconButton component="label">
-            //                         <EditIcon />
-            //                     </IconButton>
-            //                 </Link>
-            //             </>
-            //         ) 
-            //     }
-            // }
+            renderCell: (data) => {
+                if (userInfo.role_id === 1) {
+                    return (
+                    <>
+                        <Link href={'/conge/update-conge/' + data.id}>
+                            <IconButton component="label">
+                                <EditIcon />
+                            </IconButton>
+                        </Link>
+                        <IconButton component="label" onClick={() => deleteprovider(data.id)}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </>
+                    ) 
+                } else {
+                    return (
+                        <>
+                            <Link href={'/conge/update-conge/' + data.id}>
+                                <IconButton component="label">
+                                    <EditIcon />
+                                </IconButton>
+                            </Link>
+                        </>
+                    ) 
+                }
+            }
         },
     ];
 
-    const rows = []
+    const rows = providers.map(provider => ({
+        id: provider.provider_id,
+        firstname: provider.firstname,
+        lastname: provider.lastname,
+        cin: provider.cin,
+        address: provider.address,
+        contact: provider.contact,
+        start_contract: moment(provider.start_contract).format('DD-MM-YYYY'),
+        end_contract: moment(provider.end_contract).format('DD-MM-YYYY'),
+        number_days: provider.number_days,
+        post_occupe: provider.post_occupe,
+        salary: provider.salary
+    }))
 
+    const deleteprovider = (id) => {
+        swal({
+          text: "Supprimer le prestataire de la liste ?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if(willDelete) { 
+            serviceProviderService.remove(id)
+            const newTabList = providers.filter((provider) => provider.id !== id)
+            setproviders(newTabList)
+            document.location.reload(true)
+          } 
+        });
+      }
+
+      console.log("PROVIDERS ", providers);
 
   return (
     <div>

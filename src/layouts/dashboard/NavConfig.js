@@ -82,7 +82,7 @@ if (user) {
       },
       {
         category: 'service-provider',
-        title: 'Préstataire H3M',
+        title: 'Prestataire H3M',
         path: '/service-provider/personnal',
         icon: getIcon('la:user'),
       }
