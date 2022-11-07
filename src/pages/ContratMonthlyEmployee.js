@@ -123,7 +123,7 @@ const ContratMonthlyEmployee = () => {
 
         // if (data.contrat_id.length <= 0 || data.type_contrat.length <= 0 || data.start_date.length <= 0 || data.evaluation.length <= 0 || data.start_motif.length <= 0 || data.sanction.length <= 0) {
         //     swal({
-        //         title: "Un erreur est survenu!",
+        //         title: "Une erreur est survenu!",
         //         text: "Des formulaires requis sont vides.",
         //         icon: "error",
         //         button: "OK",

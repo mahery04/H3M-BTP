@@ -24,7 +24,7 @@ export default function LoginForm() {
 
     if (!login || !password) {
       swal({
-        title: "Un erreur est survenue!",
+        title: "Une erreur est survenue!",
         text: "Veuillez remplir tous les formulaires.",
         icon: "error",
         button: "OK",

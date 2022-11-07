@@ -37,8 +37,8 @@ function NewServiceProvider() {
     cin: null,
     address: '',
     contact: '',
-    start_contract: startContract,
-    end_contract: endContract,
+    start_contract: '',
+    end_contract: '',
     post_occupe: '',
     salary:''
   }
@@ -68,6 +68,7 @@ function NewServiceProvider() {
     e.preventDefault()
 
     var data = {
+      provider_id: serviceProviders.provider_id,
       firstname: serviceProviders.firstname,
       lastname: serviceProviders.lastname,
       cin: serviceProviders.cin,
@@ -79,33 +80,36 @@ function NewServiceProvider() {
       salary: serviceProviders.salary
     }
 
-    if (data.firstname.length <= 0 || data.lastname.length <= 0 || data.start_contract.length <= 0 || data.end_contract.length <= 0 || data.post_occupe.length <= 0 ) {
-      swal({
-        title: "Une erreur est survenue!",
-        text: "Des formulaires requis sont vides.",
-        icon: "error",
-        button: "OK",
-      });
-    } else {
+    // if (!data.firstname || !data.lastname || !data.start_contract.length <= 0 || !data.end_contract || !data.post_occupe ) {
+    //   swal({
+    //     title: "Une erreur est survenue!",
+    //     text: "Des formulaires requis sont vides.",
+    //     icon: "error",
+    //     button: "OK",
+    //   });
+    // } else {
       serviceProviderService.create(data).then(res => {
         setServiceProviders({
-          id: res.data.id,
+          // id: res.data.id,
+          provider_id: res.data.provider_id,
           firstname: res.data.firstname,
           lastname: res.data.lastname,
           cin: res.data.cin,
-          address: res.data.cin,
+          address: res.data.address,
           contact: res.data.contact,
           start_contract: res.data.start_contract,
           end_contract: res.data.end_contract,
           post_occupe: res.data.post_occupe,
-          salary: res.data.post_occupe
+          salary: res.data.salary
         })
       }).catch(err => {
         console.log(err)
       })
       navigate('/service-provider/personnal?inserted')
-    }
+    // }
   }
+
+  console.log(serviceProviders);
   
   return (
     <div>

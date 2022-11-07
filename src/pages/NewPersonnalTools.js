@@ -104,7 +104,7 @@ function NewPersonnalTools() {
     }
     if(tools.identification_number <= 0 ||  tools.article_name <= 0 || tools.statue <= 0 ||  tools.material_number <= 0) {
       swal({
-        title: "Un erreur est survenu!",
+        title: "Une erreur est survenu!",
         text: "Veuillez remplir tous les formulaires",
         icon: "error",
         button: "OK",

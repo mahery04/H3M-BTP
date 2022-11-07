@@ -153,7 +153,7 @@ function UpdateDailyEmployee(props) {
 
     if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.post_id.length <= 0 || data.group.length <= 0 || data.status.length <= 0) {
       swal({
-        title: "Un erreur est survenue!",
+        title: "Une erreur est survenue!",
         text: "Des formulaires requis sont vides.",
         icon: "error",
         button: "OK",

@@ -162,7 +162,7 @@ const ToolsMonthlyEmployee = () => {
 
         if (data.tool_id.length <= 0 || data.number.length <= 0 || data.loan_date.length <= 0) {
             swal({
-                title: "Un erreur est survenue!",
+                title: "Une erreur est survenue!",
                 text: "Des formulaires requis sont vides.",
                 icon: "error",
                 button: "OK",

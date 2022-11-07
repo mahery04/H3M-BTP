@@ -80,7 +80,7 @@ const NewCantine = () => {
 
     if (!data.month || !data.date || !data.nb_people || !data.select_one || !data.price_one || !data.select_two || !data.price_two) {
       swal({
-        title: "Un erreur est survenue!",
+        title: "Une erreur est survenue!",
         text: "Des formulaires requis sont vides.",
         icon: "error",
         button: "OK",

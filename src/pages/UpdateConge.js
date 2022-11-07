@@ -107,7 +107,7 @@ function UpdateConge() {
 
         if (!data.start_conge || !data.end_conge) {
             swal({
-                title: "Un erreur est survenue!",
+                title: "Une erreur est survenue!",
                 text: "Des formulaires requis sont vides.",
                 icon: "error",
                 button: "OK",

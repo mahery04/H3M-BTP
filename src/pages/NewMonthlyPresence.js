@@ -73,7 +73,7 @@ const NewMonthlyPresence = () => {
     }                       
     if (!data.start_date) {
         swal({
-            title: "Un erreur est survenue!",
+            title: "Une erreur est survenue!",
             text: "Des formulaires requis sont vides.",
             icon: "error",
             button: "OK",
@@ -196,7 +196,7 @@ const NewMonthlyPresence = () => {
 
     if (!data.date) {
       swal({
-        title: "Un erreur est survenue!",
+        title: "Une erreur est survenue!",
         text: "Des formulaires requis sont vides.",
         icon: "error",
         button: "OK",
