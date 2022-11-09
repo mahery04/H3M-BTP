@@ -18,9 +18,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
 import monthlyPresenceService from '../services/monthlyPresenceService'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
-function NewMonthlyPresence() {
+function UpdateMonthlyPresence() {
 
   const [monthlyEmployees, setMonthlyEmployees] = useState('')
   const [employees, setEmployees] = useState([])
@@ -52,7 +52,23 @@ function NewMonthlyPresence() {
     visa_rh: visaRh
   }
 
+  const findData = useParams()
+  const presence_id = findData.id
+  const [loaded, setLoaded] = useState(false)
+
   const [presence, setPresence] = useState(initialPresenceState)
+  
+  useEffect(() => {
+    const load = async () => {
+      const res = await monthlyPresenceService.get(presence_id)
+      setPresence(res.data)
+      setLoaded(true)
+    }
+    if (presence_id && !loaded) {
+      load();
+    }
+  }, [presence_id, loaded])
+
 
   const handleEmployeeChange = e => {
     const employeeValue = e.target.value
@@ -101,7 +117,7 @@ function NewMonthlyPresence() {
         button: "OK",
       });
     } else {
-      monthlyPresenceService.create(data).then(res => {
+      monthlyPresenceService.update(presence_id,data).then(res => {
         setPresence({
           id: res.data.id,
           monthlyemployee_id: res.data.monthlyemployee_id,
@@ -122,7 +138,7 @@ function NewMonthlyPresence() {
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Nouvelle présence
+        Modification présence 
         <Button
           size="medium"
           variant="outlined"
@@ -140,7 +156,7 @@ function NewMonthlyPresence() {
             <form onSubmit={savepresence} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Container maxWidth="xl" sx={{ lineHeight: 5 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                  {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
                       <InputLabel id="statue">Employé(e) *</InputLabel>
@@ -150,15 +166,12 @@ function NewMonthlyPresence() {
                         onChange={handleEmployeeChange}
                         label="Age"
                       >
-                        {/* <MenuItem value="">
-                              <em>None</em>
-                          </MenuItem> */}
                         {employees.map(employee => (
                           <MenuItem key={employee.monthlyemployee_id} value={employee.monthlyemployee_id}>{employee.matricule} - {employee.firstname} {employee.lastname}</MenuItem>
                         ))}
                       </Select>
                     </FormControl>
-                  </Box>
+                  </Box> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <NoteAltIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -179,7 +192,7 @@ function NewMonthlyPresence() {
                       label="Date de départ *"
                       id="start_date"
                       name="start_date"
-                      value={startDate}
+                      value={presence.start_date}
                       onChange={insertstartDate}
                       renderInput={(params) =>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -194,7 +207,7 @@ function NewMonthlyPresence() {
                       label="Date de retour *"
                       id="return_date"
                       name="return_date"
-                      value={returnDate}
+                      value={presence.return_date}
                       onChange={insertreturnDate}
                       renderInput={(params) =>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -210,7 +223,7 @@ function NewMonthlyPresence() {
                         <Select
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
-                          value={visaRh}
+                          value={presence.visa_rh}
                           onChange={handleVisaChange}
                           label="Visa RH *"
                         >
@@ -232,7 +245,7 @@ function NewMonthlyPresence() {
                     startIcon={<AddIcon />}
                     onClick={savepresence}
                   >
-                    Ajouter
+                    Modifier
                   </Button>
                 </Container>
               </Box>
@@ -244,4 +257,4 @@ function NewMonthlyPresence() {
   )
 }
 
-export default NewMonthlyPresence
+export default UpdateMonthlyPresence

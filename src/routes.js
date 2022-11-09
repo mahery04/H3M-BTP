@@ -28,6 +28,7 @@ import UpdateCommonTools from './pages/UpdateCommonTools';
 import NewPersonnalTools from './pages/NewPersonnalTools';
 import NewCommonTools from './pages/NewCommonTools';
 import NewMonthlyPresence from './pages/NewMonthlyPresence';
+import UpdateMonthlyPresence from './pages/UpdateMonthlyPresence';
 import DailyPresenceHistory from './pages/DailyPresenceHistory';
 import DailyPresenceView from './pages/DailyPresenceView';
 import MonthlyPresenceHistory from './pages/MonthlyPresenceHistory';
@@ -104,7 +105,8 @@ export default function Router() {
         { path: 'monthlypresence', element: !user? <Navigate to="/login" /> : <MonthlyPresence /> },
         { path: 'employeepresence/:id', element: !user? <Navigate to="/login" /> : <EmployeePresence /> },
         { path: 'newdailypresence/:id', element: !user? <Navigate to="/login" /> : <NewDailyPresence /> },
-        { path: 'newmonthlypresence/:id', element: !user? <Navigate to="/login" /> : <NewMonthlyPresence /> },
+        { path: 'newmonthlypresence', element: !user? <Navigate to="/login" /> : <NewMonthlyPresence /> },
+        { path: 'updatemonthlypresence/:id', element: !user? <Navigate to="/login" /> : <UpdateMonthlyPresence /> },
         { path: 'dailypresence-history/:id', element: !user? <Navigate to="/login" /> : <DailyPresenceHistory /> },
         { path: 'dailypresence-view', element: !user? <Navigate to="/login" /> : <DailyPresenceView /> },
         { path: 'monthlypresence-history/:id', element: !user? <Navigate to="/login" /> : <MonthlyPresenceHistory /> },

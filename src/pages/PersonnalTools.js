@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, Paper, Container, Typography, Box, Tooltip } from '@mui/material';
-
-import { useDemoData } from '@mui/x-data-grid-generator';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
