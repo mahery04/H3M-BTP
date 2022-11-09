@@ -69,6 +69,7 @@ function UpdateMonthlyPresence() {
     }
   }, [presence_id, loaded])
 
+  console.log("LOADED ",loaded);
 
   const handleEmployeeChange = e => {
     const employeeValue = e.target.value
@@ -129,7 +130,7 @@ function UpdateMonthlyPresence() {
       }).catch(err => {
         console.log(err)
       })
-      navigate('/presence/monthlypresence?inserted')
+      navigate('/presence/monthlypresence?updated')
     }
   }
 

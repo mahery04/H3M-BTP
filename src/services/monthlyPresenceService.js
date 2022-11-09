@@ -20,12 +20,16 @@ const update = (id,data) => {
     return http.put(`/api/monthlypresence/${id}`, data)
 }
 
+const validation = (id,data) => {
+    return http.put(`/api/monthlypresence/validation/${id}`, data)
+}
+
 const remove = id => {
     return http.delete(`/api/monthlypresence/${id}`)
 }
 
 const exportedObject = {
-    getEmployee ,getAll, get, create, update, remove
+    getEmployee ,getAll, get, create, update, validation, remove
 }
 
 export default exportedObject

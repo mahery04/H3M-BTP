@@ -54,6 +54,23 @@ const MonthlyPresence = () => {
       });
   }
 
+  const updateValidation = (id) => {
+    swal({
+      text: "Voulez-vous vraiment valider ?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((validate) => {     
+      if (validate) {
+        MonthlyPresenceService.validation(id)
+        // const valide = views.filter(view => view.weekpresence_id)
+        // console.log("VAL", valide.validation);
+        // isDisabled = true
+        window.location.reload()
+      }
+    });
+  }
 
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
@@ -109,21 +126,39 @@ const MonthlyPresence = () => {
       field: 'action', headerName: 'Action', width: 250, type: 'action',
       renderCell: (data) => {
         if (userInfo.role_id === 1) {
-          return (
-            <>
-              <Link href={'/presence/updatemonthlypresence/' + data.id}>
+          if (data.row.approval_direction === "VALIDE") {
+            return (
+              <>
+                <Link href={'/presence/updatemonthlypresence/' + data.id}>
+                  <IconButton component="label">
+                    <EditIcon />
+                  </IconButton>
+                </Link>
                 <IconButton component="label">
-                  <EditIcon />
+                  <CheckCircleIcon />
                 </IconButton>
-              </Link>
-              <IconButton component="label">
-                <CheckCircleIcon sx={{ color: "green" }} />
-              </IconButton>
-              <IconButton component="label" onClick={() => deletePresence(data.id)}>
-                <DeleteIcon sx={{ color: "red" }} />
-              </IconButton>
-            </>
-          )
+                <IconButton component="label" onClick={() => deletePresence(data.id)}>
+                  <DeleteIcon sx={{ color: "red" }} />
+                </IconButton>
+              </>
+            )
+          } else {
+            return (
+              <>
+                <Link href={'/presence/updatemonthlypresence/' + data.id}>
+                  <IconButton component="label">
+                    <EditIcon />
+                  </IconButton>
+                </Link>
+                <IconButton component="label" onClick={() => updateValidation(data.id)}>
+                  <CheckCircleIcon sx={{ color: "green" }} />
+                </IconButton>
+                <IconButton component="label" onClick={() => deletePresence(data.id)}>
+                  <DeleteIcon sx={{ color: "red" }} />
+                </IconButton>
+              </>
+            )
+          }
         } else {
           return (
             <>
@@ -140,7 +175,7 @@ const MonthlyPresence = () => {
   ];
 
   const rows = monthlyPresences.map(monthlyEmployee => ({
-    id: monthlyEmployee.monthlyemployee_id,
+    id: monthlyEmployee.monthlypresence_id,
     matricule: monthlyEmployee.matricule,
     firstname: monthlyEmployee.firstname,
     lastname: monthlyEmployee.lastname,
@@ -155,6 +190,8 @@ const MonthlyPresence = () => {
     visa_rh: monthlyEmployee.visa_rh,
     approval_direction: monthlyEmployee.approval_direction
   }))
+
+  console.log("TEST ID ", monthlyPresences);
 
   return (
     <div>
