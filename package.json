@@ -69,6 +69,7 @@
     "react-input-mask": "^2.0.4",
     "react-scripts": "^5.0.0",
     "react-table": "^7.8.0",
+    "react-time-picker": "^5.1.0",
     "simplebar": "^5.3.6",
     "simplebar-react": "^2.3.6",
     "styled-components": "^4.3.2",

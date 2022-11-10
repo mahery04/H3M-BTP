@@ -7,6 +7,9 @@ import { Grid, TextField } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import PortraitIcon from '@mui/icons-material/Portrait';
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -22,6 +25,8 @@ function NewConge() {
     const [employees, setEmployees] = useState([])
     const [startconge, setStartconge] = useState(null)
     const [endconge, setEndconge] = useState(null)
+    const [visaRh, setVisaRh] = useState(null)
+    const [congeTime, setCongeTime] = useState(null)
 
     const navigate = useNavigate()
 
@@ -41,9 +46,12 @@ function NewConge() {
     const initialCongeState = {
         id:             null,
         monthlyemployee_id:       monthlyEmployees,
+        conge_motif: '',
         start_conge:    '',
         end_conge:      '',
         // number_days: null,
+        conge_before_request:'',
+        visa_rh: visaRh,
     }
     
     const [conge, setConge] = useState(initialCongeState)
@@ -52,6 +60,22 @@ function NewConge() {
         const employeeValue = e.target.value
         setMonthlyEmployee(employeeValue)
         setConge({ ...conge, monthlyemployee_id: employeeValue })
+    }
+
+    const handleInputChange = e => {
+        const { name, value } = e.target
+        setConge({ ...conge, [name]: value })
+    }
+
+    const handleVisaChange = (event) => {
+        setVisaRh(event.target.value);
+        setConge({...conge, visa_rh: event.target.value })
+    }
+
+    const insertCongeTime = newTime => {
+        const d = newTime
+        setCongeTime(d)
+        setConge({ ...conge, conge_before_request : d })
     }
 
     const insertStartconge = newDate => {
@@ -71,9 +95,11 @@ function NewConge() {
 
         var data = {
             monthlyemployee_id: conge.monthlyemployee_id,
+            conge_motif: conge.conge_motif,
             start_conge: conge.start_conge,
             end_conge: conge.end_conge,
-            // number_days: conge.number_days
+            conge_before_request: conge.conge_before_request,
+            visa_rh: conge.visa_rh
         }
 
         if (!data.monthlyemployee_id || !data.start_conge || !data.end_conge) {
@@ -99,6 +125,7 @@ function NewConge() {
         }
     }
 
+    console.log(conge);
   return (
     <div>
         <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
@@ -140,9 +167,23 @@ function NewConge() {
                                     </FormControl>
                                 </Box>
 
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <NoteAltIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                                    <TextField
+                                    id="conge_motif"
+                                    value={conge.conge_motif}
+                                    onChange={handleInputChange}
+                                    name="conge_motif"
+                                    required
+                                    label="Motif de congé"
+                                    variant="standard"
+                                    sx={{ width: '100%' }}
+                                    /><br />
+                                </Box>
+
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label="Début de congé"
+                                        label="Date de départ"
                                         id="start_conge"
                                         name="start_conge"
                                         value={startconge}
@@ -157,7 +198,7 @@ function NewConge() {
 
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label="Fin de congé"
+                                        label="Date de retour"
                                         id="end_conge"
                                         name="end_conge"
                                         value={endconge}
@@ -169,7 +210,37 @@ function NewConge() {
                                         }
                                     />
                                 </LocalizationProvider>
-                                <br />
+                            
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <NoteAltIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                                    <TextField
+                                    id="conge_before_request"
+                                    value={conge.conge_before_request}
+                                    onChange={handleInputChange}
+                                    name="conge_before_request"
+                                    required
+                                    label="Solde congé avant demande"
+                                    variant="standard"
+                                    sx={{ width: '100%' }}
+                                    /><br />
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <DoneAllIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                                    <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 7 }}>
+                                    <InputLabel id="demo-simple-select-standard-label">Visa RH *</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-standard-label"
+                                        id="demo-simple-select-standard"
+                                        value={visaRh}
+                                        onChange={handleVisaChange}
+                                        label="Visa RH *"
+                                    >
+                                        <MenuItem value="En attente">En attente</MenuItem>
+                                        <MenuItem value="Accordé">Accordé</MenuItem>
+                                        <MenuItem value="Non accordé">Non accordé</MenuItem>
+                                    </Select>
+                                    </FormControl>
+                                </Box>
                                 <Button
                                     size="medium"
                                     variant="outlined"

@@ -224,7 +224,7 @@ export default function NavSection({ navConfig, ...other }) {
       </Accordion>
       <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography style={category}>Congé</Typography>
+          <Typography style={category}>Permission et Congé</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {getMenus('conge')}

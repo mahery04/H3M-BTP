@@ -45,6 +45,9 @@ import UpdateContratMonthlyEmployee from './pages/UpdateContratMonthlyEmployee';
 import ServiceProvider from './pages/ServiceProvider';
 import NewServiceProvider from './pages/NewServiceProvider';
 import UpdateServiceProvider from './pages/UpdateServiceProvider';
+import Permission from './pages/Permission';
+import NewPermission from './pages/NewPermission';
+import UpdatePermission from './pages/UpdatePermission';
 
 
 // ----------------------------------------------------------------------
@@ -127,6 +130,9 @@ export default function Router() {
         { path: 'personnal', element: !user? <Navigate to="/login" /> : <Conge /> },
         { path: 'new', element: !user? <Navigate to="/login" /> : <NewConge /> },
         { path: 'update-conge/:id', element: !user? <Navigate to="/login" /> : <UpdateConge /> },
+        { path: 'permission', element: !user? <Navigate to="/login" /> : <Permission /> },
+        { path: 'new-permission', element: !user? <Navigate to="/login" /> : <NewPermission /> },
+        { path: 'update-permission/:id', element: !user? <Navigate to="/login" /> : <UpdatePermission /> },
       ]
     },
     {

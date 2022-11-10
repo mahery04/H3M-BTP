@@ -81,6 +81,12 @@ if (user) {
         icon: getIcon('bx:money'),
       },
       {
+        category: 'conge',
+        title: 'Listes des permissions',
+        path: '/conge/permission',
+        icon: getIcon('material-symbols:back-hand'),
+      },
+      {
         category: 'service-provider',
         title: 'Prestataire H3M',
         path: '/service-provider/personnal',

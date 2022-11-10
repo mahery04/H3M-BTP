@@ -13,25 +13,28 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
-import monthlyPresenceService from '../services/monthlyPresenceService'
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function UpdateMonthlyPresence() {
+import permissionService from '../services/permissionService';
+
+function UpdatePermission() {
 
   const [monthlyEmployees, setMonthlyEmployees] = useState('')
   const [employees, setEmployees] = useState([])
-  const [startDate, setStartDate] = useState(null)
-  const [returnDate, setReturnDate] = useState(null)
+  const [startTime, setStartTime] = useState(null)
+  const [returnTime, setReturnTime] = useState(null)
+  const [permissionTime, setPermissionTime] = useState(null)
   const [visaRh, setVisaRh] = useState('')
 
   const navigate = useNavigate()
 
   const getEmployees = () => {
-    monthlyPresenceService.getEmployee().then((res) => {
+    permissionService.getEmployee().then((res) => {
       setEmployees(res.data)
     }).catch(err => {
       console.log(err)
@@ -43,72 +46,87 @@ function UpdateMonthlyPresence() {
   }, [])
 
 
-  const initialPresenceState = {
+  const initialPermissionState = {
     id: null,
     monthlyemployee_id: monthlyEmployees,
-    absence_reason: '',
-    start_date: '',
-    return_date: '',
+    permission_reason: '',
+    start_time: '',
+    return_time: '',
+    number_time_permission: '',
+    permission_before_request: '',
+    new_solde_permission:'',
     visa_rh: visaRh
   }
 
   const findData = useParams()
-  const presence_id = findData.id
+  const permission_id = findData.id
   const [loaded, setLoaded] = useState(false)
 
-  const [presence, setPresence] = useState(initialPresenceState)
-  
+  const [permissions, setPermission] = useState(initialPermissionState)
+
   useEffect(() => {
     const load = async () => {
-      const res = await monthlyPresenceService.get(presence_id)
-      setPresence(res.data)
+      const res = await permissionService.get(permission_id)
+      setPermission(res.data)
       setLoaded(true)
     }
-    if (presence_id && !loaded) {
+    if (permission_id && !loaded) {
       load();
     }
-  }, [presence_id, loaded])
+  }, [permission_id, loaded])
 
   const handleEmployeeChange = e => {
     const employeeValue = e.target.value
     setMonthlyEmployees(employeeValue)
-    setPresence({ ...presence, monthlyemployee_id: employeeValue })
+    setPermission({ ...permissions, monthlyemployee_id: employeeValue })
   }
 
   const handleInputChange = e => {
     const { name, value } = e.target
-    setPresence({ ...presence, [name]: value })
+    setPermission({ ...permissions, [name]: value })
   }
 
   const handleVisaChange = (event) => {
     setVisaRh(event.target.value);
-    setPresence({...presence, visa_rh: event.target.value })
+    setPermission({...permissions, visa_rh: event.target.value })
   };
 
-  const insertstartDate = newDate => {
-    const d = moment(newDate).format('YYYY-MM-DD')
-    setStartDate(d)
-    setPresence({ ...presence, start_date: d })
+  const insertStartTime = newTime => {
+    const d = newTime
+    setStartTime(d)
+    setPermission({ ...permissions, start_time: moment(d).format("hh:mm:ss") })
+    console.log("TST: ", d);
   }
 
-  const insertreturnDate = newDate => {
-    const d = moment(newDate).format('YYYY-MM-DD')
-    setReturnDate(d)
-    setPresence({ ...presence, return_date: d })
+  console.log("PTST: ", permissions.start_time);
+
+  const insertReturnTime = newTime => {
+    const d = newTime
+    setReturnTime(d)
+    setPermission({ ...permissions, return_time: moment(d).format("hh:mm:ss") })
+    console.log("TRT: ", d);
+
   }
 
-  const savepresence = e => {
+  const insertPermissionTime = newTime => {
+    const d = newTime
+    setPermissionTime(d)
+    setPermission({ ...permissions, permission_before_request : d })
+  }
+
+  const savePermissions = e => {
     e.preventDefault()
 
     var data = {
-      monthlyemployee_id: presence.monthlyemployee_id,
-      absence_reason: presence.absence_reason,
-      start_date: presence.start_date,
-      return_date: presence.return_date,
-      visa_rh: presence.visa_rh
+      monthlyemployee_id: permissions.monthlyemployee_id,
+      permission_reason: permissions.permission_reason,
+      start_time: moment(permissions.start_time).format("hh:mm:ss"),
+      return_time:  moment(permissions.return_time).format("hh:mm:ss"),
+      permission_before_request: moment(permissions.permission_before_request).format("hh:mm:ss"),
+      visa_rh: permissions.visa_rh
     }
 
-    if (!data.monthlyemployee_id || !data.start_date || !data.return_date || !data.absence_reason) {
+    if (!data.monthlyemployee_id || !data.start_time || !data.return_time || !data.permission_reason) {
       swal({
         title: "Une erreur est survenue!",
         text: "Des formulaires requis sont vides.",
@@ -116,35 +134,36 @@ function UpdateMonthlyPresence() {
         button: "OK",
       });
     } else {
-      monthlyPresenceService.update(presence_id,data).then(res => {
-        setPresence({
+      permissionService.update(permission_id,data).then(res => {
+        setPermission({
           id: res.data.id,
           monthlyemployee_id: res.data.monthlyemployee_id,
-          absence_reason: res.data.absence_reason,
-          start_date: res.data.start_date,
-          return_date: res.data.return_date,
+          permission_reason: res.data.permission_reason,
+          start_time: res.data.start_time,
+          return_time: res.data.return_time,
+          permission_before_request: res.data.permission_before_request,
           visa_rh: res.data.visa_rh
         })
       }).catch(err => {
         console.log(err)
       })
-      navigate('/presence/monthlypresence?updated')
+      navigate('/conge/permission?updated')
     }
   }
 
-  console.log(presence);
+  
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Modification présence 
+        Modification de permission
         <Button
           size="medium"
           variant="outlined"
           color="primary"
           sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
           startIcon={<ArrowBackIcon />}
-          href='/presence/monthlypresence'
+          href='/conge/permission'
         >
           Retour
         </Button>
@@ -152,7 +171,7 @@ function UpdateMonthlyPresence() {
       <Container maxWidth="xxl">
         <Card sx={{ height: 'auto', width: '95%' }}>
           <CardContent>
-            <form onSubmit={savepresence} noValidate autoComplete='off'>
+            <form onSubmit={savePermissions} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Container maxWidth="xl" sx={{ lineHeight: 5 }}>
                   {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -175,24 +194,40 @@ function UpdateMonthlyPresence() {
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <NoteAltIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField
-                      id="absence_reason"
-                      value={presence.absence_reason}
+                      id="permission_reason"
+                      value={permissions.permission_reason}
                       onChange={handleInputChange}
-                      name="absence_reason"
+                      name="permission_reason"
                       required
-                      label="Motif d'absence"
+                      label="Motif de permission"
                       variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
 
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                      label="Date de départ *"
-                      id="start_date"
-                      name="start_date"
-                      value={presence.start_date}
-                      onChange={insertstartDate}
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <TimePicker
+                      label="Heure de départ *"
+                      id="start_time"
+                      name="start_time" 
+                      value={new Date(`2022-02-03T${permissions.start_time}`)}
+                      onChange={insertStartTime}
+                      renderInput={(params) =>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                          <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
+                        </Box>
+                      }
+                    />
+                  </LocalizationProvider>
+
+
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <TimePicker
+                      label="Heure de retour *"
+                      id="return_time"
+                      name="return_time"
+                      value={new Date(`2022-02-03T${permissions.return_time}`)}
+                      onChange={insertReturnTime}
                       renderInput={(params) =>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                           <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
@@ -202,12 +237,12 @@ function UpdateMonthlyPresence() {
                   </LocalizationProvider>
 
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                      label="Date de retour *"
-                      id="return_date"
-                      name="return_date"
-                      value={presence.return_date}
-                      onChange={insertreturnDate}
+                    <TimePicker
+                      label="Solde permission avant demande *"
+                      id="permission_before_request"
+                      name="permission_before_request"
+                      value={new Date(`2022-02-03 ${permissions.permission_before_request}`)}
+                      onChange={insertPermissionTime}
                       renderInput={(params) =>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                           <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
@@ -222,7 +257,7 @@ function UpdateMonthlyPresence() {
                         <Select
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
-                          value={presence.visa_rh}
+                          value={permissions.visa_rh}
                           onChange={handleVisaChange}
                           label="Visa RH *"
                         >
@@ -242,7 +277,7 @@ function UpdateMonthlyPresence() {
                     color="primary"
                     sx={{ width: 250 }}
                     startIcon={<AddIcon />}
-                    onClick={savepresence}
+                    onClick={savePermissions}
                   >
                     Modifier
                   </Button>
@@ -256,4 +291,4 @@ function UpdateMonthlyPresence() {
   )
 }
 
-export default UpdateMonthlyPresence
+export default UpdatePermission
