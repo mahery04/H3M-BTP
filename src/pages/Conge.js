@@ -131,6 +131,8 @@ function Conge() {
                 if (data.row.new_solde_conge < 0 || data.row.new_solde_conge > 90) {
                     // return data.row.new_solde_conge + " jours"
                     return ( <Label variant="ghost" color='error'>{data.row.new_solde_conge + " jours"}</Label> )
+                } else  {
+                    return data.row.new_solde_conge + " jours"
                 }
             }
         },
