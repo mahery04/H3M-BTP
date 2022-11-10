@@ -25,7 +25,7 @@ function UpdateConge() {
     const [employees, setEmployees] = useState([])
     const [startconge, setStartconge] = useState(null)
     const [endconge, setEndconge] = useState(null)
-    const [visaRh, setVisaRh] = useState(null)
+    const [visaRh, setVisaRh] = useState('')
     const [congeTime, setCongeTime] = useState(null)
 
     const navigate = useNavigate()
@@ -49,7 +49,6 @@ function UpdateConge() {
         conge_motif: '',
         start_conge:    '',
         end_conge:      '',
-        // number_days: null,
         conge_before_request:'',
         visa_rh: visaRh,
     }
@@ -125,13 +124,16 @@ function UpdateConge() {
                 button: "OK",
             });
         } else {
-            congeService.create(data).then(res => {
+            congeService.update(conge_id,data).then(res => {
                 setConge({
                     id: res.data.id,
                     monthlyemployee_id: res.data.monthlyemployee_id,
+                    conge_motif: res.data.conge_motif,
                     start_conge: res.data.start_conge,
                     end_conge: res.data.end_conge,
-                    // number_days: res.data.number_days
+                    conge_before_request: res.data.conge_before_request,
+                    visa_rh: res.data.visa_rh
+        
                 })
             }).catch(err => {
                 console.log(err)

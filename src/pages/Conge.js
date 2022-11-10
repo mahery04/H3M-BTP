@@ -84,8 +84,8 @@ function Conge() {
             // const valide = views.filter(view => view.permission_id)
             // console.log("VAL", valide.validation);
             // isDisabled = true
-            // window.location.reload()
-            navigate('/conge/personnal?validated')
+            window.location.reload()
+            // navigate('/conge/personnal?validated')
           }
         });
       }

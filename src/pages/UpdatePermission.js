@@ -261,9 +261,6 @@ function UpdatePermission() {
                           onChange={handleVisaChange}
                           label="Visa RH *"
                         >
-                          {/* <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem> */}
                           <MenuItem value="En attente">En attente</MenuItem>
                           <MenuItem value="Accordé">Accordé</MenuItem>
                           <MenuItem value="Non accordé">Non accordé</MenuItem>
