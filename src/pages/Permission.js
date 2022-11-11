@@ -101,7 +101,13 @@ const Permission = () => {
     { field: 'start_time', headerName: 'Heure de départ', width: 150 },
     { field: 'return_time', headerName: 'Heure de retour', width: 150 },
     { field: 'number_time_permission', headerName: 'Nombre d\'heure de permission', width: 250 },
-    { field: 'permission_before_request', headerName: 'Solde permission avant demande', width: 300 },
+    { field: 'permission_before_request', headerName: 'Solde permission avant demande', width: 300,
+      // renderCell: (data) => {
+      //   if (data.row.permission_before_request) {
+      //   return data.row.permission_before_request + " h"
+      //   }
+      // }
+    },
     { field: 'new_solde_permission', headerName: 'Nouveau solde permission', width: 250 },
     { field: 'visa_rh', headerName: 'Visa RH', width: 150,
       renderCell: (data) => {
@@ -186,16 +192,16 @@ const Permission = () => {
     category: permission.category,
     group: permission.group,
     permission_reason: permission.permission_reason,
-    start_time: permission.start_time,
-    return_time: permission.return_time,
-    number_time_permission: permission.number_time_permission,
-    permission_before_request: permission.permission_before_request,
-    new_solde_permission: permission.new_solde_permission,
+    start_time: `${permission.start_hour_time + " h"} : ${permission.start_minute_time + " mn"}`, 
+    return_time: `${permission.return_hour_time + " h"} : ${permission.return_minute_time + " mn"}`,
+    number_time_permission: `${permission.return_hour_time - permission.start_hour_time + " h"} : ${permission.return_minute_time - permission.start_minute_time + " mn"} `,
+    permission_before_request: `${permission.permission_hour_before_request + " h"} : ${permission.permission_minute_before_request + " mn"}`,
+    new_solde_permission: `${permission.new_solde_permission.split(' ')[0] + " h"} : ${permission.new_solde_permission.split(' ')[1] + " mn"}`,
     visa_rh: permission.visa_rh,
     approval_direction: permission.approval_direction
   }))
 
-
+  // console.log("PRM ", typeof(parseInt(permissions[0].start_hour_time)));
 
 
   return (

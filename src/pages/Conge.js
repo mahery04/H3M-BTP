@@ -54,6 +54,16 @@ function Conge() {
         getConges()
     }, [])
 
+    useEffect(() => {
+        var date = new Date()
+        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        // var lastDay = new Date("2022-11-11");
+        if (moment(date).format('YYYY-MM-DD') === moment(lastDay).format('YYYY-MM-DD')) {
+            congeService.updateLastDay()
+        }
+        // console.log(moment(date).format('YYYY-MM-DD'), moment(lastDay).format('YYYY-MM-DD'))
+    })
+
     const deleteConge = (id) => {
         swal({
             text: "Supprimer le congé ?",
@@ -128,15 +138,16 @@ function Conge() {
         },
         { field: 'new_solde_conge', headerName: 'Nouveau solde congé', width: 200,
             renderCell: (data) => {
-                if (data.row.new_solde_conge < 0 || data.row.new_solde_conge > 90) {
-                    // return data.row.new_solde_conge + " jours"
+                if (data.row.new_solde_conge < 0 ) {
                     return ( <Label variant="ghost" color='error'>{data.row.new_solde_conge + " jours"}</Label> )
+                } else if (data.row.new_solde_conge > 90) {
+                    return ( <Label variant="ghost" color='primary'>{data.row.new_solde_conge + " jours"}</Label> )
                 } else  {
                     return data.row.new_solde_conge + " jours"
                 }
             }
         },
-        { field: 'visa_rh', headerName: 'Visa RH', width: 250,
+        { field: 'visa_rh', headerName: 'Visa RH', width: 170,
             renderCell: (data) => {
                 if (data.row.visa_rh === 'En attente') {
                 return ( <Label variant="ghost" color='warning'>{data.row.visa_rh}</Label> )

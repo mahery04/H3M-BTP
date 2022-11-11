@@ -1,5 +1,9 @@
 import http from '../http-common'
 
+const updateLastDay = () => {
+    return http.put(`/api/conge/lastday`)
+}
+
 const getEmployee = () => {
     return http.get('/api/conge/fullemployee')
 }
@@ -29,7 +33,7 @@ const remove = id => {
 }
 
 const exportedObject = {
-    getEmployee ,getAll, get, create, update, validation, remove
+    updateLastDay, getEmployee ,getAll, get, create, update, validation, remove
 }
 
 export default exportedObject
