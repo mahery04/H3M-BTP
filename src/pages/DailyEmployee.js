@@ -52,7 +52,7 @@ function DailyEmployee() {
   }
   notification()
 
-  const [dailyemployees, setDailyemployees] = useState([]);
+  const [dailyemployees, setDailyemployees] = useState([])
     
   const getDailyemployees = () => {
     dailyEmployeeService.getAll().then((res) => {
@@ -69,7 +69,7 @@ function DailyEmployee() {
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
   const columns = [
-    { field: 'id', headerName: 'Id', width: 50 },
+    // { field: 'id', headerName: 'Id', width: 50 },
     { field: 'matricule', headerName: 'Matricule', width: 100 },
     { field: 'firstname', headerName: 'Nom', width: 200 },
     { field: 'lastname', headerName: 'Prénom', width: 200 },
@@ -135,7 +135,8 @@ function DailyEmployee() {
             </Stack>
           </>
         )
-      }},
+      }
+    },
     {
       field: 'remarque', headerName: 'Remarque', width: 100, type: 'action',
       renderCell: (data) => {
@@ -145,10 +146,14 @@ function DailyEmployee() {
             <InfoIcon sx={{ color: 'grey' }}/>
           </Tooltip>
         )
-      }},
+      }
+    },
+    {
+      field: 'par', headerName: 'Fait par', width: 250, type: 'action'},
     {
       field: 'action', headerName: 'Action', width: 100, type: 'action',
       renderCell: (data) => {
+        const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
         if (userInfo.role_id === 1) {
           return (
             <>
@@ -196,7 +201,8 @@ function DailyEmployee() {
     start_motif:  dailyemployee.start_motif,
     status:       dailyemployee.status,
     sanction:     dailyemployee.sanction,
-    remarque:     dailyemployee.remarque
+    remarque:     dailyemployee.remarque,
+    par: dailyemployee.par
   }))
 
   const navigate = useNavigate()

@@ -11,6 +11,8 @@ import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 
 import moment from 'moment'
 import serviceProviderService from '../services/serviceProviderService';
@@ -65,41 +67,60 @@ function ServiceProvider() {
             }
         },
         { field: 'post_occupe', headerName: 'Poste occupé', width: 200 },
-        { field: 'salary', headerName: 'Salaire', width: 200,
+        { field: 'salary', headerName: 'Montant de préstation mensuel', width: 250,
             renderCell: (data) => {
                 if (data.row.salary) {
                 return data.row.salary + " Ar"
                 }
             }
         },
-        { field: 'action', headerName: 'Action', width: 200, type: 'action',
+        { field: 'salary_mensuel', headerName: 'Paiement mensuel', width: 200, type:'action',
             renderCell: (data) => {
-                if (userInfo.role_id === 1) {
-                    return (
-                    <>
-                        <Link href={'/conge/update-conge/' + data.id}>
-                            <IconButton component="label">
-                                <EditIcon />
-                            </IconButton>
-                        </Link>
-                        <IconButton component="label" onClick={() => deleteprovider(data.id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </>
-                    ) 
-                } else {
-                    return (
-                        <>
-                            <Link href={'/conge/update-conge/' + data.id}>
-                                <IconButton component="label">
-                                    <EditIcon />
-                                </IconButton>
-                            </Link>
-                        </>
-                    ) 
-                }
+                return (
+                <>
+                    <Stack direction="row">
+                    <Link underline="none" href={'/salary/personnal/' + data.id}>
+                        <Chip 
+                            icon={<AddCircleIcon/>} 
+                            label="Voir paiement mensuel"
+                            sx={{cursor:'pointer'}}
+                            variant="outlined"
+                            color="warning"
+                        />
+                    </Link>
+                    </Stack>
+                </>
+                )
             }
         },
+        // { field: 'action', headerName: 'Action', width: 200, type: 'action',
+        //     renderCell: (data) => {
+        //         if (userInfo.role_id === 1) {
+        //             return (
+        //             <>
+        //                 <Link href={'/service-provider/update-service-provider/' + data.id}>
+        //                     <IconButton component="label">
+        //                         <EditIcon />
+        //                     </IconButton>
+        //                 </Link>
+        //                 <IconButton component="label" onClick={() => deleteprovider(data.id)}>
+        //                     <DeleteIcon />
+        //                 </IconButton>
+        //             </>
+        //             ) 
+        //         } else {
+        //             return (
+        //                 <>
+        //                     <Link href={'/service-provider/update-service-provider/' + data.id}>
+        //                         <IconButton component="label">
+        //                             <EditIcon />
+        //                         </IconButton>
+        //                     </Link>
+        //                 </>
+        //             ) 
+        //         }
+        //     }
+        // },
     ];
 
     const rows = providers.map(provider => ({
@@ -126,12 +147,12 @@ function ServiceProvider() {
         .then((willDelete) => {
           if(willDelete) { 
             serviceProviderService.remove(id)
-            const newTabList = providers.filter((provider) => provider.id !== id)
+            const newTabList = providers.filter((provider) => provider.provider_id !== id)
             setproviders(newTabList)
-            document.location.reload(true)
+            navigate('/service-provider/personnal?deleted')
           } 
         });
-      }
+    }
 
       console.log("PROVIDERS ", providers);
 

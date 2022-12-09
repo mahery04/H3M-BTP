@@ -9,8 +9,9 @@ import AddIcon from '@mui/icons-material/Add';
 import GroupsIcon from '@mui/icons-material/Groups';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-
 import PortraitIcon from '@mui/icons-material/Portrait';
+
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'; 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -24,6 +25,7 @@ import permissionService from '../services/permissionService';
 function NewPermission() {
 
   const [monthlyEmployees, setMonthlyEmployees] = useState('')
+  const [datePermission, setDatePermission] = useState(null)
   const [employees, setEmployees] = useState([])
   const [startTime, setStartTime] = useState('')
   const [returnTime, setReturnTime] = useState('')
@@ -33,11 +35,11 @@ function NewPermission() {
   const [returnMinutesTime, setreturnMinutesTime] = useState(null)
   const [hoursBeforeReq, sethoursBeforeReq] = useState(null)
   const [minutesBeforeReq, setminutesBeforeReq] = useState(null)
-
-
-
+  
   const [permissionTime, setPermissionTime] = useState(null)
   const [visaRh, setVisaRh] = useState('')
+
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
   const navigate = useNavigate()
 
@@ -53,10 +55,13 @@ function NewPermission() {
     getEmployees()
   }, [])
 
-  
+  var today = new Date();
+  var dateToday = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+
   const initialPermissionState = {
     id: null,
     monthlyemployee_id: monthlyEmployees,
+    date_permission: datePermission,
     permission_reason: '',
     start_hour_time: '',
     return_hour_time: '',
@@ -66,7 +71,8 @@ function NewPermission() {
     permission_hour_before_request: '',
     permission_minute_before_request: '',
     new_solde_permission:'',
-    visa_rh: visaRh
+    visa_rh: visaRh,
+    par:''
   }
 
   const [permissions, setPermission] = useState(initialPermissionState)
@@ -75,6 +81,12 @@ function NewPermission() {
     const employeeValue = e.target.value
     setMonthlyEmployees(employeeValue)
     setPermission({ ...permissions, monthlyemployee_id: employeeValue })
+  }
+
+  const insertDatePermission = (newDate) => {
+    const d = moment(newDate).format('YYYY-MM-DD')
+    setDatePermission(d);
+    setPermission({ ...permissions, date_permission: d })
   }
 
   const handleInputChange = e => {
@@ -141,64 +153,52 @@ function NewPermission() {
     setPermission({ ...permissions, permission_before_request : d })
   }
 
-  // useEffect(() => {
-  //   setStartTime(`${startHoursTime}:${startMinutesTime}`)
-  //   setPermission({...permissions, start_time:startTime})
-  //   setReturnTime(`${returnHoursTime}:${returnMinutesTime}`)
-  //   setPermission({...permissions, return_time:returnTime})
-  // }, [])
-
   const savePermissions = e => {
     e.preventDefault()
 
     var data = {
       monthlyemployee_id: permissions.monthlyemployee_id,
       permission_reason: permissions.permission_reason,
+      date_permission: permissions.date_permission,
       start_hour_time: permissions.start_hour_time,
       start_minute_time: permissions.start_minute_time,
       return_hour_time: permissions.return_hour_time,
       return_minute_time: permissions.return_minute_time,
-      permission_hour_before_request: permissions.permission_hour_before_request,
-      permission_minute_before_request: permissions.permission_minute_before_request,
-      visa_rh: permissions.visa_rh
+      // permission_hour_before_request: permissions.permission_hour_before_request,
+      // permission_minute_before_request: permissions.permission_minute_before_request,
+      visa_rh: permissions.visa_rh,
+      par: userInfo.role_name + " le " + dateToday
     }
 
-    // if (!data.monthlyemployee_id || !data.start_hour_time || !data.start_minute_time || !data.permission_reason || !data.visa_rh) {
-    //   swal({
-    //     title: "Une erreur est survenue!",
-    //     text: "Des formulaires requis sont vides.",
-    //     icon: "error",
-    //     button: "OK",
-    //   });
-    // } else {
+    if (data.monthlyemployee_id.length <=0 || data.permission_reason.length <=0 || data.start_hour_time.length <=0 || data.start_minute_time.length <=0 || data.return_hour_time.length <=0 || data.return_minute_time.length <=0 || data.visa_rh.length <=0) {
+      swal({
+        title: "Une erreur est survenue!",
+        text: "Des formulaires requis sont vides.",
+        icon: "error",
+        button: "OK",
+      });
+    } else {
       permissionService.create(data).then(res => {
         setPermission({
           id: res.data.id,
           monthlyemployee_id: res.data.monthlyemployee_id,
+          date_permission: res.data.date_permission,
           permission_reason: res.data.permission_reason,
           start_hour_time: res.data.start_hour_time,
           start_minute_time: res.data.start_minute_time,
           return_hour_time: res.data.return_hour_time,
           return_minute_time: res.data.return_minute_time,
-          permission_hour_before_request: res.data.permission_hour_before_request,
-          permission_minute_before_request: res.data.permission_minute_before_request,
-          visa_rh: res.data.visa_rh
+          // permission_hour_before_request: res.data.permission_hour_before_request,
+          // permission_minute_before_request: res.data.permission_minute_before_request,
+          visa_rh: res.data.visa_rh,
+          par: res.data.par
         })
       }).catch(err => {
         console.log(err)
       })
       navigate('/conge/permission?inserted')
-    // }
+    }
   }
-
-  console.log(
-    "HD ", startHoursTime,
-    "MD ", startMinutesTime,
-    "HR ", returnHoursTime,
-    "MR ", returnMinutesTime,
-    "HBR ", hoursBeforeReq,
-    "MBR ", minutesBeforeReq
-  );
 
   console.log("PRM ", permissions);
 
@@ -240,6 +240,27 @@ function NewPermission() {
                     </FormControl>
                   </Box>
 
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label="Date de permission"
+                      id="date_permission"
+                      name="date_permission"
+                      value={datePermission}
+                      onChange={insertDatePermission}
+                      renderInput={(params) =>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            sx={{ width: '100%' }}
+                            id="date_permission"
+                            name="date_permission"
+                          /><br />
+                        </Box>
+                      }
+                    />
+                  </LocalizationProvider>
+
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <NoteAltIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField
@@ -254,21 +275,6 @@ function NewPermission() {
                     /><br />
                   </Box> 
 
-                  {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <TimePicker
-                      label="Heure de départ *"
-                      id="start_time"
-                      name="start_time"
-                      value={startTime}
-                      onChange={insertStartTime}
-                      renderInput={(params) =>
-                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                          <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
-                        </Box>
-                      }
-                    />
-                  </LocalizationProvider> */} 
-                  
                   <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>
                       <FormControl variant="standard" sx={{ m: 1, width:'100%', mt: 5 }}>
@@ -500,55 +506,7 @@ function NewPermission() {
                     </Grid>
                   </Grid>
 
-                  {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <TimePicker
-                      label="Heure de retour *"
-                      id="return_time"
-                      name="return_time"
-                      value={returnTime}
-                      onChange={insertReturnTime}
-                      renderInput={(params) =>
-                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                          <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
-                        </Box>
-                      }
-                    />
-                  </LocalizationProvider> */}
-
-                  {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <TimePicker
-                      label="Solde permission avant demande *"
-                      id="permission_before_request"
-                      name="permission_before_request"
-                      value={permissionTime}
-                      onChange={insertPermissionTime}
-                      renderInput={(params) =>
-                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                          <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
-                        </Box>
-                      }
-                    />
-                  </LocalizationProvider> */}
-
-                 
-
-                  {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                    <NoteAltIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField
-                      id="permission_before_request"
-                      value={permissions.permission_before_request}
-                      onChange={handleInputChange}
-                      name="permission_before_request"
-                      required
-                      type='number'
-                      label="Solde permission avant demande *"
-                      variant="standard"
-                      sx={{ width: '100%' }}
-                    /><br />
-                  </Box> */}
-
-
-                  <Chip label="Solde permission avant demande *" />
+                  {/* <Chip label="Solde permission avant demande *" />
                   <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>
                       <FormControl variant="standard" sx={{ m: 1, width:'100%' }}>
@@ -661,7 +619,7 @@ function NewPermission() {
                       </Select>
                     </FormControl>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <DoneAllIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />

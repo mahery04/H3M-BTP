@@ -22,11 +22,13 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Select from '@mui/material/Select';
 import moment from 'moment';
 
-import commonToolsService from '../services/commonToolsService'
+import commonToolsService from '../services/commonToolsService';
+import historyToolService from '../services/historyToolService';
 
-function UpdateCommonTools() {
+function UpdateHistoryTool() {
 
   const [date, setDate] = useState(null);
+  const [etat, setetat] = useState('');
   const [affectation, setAffectation] = useState('');
   const [responsable, setResponsable] = useState('');
   const [statue, setStatue] = useState('');
@@ -46,17 +48,10 @@ function UpdateCommonTools() {
 
   const initialToolsState = {
     id: null,
-    purchase_date: date,
-    identification_number: '',
-    vendor: '',
-    num_fact: '',
-    article_name: '',
-    // assignation_place:      '',
-    statue: statue,
-    historical: '',
-    material_number: '',
-    // responsable:            responsable,
-    tooling_id: affectation,
+    date_transfert: date,
+    lieu_transfert: '',
+    etat: etat,
+    observation: '',
   }
 
   const findData = useParams()
@@ -67,7 +62,7 @@ function UpdateCommonTools() {
 
   useEffect(() => {
     const load = async () => {
-      const res = await commonToolsService.get(tool_id)
+      const res = await historyToolService.get(tool_id)
       setTools(res.data)
       setLoaded(true)
     }
@@ -83,7 +78,7 @@ function UpdateCommonTools() {
   const insertDate = (newDate) => {
     const d = moment(newDate).format('YYYY-MM-DD')
     setDate(d)
-    setTools({ ...tools, purchase_date: d })
+    setTools({ ...tools, date_transfert: d })
   }
 
   const handleResponsableChange = (event) => {
@@ -100,44 +95,34 @@ function UpdateCommonTools() {
 
   const navigate = useNavigate()
 
-  const updateTools = e => {
+  const updateHistoryTool = e => {
     e.preventDefault()
 
     var data = {
-      purchase_date: moment(tools.purchase_date).format('YYYY-MM-DD'),
-      identification_number: tools.identification_number,
-      vendor: tools.vendor,
-      num_fact: tools.num_fact,
-      article_name: tools.article_name,
-      statue: tools.statue,
-      historical: tools.historical,
-      material_number: tools.material_number,
-      tooling_id: tools.tooling_id,
+      date_transfert: moment(tools.date_transfert).format('YYYY-MM-DD'),
+      lieu_transfert: tools.lieu_transfert,
+      etat: tools.etat,
+      observation: tools.observation,
     }
 
-    commonToolsService.update(tool_id, data).then(res => {
+    historyToolService.update(tool_id, data).then(res => {
       setTools({
-        id: res.data.id,
-        purchase_date: res.data.purchase_date,
-        identification_number: res.data.identification_number,
-        vendor: res.data.vendor,
-        num_fact: res.data.num_fact,
-        article_name: res.data.article_name,
-        statue: res.data.statue,
-        historical: res.data.historical,
-        material_number: parseInt(res.data.material_number),
-        tooling_id: res.data.tooling_id,
+        id: res.data.history_tool_id,
+        date_transfert: res.data.date_transfert,
+        lieu_transfert: res.data.lieu_transfert,
+        etat: res.data.etat,
+        observation: res.data.observation,
       })
     }).catch(err => {
       console.log(err)
     })
-    navigate('/tools/common?updated')
+    navigate('/history/tool/'+tools.id+'?updated')
   }
 
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Modification de l'outil
+        Modification de l'historique
         <Button
           size="medium"
           variant="outlined"
@@ -153,17 +138,16 @@ function UpdateCommonTools() {
       <Container maxWidth="xxl">
         <Card sx={{ height: 'auto', width: '95%' }}>
           <CardContent>
-            <form onSubmit={updateTools} noValidate autoComplete='off'>
+            <form onSubmit={updateHistoryTool} noValidate autoComplete='off'>
               <Box sx={{ flexGrow: 1 }}>
                 <Container maxWidth="xl" sx={{ lineHeight: 5 }}>
-
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
-                      label="Date d'achat"
-                      id="purchase_date"
-                      name="purchase_date"
-                      value={tools.purchase_date}
-                      onChange={insertDate}
+                      label="Date de transfert"
+                      id="date_transfert"
+                      name="date_transfert"
+                      value={tools.date_transfert}
+                      //onChange={insertDate}
                       renderInput={(params) =>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                           <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
@@ -175,64 +159,26 @@ function UpdateCommonTools() {
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <NumbersIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField
-                      id="identification_number"
-                      value={tools.identification_number}
+                      id="lieu_transfert"
+                      value={tools.lieu_transfert}
                       onChange={handleInputChange}
-                      name="identification_number"
-                      label="Numéro d'identification"
+                      name="lieu_transfert"
+                      label="Lieu de transfert"
                       variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
                   </Box>
 
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                    <ArchiveIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField
-                      id="vendor"
-                      value={tools.vendor}
-                      onChange={handleInputChange}
-                      name="vendor"
-                      label="Fournisseur"
-                      variant="standard"
-                      sx={{ width: '100%' }}
-                    /><br />
-                  </Box>
-
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                    <ReceiptIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField
-                      id="num_fact"
-                      value={tools.num_fact}
-                      onChange={handleInputChange}
-                      name="num_fact"
-                      label="Numéro de facture"
-                      variant="standard"
-                      sx={{ width: '100%' }}
-                    /><br />
-                  </Box>
-
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                    <FeedIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                    <TextField
-                      id="article_name"
-                      value={tools.article_name}
-                      onChange={handleInputChange}
-                      name="article_name"
-                      label="Nom article"
-                      variant="standard"
-                      sx={{ width: '100%' }}
-                    /><br />
-                  </Box>
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <MoreHorizIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <FormControl variant="standard" sx={{ width: '100%', marginTop: 4 }}>
-                      <InputLabel id="statue">Etat</InputLabel>
+                      <InputLabel id="etat">Etat</InputLabel>
                       <Select
-                        labelId="statue"
-                        id="statue"
-                        value={tools.statue}
+                        labelId="etat"
+                        id="etat"
+                        value={tools.etat}
                         onChange={handleStatueChange}
-                        label="Age"
+                        label="Etat"
                       >
                         <MenuItem value="">
                           <em>None</em>
@@ -244,14 +190,13 @@ function UpdateCommonTools() {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                    <TwoKIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <FeedIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                     <TextField
-                      type="number"
-                      id="material_number"
-                      value={tools.material_number}
+                      id="observation"
+                      value={tools.observation}
                       onChange={handleInputChange}
-                      name="material_number"
-                      label="Nombre de matériels"
+                      name="observation"
+                      label="Observation"
                       variant="standard"
                       sx={{ width: '100%' }}
                     /><br />
@@ -264,7 +209,7 @@ function UpdateCommonTools() {
                     color="primary"
                     sx={{ width: 250 }}
                     startIcon={<AddIcon />}
-                    onClick={updateTools}
+                    onClick={updateHistoryTool}
                   >
                     Modifier
                   </Button>
@@ -278,4 +223,4 @@ function UpdateCommonTools() {
   )
 }
 
-export default UpdateCommonTools
+export default UpdateHistoryTool

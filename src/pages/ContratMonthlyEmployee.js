@@ -25,17 +25,6 @@ import swal from '@sweetalert/with-react';
 import contratMonthlyEmployeeService from '../services/contratMonthlyEmployeeService';
 import monthlyEmployeeService from '../services/monthlyEmployeeService';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 const ContratMonthlyEmployee = () => {
     
@@ -66,6 +55,7 @@ const ContratMonthlyEmployee = () => {
             setEmployee({ matricule: employee.data.matricule, firstname: employee.data.firstname, lastname: employee.data.lastname })
         })
     }, [monthlyemployee_id])
+
 
     const getContratMonthlyEmployees = (id) => {
         contratMonthlyEmployeeService.getAll(id).then((res) => {
@@ -202,6 +192,8 @@ const ContratMonthlyEmployee = () => {
           {employee.firstname} {employee.lastname}
         </Typography>,
     ];
+
+    console.log("CME ", contratMonthlyEmployee);
 
   return (
     <div>

@@ -98,11 +98,11 @@ function NewConge() {
             conge_motif: conge.conge_motif,
             start_conge: conge.start_conge,
             end_conge: conge.end_conge,
-            conge_before_request: conge.conge_before_request,
+            // conge_before_request: conge.conge_before_request,
             visa_rh: conge.visa_rh
         }
 
-        if (!data.monthlyemployee_id || !data.start_conge || !data.end_conge) {
+        if (!data.monthlyemployee_id || !data.conge_motif || !data.start_conge || !data.end_conge || !data.visa_rh) {
             swal({
                 title: "Une erreur est survenue!",
                 text: "Des formulaires requis sont vides.",
@@ -211,7 +211,7 @@ function NewConge() {
                                     />
                                 </LocalizationProvider>
                             
-                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                {/* <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                     <NoteAltIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                                     <TextField
                                     id="conge_before_request"
@@ -223,7 +223,7 @@ function NewConge() {
                                     variant="standard"
                                     sx={{ width: '100%' }}
                                     /><br />
-                                </Box>
+                                </Box> */}
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                     <DoneAllIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                                     <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 7 }}>

@@ -53,13 +53,13 @@ function NewServiceProvider() {
   const insertStartContract = newDate => {
     const d = moment(newDate).format('YYYY-MM-DD')
     setStartContract(d)
-    setServiceProviders({...serviceProviders, startContract: d})
+    setServiceProviders({...serviceProviders, start_contract: d})
   }
 
   const insertEndContract = newDate => {
     const d = moment(newDate).format('YYYY-MM-DD')
     setEndContract(d)
-    setServiceProviders({...serviceProviders, endContract: d})
+    setServiceProviders({...serviceProviders, end_contract: d})
   }
 
   const navigate = useNavigate()
@@ -80,14 +80,14 @@ function NewServiceProvider() {
       salary: serviceProviders.salary
     }
 
-    // if (!data.firstname || !data.lastname || !data.start_contract.length <= 0 || !data.end_contract || !data.post_occupe ) {
-    //   swal({
-    //     title: "Une erreur est survenue!",
-    //     text: "Des formulaires requis sont vides.",
-    //     icon: "error",
-    //     button: "OK",
-    //   });
-    // } else {
+    if (!data.firstname || !data.lastname || !data.start_contract || !data.end_contract || !data.post_occupe || !data.salary ) {
+      swal({
+        title: "Un erreur est survenu!",
+        text: "Veuillez remplir les champs étoilés",
+        icon: "error",
+        button: "OK",
+      });
+    } else {
       serviceProviderService.create(data).then(res => {
         setServiceProviders({
           // id: res.data.id,
@@ -106,188 +106,187 @@ function NewServiceProvider() {
         console.log(err)
       })
       navigate('/service-provider/personnal?inserted')
-    // }
+    }
   }
 
   console.log(serviceProviders);
   
   return (
     <div>
-        <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-          Nouveau Prestataire
-          <Button
-            size="medium"
-            variant="outlined"
-            color="primary"
-            sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
-            startIcon={<ArrowBackIcon />}
-            href='/service-provider/personnal'
-          >
-          Retour
-          </Button>
-        </Typography>
-        <Container maxWidth="xxl">
-          <Card sx={{ height: 'auto', width: '95%' }}>
-            <CardContent>
-              <form onSubmit={savePersonnalProvider} noValidate autoComplete='off'>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ lineHeight: 6 }}>
-                    <Grid item xs={2} sm={4} md={4}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <TextField
-                          id="firstname"
-                          value={serviceProviders.firstname}
-                          onChange={handleInputChange}
-                          name="firstname"
-                          required
-                          label="Nom"
-                          variant="standard"
-                          sx={{ width: '100%' }}
-                        /><br />
-                      </Box> 
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <TextField
-                          id="address"
-                          value={serviceProviders.address}
-                          onChange={handleInputChange}
-                          name="address"
-                          label="Adresse"
-                          variant="standard"
-                          sx={{ width: '100%' }}
-                        /><br />
-                      </Box>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                            label="Début de contrat *"
-                            id="start_contract"
-                            name="start_contract"
-                            value={startContract}
-                            onChange={insertStartContract}
-                            renderInput={(params) =>
-                              <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                              <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
-                              </Box>
-                            }
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={2} sm={4} md={4}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <TextField
-                          id="lastname"
-                          value={serviceProviders.lastname}
-                          onChange={handleInputChange}
-                          name="lastname"
-                          required
-                          label="Prénom"
-                          variant="standard"
-                          sx={{ width: '100%' }}
-                        /><br />
-                      </Box> 
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <CallIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <InputMask
-                          value={serviceProviders.contact}
-                          onChange={handleInputChange}
-                          mask="999 99 999 99"
-                          disabled={false}
-                          maskChar=""
-                        >
-                          {() => <TextField
-                            id="contact"
-                            name="contact"
-                            variant="standard"
-                            sx={{ width: '100%' }}
-                            label="Contact"
-                          />}
-                        </InputMask><br />
-                      </Box>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                            label="Fin de contrat *"
-                            id="end_contract"
-                            name="end_contract"
-                            value={endContract}
-                            onChange={insertEndContract}
-                            renderInput={(params) =>
-                              <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                              <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
-                              </Box>
-                            }
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={2} sm={4} md={4}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <InputMask
-                          value={serviceProviders.cin}
-                          onChange={handleInputChange}
-                          mask="999 999 999 999"
-                          disabled={false}
-                          maskChar=""
-                        >
-                          {() => <TextField
-                            id="cin"
-                            name="cin"
-                            variant="standard"
-                            sx={{ width: '100%' }}
-                            label="Numéro CIN"
-                          />}
-                        </InputMask> <br />
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <TextField
-                          id="post_occupe"
-                          value={serviceProviders.post_occupe}
-                          onChange={handleInputChange}
-                          name="post_occupe"
-                          label="Poste occupé"
-                          required
-                          variant="standard"
-                          sx={{ width: '100%' }}
-                        /><br />
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <CurrencyTextField
-                          label="Salaire *"
-                          variant="standard"
-                          id="salary"
-                          name="salary"
-                          value={serviceProviders.salary}
-                          currencySymbol="Ar"
-                          //minimumValue="0"
-                          outputFormat="string"
-                          decimalCharacter="."
-                          digitGroupSeparator=","
-                          onChange={(event, value)=> setServiceProviders({...serviceProviders, salary: value })}
-                          style={{width: '100%', marginTop: '10%'}}
-                        />
-                      </Box>
-                    </Grid>
+      <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
+        Nouveau Prestataire
+        <Button
+          size="medium"
+          variant="outlined"
+          color="primary"
+          sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
+          startIcon={<ArrowBackIcon />}
+          href='/service-provider/personnal'
+        >
+        Retour
+        </Button>
+      </Typography>
+      <Container maxWidth="xxl">
+        <Card sx={{ height: 'auto', width: '95%' }}>
+          <CardContent>
+            <form onSubmit={savePersonnalProvider} noValidate autoComplete='off'>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ lineHeight: 6 }}>
+                  <Grid item xs={2} sm={4} md={4}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="firstname"
+                        value={serviceProviders.firstname}
+                        onChange={handleInputChange}
+                        name="firstname"
+                        required
+                        label="Nom"
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      /><br />
+                    </Box> 
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <LocationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="address"
+                        value={serviceProviders.address}
+                        onChange={handleInputChange}
+                        name="address"
+                        label="Adresse"
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      /><br />
+                    </Box>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                          label="Début de contrat *"
+                          id="start_contract"
+                          name="start_contract"
+                          value={startContract}
+                          onChange={insertStartContract}
+                          renderInput={(params) =>
+                            <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
+                            </Box>
+                          }
+                      />
+                    </LocalizationProvider>
                   </Grid>
-                  <br/><br /><br />
-                  <Button
-                    size="medium"
-                    variant="outlined"
-                    color="primary"
-                    sx={{ width: 250 }}
-                    startIcon={<AddIcon />}
-                    onClick={savePersonnalProvider}
-                  >
-                    Enregistrer
-                  </Button>
-                </Box>
-              </form>
-            </CardContent>
-          </Card>
-        </Container>
-
+                  <Grid item xs={2} sm={4} md={4}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <PortraitIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="lastname"
+                        value={serviceProviders.lastname}
+                        onChange={handleInputChange}
+                        name="lastname"
+                        required
+                        label="Prénom"
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      /><br />
+                    </Box> 
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <CallIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <InputMask
+                        value={serviceProviders.contact}
+                        onChange={handleInputChange}
+                        mask="999 99 999 99"
+                        disabled={false}
+                        maskChar=""
+                      >
+                        {() => <TextField
+                          id="contact"
+                          name="contact"
+                          variant="standard"
+                          sx={{ width: '100%' }}
+                          label="Contact"
+                        />}
+                      </InputMask><br />
+                    </Box>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                          label="Fin de contrat *"
+                          id="end_contract"
+                          name="end_contract"
+                          value={endContract}
+                          onChange={insertEndContract}
+                          renderInput={(params) =>
+                            <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <TextField {...params} variant="standard" sx={{ width: '100%' }} /><br />
+                            </Box>
+                          }
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={2} sm={4} md={4}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <InputMask
+                        value={serviceProviders.cin}
+                        onChange={handleInputChange}
+                        mask="999 999 999 999"
+                        disabled={false}
+                        maskChar=""
+                      >
+                        {() => <TextField
+                          id="cin"
+                          name="cin"
+                          variant="standard"
+                          sx={{ width: '100%' }}
+                          label="Numéro CIN"
+                        />}
+                      </InputMask> <br />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="post_occupe"
+                        value={serviceProviders.post_occupe}
+                        onChange={handleInputChange}
+                        name="post_occupe"
+                        label="Poste occupé"
+                        required
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      /><br />
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <CurrencyTextField
+                        label="Salaire *"
+                        variant="standard"
+                        id="salary"
+                        name="salary"
+                        value={serviceProviders.salary}
+                        currencySymbol="Ar"
+                        //minimumValue="0"
+                        outputFormat="string"
+                        decimalCharacter="."
+                        digitGroupSeparator=","
+                        onChange={(event, value)=> setServiceProviders({...serviceProviders, salary: value })}
+                        style={{width: '100%', marginTop: '10%'}}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+                <br/><br /><br />
+                <Button
+                  size="medium"
+                  variant="outlined"
+                  color="primary"
+                  sx={{ width: 250 }}
+                  startIcon={<AddIcon />}
+                  onClick={savePersonnalProvider}
+                >
+                  Enregistrer
+                </Button>
+              </Box>
+            </form>
+          </CardContent>
+        </Card>
+      </Container>
     </div>
   )
 }

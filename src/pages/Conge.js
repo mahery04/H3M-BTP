@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
 import InfoIcon from '@mui/icons-material/Info';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
@@ -20,8 +21,12 @@ import { useNavigate } from 'react-router-dom';
 
 import Label from '../components/Label';
 
+import monthlyEmployeeService from '../services/monthlyEmployeeService';
+import monthlyPresenceService from '../services/monthlyPresenceService';
 
-function Conge() {
+
+
+function Conge() {    
 
     const notification = () => {
         let url = window.location.href
@@ -41,6 +46,19 @@ function Conge() {
 
     const navigate = useNavigate()
     const [conges, setConges] = useState([])
+    const [monthlyEmployees, setMonthlyemployees] = useState([])
+
+    const getMonthlyEmployees = () => {
+        monthlyEmployeeService.getAll().then((res) => {
+            setMonthlyemployees(res.data)
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+    useEffect(() => {
+        getMonthlyEmployees()
+    }, [])
 
     const getConges = () => {
         congeService.getAll().then(res => {
@@ -55,14 +73,16 @@ function Conge() {
     }, [])
 
     useEffect(() => {
-        var date = new Date()
-        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        // var lastDay = new Date("2022-11-11");
-        if (moment(date).format('YYYY-MM-DD') === moment(lastDay).format('YYYY-MM-DD')) {
-            congeService.updateLastDay()
-        }
+        // var date = new Date()
+        // var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        // var date = new Date();
+        // var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+        // var lastDay = congeService.get(id)
+        // if (date.getDate() === lastDay.getDate()) {
+            congeService.updateLastDay() 
+        // }
         // console.log(moment(date).format('YYYY-MM-DD'), moment(lastDay).format('YYYY-MM-DD'))
-    })
+    },[])
 
     const deleteConge = (id) => {
         swal({
@@ -98,63 +118,118 @@ function Conge() {
             // navigate('/conge/personnal?validated')
           }
         });
-      }
+    }
 
-  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    const updateNoValidation = (data) => {
+        swal({
+          text: "Voulez-vous vraiment ne pas valider ?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((novalidate) => {     
+          if (novalidate) {
+            congeService.novalidation(data.id)
+            var dataMonthlyPresence = {
+                monthlyemployee_id: data.monthlyemployee_id,
+                absence_reason: data.conge_motif,
+                start_date: moment(data.start_conge).format("YYYY-MM-DD"),
+                return_date: moment(data.end_conge).format("YYYY-MM-DD"),
+                number_days_absence: data.number_days,
+                visa_rh: data.visa_rh
+            }
+            monthlyPresenceService.create(dataMonthlyPresence)
+            congeService.remove(data.id)
+            window.location.reload()
+          }
+        });
+    }
+
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
     const columns = [
         { field: 'matricule', headerName: 'Matricule', width: 100 },
         { field: 'firstname', headerName: 'Nom', width: 200 },
         { field: 'lastname', headerName: 'Prénom', width: 200 },
-        { field: 'hiring_date', headerName: 'Date d\'embauche', width: 200 },
+        { field: 'hiring_date', headerName: 'Date d\'embauche', width: 200,
+            renderCell: (data) => {
+                if (data.row.hiring_date)
+                return moment(data.row.hiring_date).format("DD-MM-YYYY")
+            }  
+        },
         { field: 'post_occupe', headerName: 'Poste occupé', width: 200 },
         { field: 'category', headerName: 'Catégorie', width: 200 },
         { field: 'group', headerName: 'Groupe', width: 200 },
         { field: 'conge_motif', headerName: 'Motif de congé', width: 200,
+            // renderCell: (data) => {
+            //     if (data.row.conge_motif)
+            //     return (
+            //     <Tooltip title={data.row.conge_motif}>
+            //         <InfoIcon sx={{ color: 'grey' }}/>
+            //     </Tooltip>
+            //     )
+            // }  
+        },
+        { field: 'start_conge', headerName: 'Date de départ', width: 250,
             renderCell: (data) => {
-                if (data.row.conge_motif)
-                return (
-                <Tooltip title={data.row.conge_motif}>
-                    <InfoIcon sx={{ color: 'grey' }}/>
-                </Tooltip>
-                )
+                if (data.row.start_conge)
+                return moment(data.row.start_conge).format("DD-MM-YYYY")
             }  
         },
-        { field: 'start_conge', headerName: 'Date de départ', width: 250 },
-        { field: 'end_conge', headerName: 'Date de retour', width: 250 },
+        { field: 'end_conge', headerName: 'Date de retour', width: 250,
+            renderCell: (data) => {
+                if (data.row.end_conge)
+                return moment(data.row.end_conge).format("DD-MM-YYYY")
+            }  
+        },
         { field: 'number_days', headerName: 'Nombre de jour congé', width: 250,
             renderCell: (data) => {
-                if (data.row.number_days) {
-                return data.row.number_days + " jours"
+                if(data.row.number_days > 1) {
+                    return ( <Label variant="ghost" color='primary'>{data.row.number_days + " jours"}</Label> )
+                }
+                else if(data.row.number_days) {
+                    return ( <Label variant="ghost" color='primary'>{data.row.number_days + " jour"}</Label> )
+                } 
+                else if (data.row.conge_before_request - data.row.number_days < 0) {
+                    return ( <Label variant="ghost" color='error'>{data.row.conge_before_request - data.row.number_days + " jours"}</Label> )
+                } else if (data.row.conge_before_request - data.row.number_days > 90) {
+                    return ( <Label variant="ghost" color='error'>{data.row.conge_before_request - data.row.number_days + " jours"}</Label> )
+                }  else {
+                    return ( <Label variant="ghost" color='primary'>{data.row.conge_before_request - data.row.number_days + " jours"}</Label> )
                 }
             }
         },
         { field: 'conge_before_request', headerName: 'Solde congé avant demande', width: 250,
             renderCell: (data) => {
+                
                 if (data.row.conge_before_request) {
-                return data.row.conge_before_request + " jours"
+                    return data.row.conge_before_request + " jours"
                 }
             }
         },
         { field: 'new_solde_conge', headerName: 'Nouveau solde congé', width: 200,
             renderCell: (data) => {
-                if (data.row.new_solde_conge < 0 ) {
-                    return ( <Label variant="ghost" color='error'>{data.row.new_solde_conge + " jours"}</Label> )
-                } else if (data.row.new_solde_conge > 90) {
-                    return ( <Label variant="ghost" color='primary'>{data.row.new_solde_conge + " jours"}</Label> )
-                } else  {
-                    return data.row.new_solde_conge + " jours"
+                if(data.row.new_solde_conge) {
+                    return ( <Label variant="ghost" color='primary'>{data.row.new_solde_conge + " jour"}</Label> )
                 }
+                else if (data.row.conge_before_request - data.row.number_days < 0) {
+                    return ( <Label variant="ghost" color='error'>{data.row.conge_before_request - data.row.number_days + " jours"}</Label> )
+                } else if (data.row.conge_before_request - data.row.number_days > 90) {
+                    return ( <Label variant="ghost" color='error'>{data.row.conge_before_request - data.row.number_days + " jours"}</Label> )
+                }  else {
+                    return ( <Label variant="ghost" color='primary'>{data.row.conge_before_request - data.row.number_days + " jours"}</Label> )
+                }
+                
             }
         },
         { field: 'visa_rh', headerName: 'Visa RH', width: 170,
             renderCell: (data) => {
                 if (data.row.visa_rh === 'En attente') {
-                return ( <Label variant="ghost" color='warning'>{data.row.visa_rh}</Label> )
+                    return ( <Label variant="ghost" color='warning'>{data.row.visa_rh}</Label> )
                 } else if(data.row.visa_rh === 'Accordé') {
-                return ( <Label variant="ghost" color='success'>{data.row.visa_rh}</Label> )
+                    return ( <Label variant="ghost" color='success'>{data.row.visa_rh}</Label> )
                 } else if (data.row.visa_rh === 'Non accordé') {
-                return ( <Label variant="ghost" color='error'>{data.row.visa_rh}</Label> )
+                    return ( <Label variant="ghost" color='error'>{data.row.visa_rh}</Label> )
                 }
             }
         },
@@ -162,7 +237,10 @@ function Conge() {
         {
             field: 'approval_direction', headerName: 'Approbation direction', width: 200,
             renderCell: (data) => {
-              if (data.row.approval_direction === 'NON VALIDE') {
+                if (data.row.approval_direction === 'En attente') {
+                   return ( <Label variant="ghost" color='warning'>{data.row.approval_direction}</Label> )
+                }
+                else if (data.row.approval_direction === 'NON VALIDE') {
                 return ( <Label variant="ghost" color='error'>{data.row.approval_direction}</Label> )
               } else if(data.row.approval_direction === 'VALIDE') {
                 return ( <Label variant="ghost" color='success'>{data.row.approval_direction}</Label> )
@@ -170,52 +248,161 @@ function Conge() {
             }
         },
 
-        { field: 'action', headerName: 'Action', width: 250, type: 'action',
+        { field: 'action', headerName: 'Action', width: 350, type: 'action',
             renderCell: (data) => {
                 if (userInfo.role_id === 1) {
-                if (data.row.approval_direction === "VALIDE") {
-                    return (
-                    <>
-                        <Link href={'/conge/update-conge/' + data.id}>
-                        <IconButton component="label">
-                            <EditIcon />
-                        </IconButton>
-                        </Link>
-                        <IconButton component="label">
-                        <CheckCircleIcon />
-                        </IconButton>
-                        <IconButton component="label" onClick={() => deleteConge(data.id)}>
-                        <DeleteIcon sx={{ color: "red" }} />
-                        </IconButton>
-                    </>
-                    )
+                    if (data.row.visa_rh === 'En attente' && data.row.approval_direction === 'En attente') {
+                        return (
+                            <>
+                                <Link href={'/conge/update-conge/' + data.id}>
+                                    <IconButton component="label">
+                                        <EditIcon  />
+                                    </IconButton>
+                                </Link>
+                                <IconButton component="label">
+                                    <CheckCircleIcon />
+                                </IconButton>
+                                <IconButton component="label" onClick={() => deleteConge(data.id)}>
+                                    <DeleteIcon sx={{ color: "red" }} />
+                                </IconButton>
+                            </>
+                        )
+                    } 
+                    else if (data.row.conge_motif !== "Excès de permission" && data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'En attente') {
+                        return (
+                            <>
+                                <Link href={'/conge/update-conge/' + data.id}>
+                                    <IconButton component="label">
+                                        <EditIcon  />
+                                    </IconButton>
+                                </Link>
+                                <IconButton component="label" onClick={() => updateValidation(data.id)}>
+                                    <CheckCircleIcon sx={{ color: "green" }} />
+                                </IconButton>
+                                <IconButton component="label" onClick={() => deleteConge(data.id)}>
+                                    <DeleteIcon sx={{ color: "red" }} />
+                                </IconButton>
+                            </>
+                        )
+                    }                     
+                    else if (data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'En attente') {
+                        return (
+                            <>
+                                <Link href={'/conge/update-conge/' + data.id}>
+                                    <IconButton component="label">
+                                        <EditIcon  />
+                                    </IconButton>
+                                </Link>
+                                <IconButton component="label" onClick={() => updateValidation(data.id)}>
+                                    <CheckCircleIcon sx={{ color: "green" }} />
+                                </IconButton>
+                                <IconButton component="label" onClick={() => {updateNoValidation(data.row)}}>
+                                    <CancelIcon sx={{ color: "yellow" }} />
+                                </IconButton>
+                                <IconButton component="label" onClick={() => deleteConge(data.id)}>
+                                    <DeleteIcon sx={{ color: "red" }} />
+                                </IconButton>
+                            </>
+                        )
+                    }  else if (data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'NON VALIDE') {
+                        return (
+                            <>
+                                <Link href={'/conge/update-conge/' + data.id}>
+                                    <IconButton component="label">
+                                        <EditIcon  />
+                                    </IconButton>
+                                </Link>
+                                <IconButton component="label" onClick={() => updateValidation(data.id)}>
+                                    <CheckCircleIcon sx={{ color: "green" }} />
+                                </IconButton>
+                                {/* <IconButton component="label" onClick={() => {updateNoValidation(data.row)}}>
+                                    <CancelIcon sx={{ color: "yellow" }} />
+                                </IconButton> */}
+                                <IconButton component="label" onClick={() => deleteConge(data.id)}>
+                                    <DeleteIcon sx={{ color: "red" }} />
+                                </IconButton>
+                            </>
+                        )
+                    } 
+
+                    else if (data.row.visa_rh === 'Non accordé' && data.row.approval_direction === 'En attente' || data.row.approval_direction === 'NON VALIDE') {
+                        return (
+                            <>
+                                <Link href={'/conge/update-conge/' + data.id}>
+                                    <IconButton component="label">
+                                        <EditIcon  />
+                                    </IconButton>
+                                </Link>
+                                <IconButton component="label">
+                                    <CheckCircleIcon />
+                                </IconButton>
+                                <IconButton component="label" onClick={() => deleteConge(data.id)}>
+                                    <DeleteIcon sx={{ color: "red" }} />
+                                </IconButton>
+                            </>
+                        )
+                    } 
+                    
+                    else if (data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'VALIDE') {
+                        return (
+                            <>
+                                <Link href={'/conge/update-conge/' + data.id}>
+                                    <IconButton component="label">
+                                        <EditIcon />
+                                    </IconButton>
+                                </Link>
+                                <IconButton component="label">
+                                    <CheckCircleIcon />
+                                </IconButton>
+                                <IconButton component="label" onClick={() => deleteConge(data.id)}>
+                                    <DeleteIcon sx={{ color: "red" }} />
+                                </IconButton>
+                            </>
+                        )
+                    }
+                    else if (data.row.visa_rh === 'En attente' && data.row.approval_direction === 'NON VALIDE') {
+                        return (
+                            <>
+                                <Link href={'/conge/update-conge/' + data.id}>
+                                    <IconButton component="label">
+                                        <EditIcon />
+                                    </IconButton>
+                                </Link>
+                                <IconButton component="label" >
+                                    <CheckCircleIcon />
+                                </IconButton>
+                                <IconButton component="label" onClick={() => deleteConge(data.id)}>
+                                    <DeleteIcon sx={{ color: "red" }} />
+                                </IconButton>
+                            </>
+                        )
+                    }
+                    else if (data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'NON VALIDE') {
+                        return (
+                            <>
+                                <Link href={'/conge/update-conge/' + data.id}>
+                                    <IconButton component="label">
+                                        <EditIcon />
+                                    </IconButton>
+                                </Link>
+                                <IconButton component="label" onClick={() => updateValidation(data.id)}>
+                                    <CheckCircleIcon sx={{ color: "green" }} />
+                                </IconButton>
+                                <IconButton component="label" onClick={() => deleteConge(data.id)}>
+                                    <DeleteIcon sx={{ color: "red" }} />
+                                </IconButton>
+                            </>
+                        )
+                    } 
+                    
                 } else {
                     return (
-                    <>
                         <Link href={'/conge/update-conge/' + data.id}>
-                        <IconButton component="label">
-                            <EditIcon />
-                        </IconButton>
+                            <IconButton component="label">
+                                <EditIcon />
+                            </IconButton>
                         </Link>
-                        <IconButton component="label" onClick={() => updateValidation(data.id)}>
-                        <CheckCircleIcon sx={{ color: "green" }} />
-                        </IconButton>
-                        <IconButton component="label" onClick={() => deleteConge(data.id)}>
-                        <DeleteIcon sx={{ color: "red" }} />
-                        </IconButton>
-                    </>
                     )
-                }
-                } else {
-                return (
-                    <>
-                    <Link href={'/conge/update-permission/' + data.id}>
-                        <IconButton component="label">
-                        <EditIcon />
-                        </IconButton>
-                    </Link>
-                    </>
-                )
                 }
             }
         },
@@ -223,6 +410,7 @@ function Conge() {
 
     const rows = conges.map(conge => ({
         id: conge.conge_id,
+        monthlyemployee_id: conge.monthlyemployee_id,
         matricule: conge.matricule,
         firstname: conge.firstname,
         lastname: conge.lastname,
@@ -231,8 +419,8 @@ function Conge() {
         category: conge.category,
         group: conge.group,
         conge_motif: conge.conge_motif,
-        start_conge: moment(conge.start_conge).format('DD-MM-YYYY'),
-        end_conge: moment(conge.end_conge).format('DD-MM-YYYY'),
+        start_conge: conge.start_conge,
+        end_conge: conge.end_conge,
         number_days: conge.number_days,
         conge_before_request: conge.conge_before_request,
         new_solde_conge: conge.new_solde_conge,

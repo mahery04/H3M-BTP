@@ -20,8 +20,16 @@ export default function DashboardApp() {
   const notification = () => {
     let url = window.location.href
     let param = url.split('?')
-    if(param[1] === 'welcome') {
-      swal("Bienvenu !", `Vous êtes connecté en tant que ${user.role_name}`, "success");
+    if (param[1] === 'welcome' && user.role_id === 1) {
+      swal("Bienvenu !", `Vous êtes connecté en tant que ${user.role_name}`, "success")
+    }
+    else if (param[1] === 'welcome' && user.role_id === 2) {
+      swal("Bienvenu !", `Vous êtes connecté en tant que ${user.role_name}`, "success")
+    }
+    else if(param[1] === 'welcome' && user.role_id === 5) {
+      swal("Bienvenue !", ` ${user.role_name}`, "success");
+    } else if(param[1] === 'welcome' && user.role_id === 3) {
+      swal("Bienvenue !", ` ${user.role_name}`, "success");
     }
   }
   notification()

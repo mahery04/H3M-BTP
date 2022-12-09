@@ -122,7 +122,7 @@ function NewMonthlyPresence() {
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Nouvelle présence
+        Nouveau absence
         <Button
           size="medium"
           variant="outlined"

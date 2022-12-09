@@ -37,11 +37,11 @@ function MonthlyEmployee() {
     let url = window.location.href
     let param = url.split('?')
     if(param[1] == 'inserted') {
-      swal("", "Employé inseré avec succés!", "success");
+      swal("", "Employé mensuel inseré avec succés!", "success");
     } else if(param[1] == 'deleted') {
-      swal("", "Employé supprimé avec succés!", "success");
+      swal("", "Employé mensuel supprimé avec succés!", "success");
     } else if(param[1] == 'updated') {
-      swal("", "Employé modifié avec succés!", "success");
+      swal("", "Employé mensuel modifié avec succés!", "success");
     }
   }
   notification()
@@ -63,14 +63,14 @@ function MonthlyEmployee() {
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
   const columns = [
-    { field: 'id', headerName: 'Id', width: 50 },
+    // { field: 'id', headerName: 'Id', width: 50 },
     { field: 'matricule', headerName: 'Matricule', width: 100 },
     { field: 'firstname', headerName: 'Nom', width: 200 },
     { field: 'lastname', headerName: 'Prénom', width: 200 },
     { field: 'cin', headerName: 'Numéro CIN', width: 150, type: 'number' },
     { field: 'address', headerName: 'Adresse', width: 200 },
     { field: 'contact', headerName: 'Contact', width: 150 },
-    { field: 'group', headerName: 'Groupe', width: 100 },
+    { field: 'group', headerName: 'Groupe', width: 200 },
     { field: 'post_occupe', headerName: 'Poste occupé', width: 150 },
     { field: 'salary', headerName: 'Salaire', width: 150,
       renderCell: (data) => {
@@ -80,7 +80,7 @@ function MonthlyEmployee() {
       }
     },
     { field: 'code_chantier', headerName: 'Code Chantier', width: 150 },
-    { field: 'category', headerName: 'Categorie', width: 100 },
+    { field: 'category', headerName: 'Catégorie', width: 100 },
     {
       field: 'hiring_date', headerName: 'Date d\'embauche', width: 150,
       renderCell: (data) => {
@@ -91,23 +91,23 @@ function MonthlyEmployee() {
     },
     {
       field: 'contrat', headerName: 'Contrat', width: 150, type: 'action',
-      renderCell: (data) => {
-        return (
-          <>
-            <Stack direction="row">
-              <Link underline="none" href={'/employee/contrat-monthly-employee/' + data.id}>
-                <Chip 
-                  icon={<AddCircleIcon/>} 
-                  label="Voir contrat"
-                  sx={{cursor:'pointer'}}
-                  variant="outlined"
-                  color="warning"
-                />
-              </Link>
-            </Stack>
-          </>
-        )
-      }
+        renderCell: (data) => {
+          return (
+            <>
+              <Stack direction="row">
+                <Link underline="none" href={'/employee/contrat-monthly-employee/' + data.id}>
+                  <Chip 
+                    icon={<AddCircleIcon/>} 
+                    label="Voir contrat"
+                    sx={{cursor:'pointer'}}
+                    variant="outlined"
+                    color="warning"
+                  />
+                </Link>
+              </Stack>
+            </>
+          )
+        }
     },
     {
       field: 'status', headerName: 'Status', width: 150, type: 'action',
@@ -154,6 +154,7 @@ function MonthlyEmployee() {
     // },
     { field: 'ostie_num', headerName: 'Numéro Ostie', width: 150 },
     { field: 'cnaps_num', headerName: 'Numéro CNAPS', width: 150 },
+    { field: 'par', headerName: 'Fait par', width: 250 },
     {
       field: 'action', headerName: 'Action', width: 150, type: 'action',
       renderCell: (data) => {
@@ -200,9 +201,9 @@ function MonthlyEmployee() {
     code_chantier:monthlyemployee.code_chantier, 
     category:     monthlyemployee.category, 
     hiring_date:  monthlyemployee.hiring_date,
-    // motif:        monthlyemployee.motif,
     ostie_num:    monthlyemployee.ostie_num,
     cnaps_num:    monthlyemployee.cnaps_num,
+    par: monthlyemployee.par
   }))
 
   const deleteMonthlyemployee = (id) => {

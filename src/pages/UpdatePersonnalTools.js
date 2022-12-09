@@ -134,7 +134,7 @@ function UpdatePersonnalTools() {
           size="medium"
           variant="outlined"
           color="primary"
-          sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
+          sx={{ mr: 10, ml: 150, width: 250, marginLeft: '70%' }}
           startIcon={<ArrowBackIcon />}
           href='/tools/personnal'
         >
@@ -263,7 +263,7 @@ function UpdatePersonnalTools() {
                     /><br />
                   </Box>
 
-                  <TextField
+                  {/* <TextField
                     id="historical"
                     value={tools.historical}
                     onChange={handleInputChange}
@@ -273,8 +273,8 @@ function UpdatePersonnalTools() {
                     multiline
                     rows={4}
                     sx={{ width: '100%', marginTop: 4 }}
-                  />
-                  <br /><br />
+                  /> */}
+                  <br />
 
                   <Button
                     size="medium"

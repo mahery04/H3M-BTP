@@ -22,6 +22,19 @@ import moment from 'moment';
 
 const MonthlyPresence = () => {
 
+  const notification = () => {
+    let url = window.location.href
+    let param = url.split('?')
+    if(param[1] === 'inserted') {
+      swal("", "Absence inseré avec succés!", "success");
+    } else if(param[1] === 'deleted') {
+      swal("", "Absence supprimé avec succés!", "success");
+    } else if(param[1] === 'updated') {
+      swal("", "Absence modifié avec succés!", "success");
+    }
+  }
+  notification()
+
   const navigate = useNavigate()
   const [monthlyPresences, setMonthlyPresences] = useState([])
 
@@ -85,22 +98,28 @@ const MonthlyPresence = () => {
         return moment(data.row.hiring_date).format("DD-MM-YYYY")
       }  
     },
-    { field: 'post_occupe', headerName: 'Post occupé', width: 150 },
+    { field: 'post_occupe', headerName: 'Post occupé', width: 250 },
     { field: 'category', headerName: 'Catégorie', width: 150 },
     { field: 'group', headerName: 'Groupe', width: 150 },
-    { field: 'absence_reason', headerName: 'Motif d\'absence', width: 150,
-      renderCell: (data) => {
-        if (data.row.absence_reason)
-        return (
-          <Tooltip title={data.row.absence_reason}>
-            <InfoIcon sx={{ color: 'grey' }}/>
-          </Tooltip>
-        )
-      }  
+    { field: 'absence_reason', headerName: 'Motif d\'absence', width: 250,
+      // renderCell: (data) => {
+      //   if (data.row.absence_reason)
+      //   return (
+      //     <Tooltip title={data.row.absence_reason}>
+      //       <InfoIcon sx={{ color: 'grey' }}/>
+      //     </Tooltip>
+      //   )
+      // }  
     },
     { field: 'start_date', headerName: 'Date de départ', width: 150 },
     { field: 'return_date', headerName: 'Date de retour', width: 150 },
-    { field: 'number_days_absence', headerName: 'Nombre de jour d\'absence', width: 200 },
+    { field: 'number_days_absence', headerName: 'Nombre de jour d\'absence', width: 200,
+      renderCell: (data) => {
+        if (data.row.number_days_absence) {
+          return data.row.number_days_absence + " jours"
+        }
+      }
+    },
     { field: 'visa_rh', headerName: 'Visa RH', width: 150,
       renderCell: (data) => {
         if (data.row.visa_rh === 'En attente') {
@@ -126,7 +145,7 @@ const MonthlyPresence = () => {
       field: 'action', headerName: 'Action', width: 250, type: 'action',
       renderCell: (data) => {
         if (userInfo.role_id === 1) {
-          if (data.row.approval_direction === "VALIDE") {
+          if (data.row.visa_rh === 'En attente' && data.row.approval_direction === 'NON VALIDE') {
             return (
               <>
                 <Link href={'/presence/updatemonthlypresence/' + data.id}>
@@ -142,7 +161,7 @@ const MonthlyPresence = () => {
                 </IconButton>
               </>
             )
-          } else {
+          } else if (data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'NON VALIDE') {
             return (
               <>
                 <Link href={'/presence/updatemonthlypresence/' + data.id}>
@@ -158,16 +177,47 @@ const MonthlyPresence = () => {
                 </IconButton>
               </>
             )
+          } else if (data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'VALIDE') {
+            return (
+              <>
+                <Link href={'/presence/updatemonthlypresence/' + data.id}>
+                  <IconButton component="label">
+                    <EditIcon />
+                  </IconButton>
+                </Link>
+                <IconButton component="label">
+                  <CheckCircleIcon />
+                </IconButton>
+                <IconButton component="label" onClick={() => deletePresence(data.id)}>
+                  <DeleteIcon sx={{ color: "red" }} />
+                </IconButton>
+              </>
+            )
+          } else if (data.row.visa_rh === 'Non accordé' && data.row.approval_direction === 'En attente' || data.row.approval_direction === 'NON VALIDE') {
+            return (
+              <>
+                <Link href={'/presence/updatemonthlypresence/' + data.id}>
+                  <IconButton component="label">
+                    <EditIcon />
+                  </IconButton>
+                </Link>
+                <IconButton component="label">
+                  <CheckCircleIcon />
+                </IconButton>
+                <IconButton component="label" onClick={() => deletePresence(data.id)}>
+                  <DeleteIcon sx={{ color: "red" }} />
+                </IconButton>
+              </>
+            )
           }
+
         } else {
           return (
-            <>
-              <Link href={'/conge/update-conge/' + data.id}>
-                <IconButton component="label">
-                  <EditIcon />
-                </IconButton>
-              </Link>
-            </>
+            <Link href={'/presence/updatemonthlypresence/' + data.id}>
+              <IconButton component="label">
+                <EditIcon />
+              </IconButton>
+            </Link>
           )
         }
       }
@@ -196,16 +246,16 @@ const MonthlyPresence = () => {
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Présence des employés mensuels
+        Tableau des absences des employés mensuels
         <Button
           size="medium"
           variant="outlined"
           color="primary"
-          sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
+          sx={{ mr: 10, ml: 150, width: 250, marginLeft: '70%' }}
           startIcon={<AddIcon />}
           href='/presence/newmonthlypresence'
         >
-          Nouvelle présence
+          Ajout absence
         </Button>
       </Typography>
 

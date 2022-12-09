@@ -176,7 +176,7 @@ export default function NavSection({ navConfig, ...other }) {
       </Accordion>
       <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography style={category}>Employé(e)s</Typography>
+          <Typography style={category}>Types Employé(e)s</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {getMenus('employee')}
@@ -184,18 +184,26 @@ export default function NavSection({ navConfig, ...other }) {
       </Accordion>
       <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography style={category}>Outillage</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {getMenus('tools')}
-        </AccordionDetails>
-      </Accordion>
-      <Accordion style={{backgroundColor: "#F9F9F9"}}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography style={category}>Fiche de présence</Typography>
+          <Typography style={category}>Présence journalier</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {getMenus('presence')}
+        </AccordionDetails>
+      </Accordion>
+      {/* <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Absence mensuel</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('absence')}
+        </AccordionDetails>
+      </Accordion> */}
+      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Suivi employé mensuel</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('etat_mensuel')}
         </AccordionDetails>
       </Accordion>
       {/* <Accordion style={{backgroundColor: "#F9F9F9"}}>
@@ -214,6 +222,38 @@ export default function NavSection({ navConfig, ...other }) {
           {getMenus('family')}
         </AccordionDetails>
       </Accordion> */}
+      {/* <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Permission et Congé</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('conge')}
+        </AccordionDetails>
+      </Accordion> */}
+      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Etat de paie mensuel</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('monthly-salary')}
+        </AccordionDetails>
+      </Accordion>
+      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Prestataire</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('service-provider')}
+        </AccordionDetails>
+      </Accordion>
+      <Accordion style={{backgroundColor: "#F9F9F9"}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography style={category}>Outillage</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {getMenus('tools')}
+        </AccordionDetails>
+      </Accordion>
       <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
           <Typography style={category}>Cantine</Typography>
@@ -224,18 +264,18 @@ export default function NavSection({ navConfig, ...other }) {
       </Accordion>
       <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography style={category}>Permission et Congé</Typography>
+          <Typography style={category}>Situation familiale</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {getMenus('conge')}
+          {getMenus('family')}
         </AccordionDetails>
       </Accordion>
       <Accordion style={{backgroundColor: "#F9F9F9"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography style={category}>Préstataire</Typography>
+          <Typography style={category}>Corbeille</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {getMenus('service-provider')}
+          {getMenus('trash')}
         </AccordionDetails>
       </Accordion>
     </Box>

@@ -311,7 +311,7 @@ function NewCommonTools() {
                     /><br />
                   </Box>
                   
-                  <TextField 
+                  {/* <TextField 
                     id="historical" 
                     value={tools.historical}
                     onChange={handleInputChange}
@@ -321,8 +321,8 @@ function NewCommonTools() {
                     rows={4}
                     variant="standard" 
                     sx={{ width: '100%', marginTop: 4 }} 
-                  />
-                  <br /><br />
+                  /> */}
+                  <br />
 
                   <Button
                     size="medium"

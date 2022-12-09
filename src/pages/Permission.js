@@ -22,6 +22,22 @@ import permissionService from '../services/permissionService';
 
 const Permission = () => {
 
+  const notification = () => {
+    let url = window.location.href
+    let param = url.split('?')
+    if(param[1] === 'inserted') {
+      swal("", "Permission enregistrée !", "success");
+    } else if(param[1] === 'deleted') {
+      swal("", "Permission supprimée avec succés!", "success");
+    } else if(param[1] === 'updated') {
+      swal("", "Permission modifiée avec succés!", "success");
+    } else if (param[1] === 'validated') {
+      swal("", "Permission validée avec succés!", "success");
+    }
+}
+
+notification()
+
   const navigate = useNavigate()
   const [permissions, setPermissions] = useState([])
 
@@ -44,14 +60,14 @@ const Permission = () => {
       buttons: true,
       dangerMode: true,
     })
-      .then((willDelete) => {
-        if (willDelete) {
-          permissionService.remove(id)
-          const newTabList = permissions.filter(permission => permission.permission_id !== id)
-          setPermissions(newTabList)
-          navigate('/conge/permission/?deleted')
-        }
-      });
+    .then((willDelete) => {
+      if (willDelete) {
+        permissionService.remove(id)
+        const newTabList = permissions.filter(permission => permission.permission_id !== id)
+        setPermissions(newTabList)
+        navigate('/conge/permission/?deleted')
+      }
+    });
   }
 
   const updateValidation = (id) => {
@@ -75,7 +91,13 @@ const Permission = () => {
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
   const columns = [
-    // { field: 'id', headerName: 'Id', width: 150 },
+    { field: 'date_permission', headerName: 'Date de permission', width: 150,
+      renderCell: (data) => {
+        if (data.row.date_permission) {
+          return moment(data.row.date_permission).format('DD-MM-YYYY') 
+        }
+      }
+    },
     { field: 'matricule', headerName: 'Matricule', width: 100 },
     { field: 'firstname', headerName: 'Nom', width: 200 },
     { field: 'lastname', headerName: 'Prénom', width: 200 },
@@ -87,20 +109,27 @@ const Permission = () => {
     },
     { field: 'post_occupe', headerName: 'Post occupé', width: 150 },
     { field: 'category', headerName: 'Catégorie', width: 150 },
-    { field: 'group', headerName: 'Groupe', width: 150 },
-    { field: 'permission_reason', headerName: 'Motif de permission', width: 150,
-      renderCell: (data) => {
-        if (data.row.permission_reason)
-        return (
-          <Tooltip title={data.row.permission_reason}>
-            <InfoIcon sx={{ color: 'grey' }}/>
-          </Tooltip>
-        )
-      }  
+    { field: 'group', headerName: 'Groupe', width: 200 },
+    
+    { field: 'permission_reason', headerName: 'Motif de permission', width: 200,
+      // renderCell: (data) => {
+      //   if (data.row.permission_reason)
+      //   return (
+      //     <Tooltip title={data.row.permission_reason}>
+      //       <InfoIcon sx={{ color: 'grey' }}/>
+      //     </Tooltip>
+      //   )
+      // }  
     },
     { field: 'start_time', headerName: 'Heure de départ', width: 150 },
     { field: 'return_time', headerName: 'Heure de retour', width: 150 },
-    { field: 'number_time_permission', headerName: 'Nombre d\'heure de permission', width: 250 },
+    { field: 'number_time_permission', headerName: 'Nombre d\'heure de permission', width: 250,
+      // renderCell: (data) => {
+      //   if (data.row.number_time_permission) {
+      //       return data.row.number_time_permission + " h"
+      //   }
+      // }
+    },
     { field: 'permission_before_request', headerName: 'Solde permission avant demande', width: 300,
       // renderCell: (data) => {
       //   if (data.row.permission_before_request) {
@@ -108,7 +137,9 @@ const Permission = () => {
       //   }
       // }
     },
-    { field: 'new_solde_permission', headerName: 'Nouveau solde permission', width: 250 },
+    { field: 'new_solde_permission', headerName: 'Nouveau solde permission', width: 250, 
+      
+    },
     { field: 'visa_rh', headerName: 'Visa RH', width: 150,
       renderCell: (data) => {
         if (data.row.visa_rh === 'En attente') {
@@ -131,10 +162,23 @@ const Permission = () => {
       }
     },
     {
+      field: 'status', headerName: 'Status permission employé', width: 250,
+      renderCell: (data) => {
+        if (data.row.number_time_permission.split(' ')[0] > 2) {
+          return ( <Label variant="ghost" color='success'>Permission changée en congé</Label> )
+        } else {
+          return ( <Label variant="ghost" color='primary'>Permission normale</Label> )
+        }
+      }
+    },
+    // {
+    //   field: 'par', headerName: 'Fait par ', width: 250,type:'action'
+    // },
+    {
       field: 'action', headerName: 'Action', width: 250, type: 'action',
         renderCell: (data) => {
           if (userInfo.role_id === 1) {
-            if (data.row.approval_direction === "VALIDE") {
+            if (data.row.visa_rh === 'En attente' && data.row.approval_direction === 'NON VALIDE') {
               return (
                 <>
                   <Link href={'/conge/update-permission/' + data.id}>
@@ -150,7 +194,38 @@ const Permission = () => {
                   </IconButton>
                 </>
               )
-            } else {
+            } else if(data.row.visa_rh === 'En attente' && data.row.approval_direction === 'NON VALIDE' ) {
+              return (
+                <>
+                  <Link href={'/conge/update-permission/' + data.id}>
+                    <IconButton component="label">
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                  <IconButton component="label" onClick={() => deletePermission(data.id)}>
+                    <DeleteIcon sx={{ color: "red" }} />
+                  </IconButton>
+                </>
+              )
+            }
+            else if (data.row.number_time_permission.split(' ')[0] > 2 && data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'NON VALIDE') {
+              return (
+                <>
+                  <Link href={'/conge/update-permission/' + data.id}>
+                    <IconButton component="label">
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                  <IconButton component="label">
+                    <CheckCircleIcon />
+                  </IconButton>
+                  <IconButton component="label" onClick={() => deletePermission(data.id)}>
+                    <DeleteIcon sx={{ color: "red" }} />
+                  </IconButton>
+                </>
+              )
+            }
+            else if (data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'NON VALIDE') {
               return (
                 <>
                   <Link href={'/conge/update-permission/' + data.id}>
@@ -166,20 +241,51 @@ const Permission = () => {
                   </IconButton>
                 </>
               )
+            } else if (data.row.visa_rh === 'Accordé' && data.row.approval_direction === 'VALIDE') {
+              return (
+                <>
+                  <Link href={'/conge/update-permission/' + data.id}>
+                    <IconButton component="label">
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                  <IconButton component="label">
+                    <CheckCircleIcon />
+                  </IconButton>
+                  <IconButton component="label" onClick={() => deletePermission(data.id)}>
+                    <DeleteIcon sx={{ color: "red" }} />
+                  </IconButton>
+                </>
+              )
+            }else if (data.row.visa_rh === 'Non accordé' && data.row.approval_direction === 'En attente' || data.row.approval_direction === 'NON VALIDE') {
+              return (
+                <>
+                  <Link href={'/conge/update-permission/' + data.id}>
+                    <IconButton component="label">
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                  <IconButton component="label">
+                    <CheckCircleIcon />
+                  </IconButton>
+                  <IconButton component="label" onClick={() => deletePermission(data.id)}>
+                    <DeleteIcon sx={{ color: "red" }} />
+                  </IconButton>
+                </>
+              )
             }
+
           } else {
             return (
-              <>
-                <Link href={'/conge/update-permission/' + data.id}>
-                  <IconButton component="label">
-                    <EditIcon />
-                  </IconButton>
-                </Link>
-              </>
+              <Link href={'/conge/update-permission/' + data.id}>
+                <IconButton component="label">
+                  <EditIcon />
+                </IconButton>
+              </Link>
             )
           }
         }
-    },
+    }
   ];
 
   const rows = permissions.map(permission => ({
@@ -191,28 +297,29 @@ const Permission = () => {
     post_occupe: permission.post_occupe,
     category: permission.category,
     group: permission.group,
+    date_permission: permission.date_permission,
     permission_reason: permission.permission_reason,
     start_time: `${permission.start_hour_time + " h"} : ${permission.start_minute_time + " mn"}`, 
     return_time: `${permission.return_hour_time + " h"} : ${permission.return_minute_time + " mn"}`,
     number_time_permission: `${permission.return_hour_time - permission.start_hour_time + " h"} : ${permission.return_minute_time - permission.start_minute_time + " mn"} `,
     permission_before_request: `${permission.permission_hour_before_request + " h"} : ${permission.permission_minute_before_request + " mn"}`,
-    new_solde_permission: `${permission.new_solde_permission.split(' ')[0] + " h"} : ${permission.new_solde_permission.split(' ')[1] + " mn"}`,
+    new_solde_permission: `${permission.permission_hour_before_request - ((permission.return_hour_time - permission.start_hour_time)-2) + " h"} : ${permission.permission_minute_before_request - (permission.return_minute_time - permission.start_minute_time) + " mn"}`,
     visa_rh: permission.visa_rh,
-    approval_direction: permission.approval_direction
+    approval_direction: permission.approval_direction,
+    par:permission.par
   }))
 
-  // console.log("PRM ", typeof(parseInt(permissions[0].start_hour_time)));
-
-
+  console.log("PRM ", permissions);
+  
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Permission des employé(e)s
+        Tableau des permissions des employé(e)s mensuels
         <Button
           size="medium"
           variant="outlined"
           color="primary"
-          sx={{ mr: 10, ml: 150, mt: -10, width: 250, marginLeft: '70%' }}
+          sx={{ mr: 10, ml: 150, width: 250, marginLeft: '70%' }}
           startIcon={<AddIcon />}
           href='/conge/new-permission'
         >

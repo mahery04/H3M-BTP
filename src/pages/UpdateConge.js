@@ -49,7 +49,7 @@ function UpdateConge() {
         conge_motif: '',
         start_conge:    '',
         end_conge:      '',
-        conge_before_request:'',
+        // conge_before_request:'',
         visa_rh: visaRh,
     }
 
@@ -86,12 +86,6 @@ function UpdateConge() {
         setConge({...conge, visa_rh: event.target.value })
     }
 
-    const insertCongeTime = newTime => {
-        const d = newTime
-        setCongeTime(d)
-        setConge({ ...conge, conge_before_request : d })
-    }
-
     const insertStartconge = newDate => {
         const d = moment(newDate).format('YYYY-MM-DD')
         setStartconge(d)
@@ -104,6 +98,8 @@ function UpdateConge() {
         setConge({ ...conge, end_conge: d })
     }
 
+    console.log(conge)
+
     const saveConge = e => {
         e.preventDefault()
 
@@ -112,11 +108,12 @@ function UpdateConge() {
             conge_motif: conge.conge_motif,
             start_conge: conge.start_conge,
             end_conge: conge.end_conge,
-            conge_before_request: conge.conge_before_request,
+            // conge_before_request: conge.conge_before_request,
             visa_rh: conge.visa_rh
         }
 
-        if (!data.monthlyemployee_id || !data.start_conge || !data.end_conge) {
+
+        if (!data.monthlyemployee_id) {
             swal({
                 title: "Une erreur est survenue!",
                 text: "Des formulaires requis sont vides.",
@@ -131,7 +128,7 @@ function UpdateConge() {
                     conge_motif: res.data.conge_motif,
                     start_conge: res.data.start_conge,
                     end_conge: res.data.end_conge,
-                    conge_before_request: res.data.conge_before_request,
+                    // conge_before_request: res.data.conge_before_request,
                     visa_rh: res.data.visa_rh
         
                 })
@@ -142,7 +139,6 @@ function UpdateConge() {
         }
     }
 
-    console.log(conge);
   return (
     <div>
         <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
@@ -188,7 +184,6 @@ function UpdateConge() {
                                     value={conge.conge_motif}
                                     onChange={handleInputChange}
                                     name="conge_motif"
-                                    required
                                     label="Motif de congé"
                                     variant="standard"
                                     sx={{ width: '100%' }}
@@ -226,22 +221,9 @@ function UpdateConge() {
                                 </LocalizationProvider>
                             
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                                    <NoteAltIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                    <TextField
-                                    id="conge_before_request"
-                                    value={conge.conge_before_request}
-                                    onChange={handleInputChange}
-                                    name="conge_before_request"
-                                    required
-                                    label="Solde congé avant demande"
-                                    variant="standard"
-                                    sx={{ width: '100%' }}
-                                    /><br />
-                                </Box>
-                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                     <DoneAllIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                                     <FormControl variant="standard" sx={{ m: 1, width: '100%', mt: 7 }}>
-                                    <InputLabel id="demo-simple-select-standard-label">Visa RH *</InputLabel>
+                                    <InputLabel id="demo-simple-select-standard-label">Visa RH</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-standard-label"
                                         id="demo-simple-select-standard"

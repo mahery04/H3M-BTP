@@ -48,6 +48,22 @@ import UpdateServiceProvider from './pages/UpdateServiceProvider';
 import Permission from './pages/Permission';
 import NewPermission from './pages/NewPermission';
 import UpdatePermission from './pages/UpdatePermission';
+import MonthlySalary from './pages/MonthlySalary';
+import NewMonthlySalary from './pages/NewMonthlySalary';
+import UpdateMonthlySalary from './pages/UpdateMonthlySalary';
+import EtatPaiePersonnalMensuel from './pages/EtatPaiePersonnalMensuel';
+import PaymentGlobalView from './pages/PaymentGlobalView';
+import SalaryServiceProvider from './pages/SalaryServiceProvider';
+import NewSalaryServiceProvider from './pages/newSalaryServiceProvider';
+import UpdateSalaryServiceProvider from './pages/UpdateSalaryServiceProvider';
+import HistoryTool from './pages/HistoryTool';
+import NewHistoryTool from './pages/NewHistoryTool';
+import UpdateHistoryTool from './pages/UpdateHistoryTool';
+import Trash from './pages/Trash';
+import FamilyEmployee from './pages/FamilyEmployee';
+import NewFamilyEmployee from './pages/NewFamilyEmployee';
+import UpdateFamilyEmployee from './pages/UpdateFamilyEmployee';
+
 
 
 // ----------------------------------------------------------------------
@@ -143,6 +159,53 @@ export default function Router() {
         { path: 'update-service-provider/:id', element: !user? <Navigate to="/login" /> : <UpdateServiceProvider /> },
       ]
     },
-    // { path: '*', element: <Navigate to="/404" replace /> },
+    {
+      path: '/monthly-salary', element: <DashboardLayout />,
+      children: [
+        { path: 'personnal', element: !user? <Navigate to="/login" /> : <MonthlySalary /> },
+        { path: 'new/:id', element: !user? <Navigate to="/login" /> : <NewMonthlySalary /> },
+        { path: 'update-monthly/:id', element: !user? <Navigate to="/login" /> : <UpdateMonthlySalary /> },
+      ]
+    },
+    {
+      path: '/state-pay', element: <DashboardLayout />,
+      children: [
+        { path: 'personnal/:id', element: !user? <Navigate to="/login" /> : <EtatPaiePersonnalMensuel /> },
+        { path: 'new', element: !user? <Navigate to="/login" /> : <NewMonthlySalary /> },
+        { path: 'update-monthly/:id', element: !user? <Navigate to="/login" /> : <UpdateMonthlySalary /> },
+        { path: 'paiement-global-view', element: !user? <Navigate to="/login" /> : <PaymentGlobalView /> },
+      ]
+    },
+    {
+      path: '/salary', element: <DashboardLayout />,
+      children: [
+        { path: 'personnal/:id', element: !user? <Navigate to="/login" /> : <SalaryServiceProvider /> },
+        { path: 'new', element: !user? <Navigate to="/login" /> : <NewSalaryServiceProvider /> },
+        { path: 'update-salary-provider/:id', element: !user? <Navigate to="/login" /> : <UpdateSalaryServiceProvider /> },
+      ]
+    },
+    {
+      path: '/history', element: <DashboardLayout />,
+      children: [
+        { path: 'tool/:id', element: !user? <Navigate to="/login" /> : <HistoryTool /> },
+        { path: 'new', element: !user? <Navigate to="/login" /> : <NewHistoryTool /> },
+        { path: 'update-tool/:id', element: !user? <Navigate to="/login" /> : <UpdateHistoryTool /> },
+
+      ]
+    },
+    {
+      path: '/trash', element: <DashboardLayout />,
+      children: [
+        { path: 'tool', element: !user? <Navigate to="/login" /> : <Trash /> },
+      ]
+    },
+    {
+      path: '/family', element: <DashboardLayout />,
+      children: [
+        { path: 'personnal', element: !user? <Navigate to="/login" /> : <FamilyEmployee /> },
+        { path: 'new', element: !user? <Navigate to="/login" /> : <NewFamilyEmployee /> },
+        { path: 'update/:id', element: !user? <Navigate to="/login" /> : <UpdateFamilyEmployee /> },
+      ]
+    },
   ]);
 }

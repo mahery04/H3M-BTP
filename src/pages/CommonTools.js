@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Paper, Container, Typography, Box, Tooltip } from '@mui/material';
+import { Button, Paper, Container, Typography, Box, Stack, Chip,Tooltip,Link } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
@@ -11,12 +11,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-import { Link } from 'react-router-dom';
+
+// import { Link } from 'react-router-dom';
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
 
-import commonToolsService from '../services/commonToolsService'
+import commonToolsService from '../services/commonToolsService';
+import trashService from '../services/trashService';
 import Label from '../components/Label';
 
 const CommonTools = () => {
@@ -33,6 +36,7 @@ const CommonTools = () => {
     }
   }
   notification()
+  const navigate = useNavigate()
 
   const [commontools, setCommontools] = useState([])
 
@@ -72,13 +76,30 @@ const CommonTools = () => {
       }},
     { field: 'material_number', headerName: 'Nombre de matériel', width: 150, type: 'number' },
     {
-      field: 'historical', headerName: 'Lieu d\'affectation', width: 200,
+      field: 'historical', headerName: 'Historique matériel', width: 200, type:'action',
+      // renderCell: (data) => {
+      //   if (data.row.historical)
+      //   return (
+      //     <Tooltip title={data.row.historical}>
+      //       <InfoIcon sx={{ color: 'grey' }}/>
+      //     </Tooltip>
+      //   )
+      // }
       renderCell: (data) => {
-        if (data.row.historical)
         return (
-          <Tooltip title={data.row.historical}>
-            <InfoIcon sx={{ color: 'grey' }}/>
-          </Tooltip>
+          <>
+            <Stack direction="row">
+              <Link underline="none" href={'/history/tool/' + data.id}>
+                <Chip 
+                  icon={<AddCircleIcon/>} 
+                  label="Voir historique"
+                  sx={{cursor:'pointer'}}
+                  variant="outlined"
+                  color="warning"
+                />
+              </Link>
+            </Stack>
+          </>
         )
       }
     },
@@ -87,13 +108,13 @@ const CommonTools = () => {
       renderCell: (data) => {
         return (
           <>
-            <Link to={'/tools/updatecommon/' + data.id}>
+            <Link underline="none" href={'/tools/updatecommon/' + data.id}>
               <IconButton component="label">
                 <EditIcon />
               </IconButton>
             </Link>
 
-            <IconButton component="label" onClick={() => deleteTool(data.id)}>
+            <IconButton component="label" onClick={() => deleteTool(data.row)}>
               <DeleteIcon />
             </IconButton>
 
@@ -113,10 +134,10 @@ const CommonTools = () => {
     statue:                 commontool.statue,
     material_number:        commontool.material_number,
     etat:                   commontool.etat,
-    historical:             commontool.historical,
+    // historical:             commontool.historical,
   }))
 
-  const deleteTool = (id) => {
+  const deleteTool = (data) => {
     swal({
       text: "Supprimer le matériel de la liste ?",
       icon: "warning",
@@ -125,10 +146,18 @@ const CommonTools = () => {
     })
     .then((willDelete) => {
       if(willDelete) { 
-        commonToolsService.remove(id)
-        const newTabList = commontools.filter((commontool) => commontool.id !== id)
+        var sendDeleteToolToTrash = {
+          tool_id: data.id,
+          purchase_date: moment(data.purchase_date).format("YYYY-MM-DD"),
+          identification_number: data.identification_number,
+          article_name: data.article_name,
+          statue: data.statue
+        }
+        trashService.create(sendDeleteToolToTrash)
+        commonToolsService.remove(data.id)
+        const newTabList = commontools.filter((commontool) => commontool.tool_id !== data.id)
         setCommontools(newTabList)
-        document.location.reload(true)
+        navigate('/tools/common?deleted')
       }
     });
   }

@@ -137,7 +137,7 @@ function UpdateMonthlyPresence() {
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Modification présence 
+        Modification de l'absence 
         <Button
           size="medium"
           variant="outlined"

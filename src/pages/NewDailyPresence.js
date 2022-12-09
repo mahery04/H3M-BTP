@@ -105,11 +105,12 @@ function NewDailyPresence() {
     getPresences()
   }, [dailyemployee_id])
 
-  const columns = [
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 
+  const columns = [
     { field: 'date',headerName: 'Date',  width: 250, type: 'action',
       renderCell: (data) => {
-        if (data.row.date) return moment(data.row.date).format('YYYY-MM-DD')
+        if (data.row.date) return moment(data.row.date).format('DD-MM-YYYY')
       }
     },
     // { field: 'day_text',        headerName: 'Jour',     width: 150 },
@@ -133,6 +134,11 @@ function NewDailyPresence() {
         }
       }
     },
+    // { field: 'par', headerName: 'Fait par',  width: 250, type: 'action', 
+    //   renderCell: (data) => {
+    //     return data.row.par
+    //   }
+    // },
   ]
 
   const rows = presences.map(presence => ({
@@ -141,6 +147,7 @@ function NewDailyPresence() {
     date:             presence.date,
     status:           presence.status,
     presence_salary:  presence.presence_salary,
+    //par: presence.par
   }))
 
   //insert new presence
@@ -148,10 +155,15 @@ function NewDailyPresence() {
   const [statusValue, setStatusValue] = useState('')
   const [salary, setSalary] = useState(0)
 
+  var today = new Date();
+  var dateToday = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+
+
   const initialPresenceState = {
     id:     null,
     date:   date,
     status: statusValue,
+    par:''
   }
   const [presence, setPresence] = useState(initialPresenceState)
 
@@ -181,11 +193,12 @@ function NewDailyPresence() {
     var data = {
       date: presence.date,
       status: presence.status,
+      par: userInfo.role_name + " le " + dateToday
     }
 
     if (!data.date) {
       swal({
-        title: "Une erreur est survenue!",
+        title: "Un erreur est survenu!",
         text: "Des formulaires requis sont vides.",
         icon: "error",
         button: "OK",
@@ -275,8 +288,8 @@ function NewDailyPresence() {
                     <DatePicker
                       views={['year', 'month']}
                       label="Mois et Année"
-                      minDate={dayjs('2012-03-01')}
-                      maxDate={dayjs('2023-06-01')}
+                      minDate={dayjs('2019-01-01')}
+                      maxDate={dayjs('2035-12-31')}
                       value={month}
                       onChange={insertMonth}
                       renderInput={(params) => <TextField sx={{ mt: 5, width: '100%' }} variant="standard" {...params} helperText={null} />}

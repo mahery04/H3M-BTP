@@ -28,12 +28,17 @@ const validation = (id,data) => {
     return http.put(`/api/conge/validation/${id}`, data)
 }
 
+const novalidation = (id,data) => {
+    return http.put(`/api/conge/novalidation/${id}`, data)
+}
+
+
 const remove = id => {
     return http.delete(`/api/conge/${id}`)
 }
 
 const exportedObject = {
-    updateLastDay, getEmployee ,getAll, get, create, update, validation, remove
+    updateLastDay, getEmployee ,getAll, get, create, update, validation, novalidation,remove
 }
 
 export default exportedObject

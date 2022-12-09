@@ -39,6 +39,8 @@ function NewDailyEmployee() {
   const [group,setGroup] = useState('');
   const [status,setStatus] = useState('');
 
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+
   const getPostDailyEmployees = () => {
     postDailyEmployeeService.getAllPosts().then((res) => {
       setPost(res.data)
@@ -46,6 +48,10 @@ function NewDailyEmployee() {
       console.log(err);
     })
   }
+
+  var today = new Date();
+  var dateToday = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+
 
   useEffect(() => {
     getPostDailyEmployees()
@@ -65,7 +71,8 @@ function NewDailyEmployee() {
     category:     '',
     hiring_date:  date,
     status:       '',
-    remarque:     ''
+    remarque:     '',
+    par: ''
   }
 
   const [dailyemployee, setDailyemployee] = useState(initialEmployeeState)
@@ -121,7 +128,8 @@ function NewDailyEmployee() {
       category:     dailyemployee.category,
       hiring_date:  dailyemployee.hiring_date,
       status:       dailyemployee.status,
-      remarque:     dailyemployee.remarque
+      remarque:     dailyemployee.remarque,
+      par: userInfo.role_name + " le " + dateToday
     }
 
     if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.post_id.length <= 0 || data.group.length <= 0 || data.status.length <= 0) {
@@ -147,7 +155,8 @@ function NewDailyEmployee() {
           category:     res.data.category,
           hiring_date:  res.data.hiring_date,
           status:       res.data.status,
-          remarque:     res.data.remarque
+          remarque:     res.data.remarque,
+          par: res.data.par
         })
       }).catch(err => {
         console.log(err)

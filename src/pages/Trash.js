@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Paper, Container, Typography, Box, Stack, Chip, Tooltip,Link } from '@mui/material';
+import { Button, Paper, Container, Typography, Box, Tooltip } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
@@ -11,21 +11,18 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import moment from 'moment'
 import swal from '@sweetalert/with-react';
 
-import personnalToolsService from '../services/personnalToolsService'
-import trashService from '../services/trashService';
+import trashService from '../services/trashService'
 import Label from '../components/Label';
 
 
 
-function PersonnalTools() {
+function Trash() {
 
   const notification = () => {
     let url = window.location.href
@@ -45,7 +42,7 @@ function PersonnalTools() {
   const [personnaltools, setPersonnaltools] = useState([])
 
   const getPersonnalTools = () => {
-    personnalToolsService.getAll().then((res) => {
+    trashService.getAll().then((res) => {
       setPersonnaltools(res.data)
     }).catch(err => {
       console.log(err)
@@ -82,38 +79,24 @@ function PersonnalTools() {
       }
     },
     { field: 'material_number', headerName: 'Nombre de matériel', width: 150, type: 'number' },
-    // { field: 'historical_tool', headerName: 'Historique du matériel', width: 200, type: 'action',
+    // { field: 'historical', headerName: 'Lieu d\'affectation', width: 150, 
     //   renderCell: (data) => {
+    //     if (data.row.historical)
     //     return (
-    //       <>
-    //         <Stack direction="row">
-    //           <Link underline="none" href={'/history/tool/' + data.id}>
-    //             <Chip 
-    //               icon={<AddCircleIcon/>} 
-    //               label="Voir historique"
-    //               sx={{cursor:'pointer'}}
-    //               variant="outlined"
-    //               color="warning"
-    //             />
-    //           </Link>
-    //         </Stack>
-    //       </>
+    //       <Tooltip title={data.row.historical}>
+    //         <InfoIcon sx={{ color: 'grey' }}/>
+    //       </Tooltip>
     //     )
     //   }
-    // }, 
+    // },
+    // { field: 'assignation_place', headerName: 'Lieu d\'affectation', width: 150, type: 'number' },
     {
-      field: 'action', headerName: 'Action', width: 200, type: 'action',
+      field: 'action', headerName: 'Action', width: 200, type: 'actions',
       renderCell: (data) => {
         if (userInfo.role_id === 1) {
           return (
             <>
-              <Link underline="none" href={'/tools/updatepersonnal/' + data.id}>
-                <IconButton component="label">
-                  <EditIcon />
-                </IconButton>
-              </Link>
-  
-              <IconButton component="label" onClick={() => deleteTool(data.row)}>
+              <IconButton component="label" onClick={() => deleteTool(data.id)}>
                 <DeleteIcon />
               </IconButton>
             </>
@@ -121,7 +104,7 @@ function PersonnalTools() {
         } else {
           return (
             <>
-              <Link underline="none" href={'/tools/updatepersonnal/' + data.id}>
+              <Link to={'/tools/updatepersonnal/' + data.id}>
                 <IconButton component="label">
                   <EditIcon />
                 </IconButton>
@@ -134,7 +117,7 @@ function PersonnalTools() {
   ];
 
   const rows = personnaltools.map(personnaltool => ({
-    id: personnaltool.tool_id,
+    id: personnaltool.trash_id,
     purchase_date: personnaltool.purchase_date,
     identification_number: personnaltool.identification_number,
     vendor: personnaltool.vendor,
@@ -143,54 +126,34 @@ function PersonnalTools() {
     // assignation_place: personnaltool.assignation_place,
     statue: personnaltool.statue,
     material_number: personnaltool.material_number,
-    // etat: personnaltool.etat,
-    // historical: personnaltool.historical,
+    etat: personnaltool.etat,
+    historical: personnaltool.historical,
   }))
 
-
-  const deleteTool = (data) => {
+  const deleteTool = (id) => {
     swal({
-      text: "Supprimer le matériel de la liste ?",
+      text: "Supprimer définitivement le matériel ?",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     })
     .then((willDelete) => {
       if (willDelete) {
-        var sendDeleteToolToTrash = {
-          tool_id: data.id,
-          purchase_date: moment(data.purchase_date).format("YYYY-MM-DD"),
-          identification_number: data.identification_number,
-          article_name: data.article_name,
-          statue: data.statue,
-        }
-        trashService.create(sendDeleteToolToTrash)
-        personnalToolsService.remove(data.id)
-         const newTabList = personnaltools.filter((personnaltool) => personnaltool.tool_id !== data.id)
+        trashService.remove(id)
+        const newTabList = personnaltools.filter((personnaltool) => personnaltool.trash_id !== id)
         setPersonnaltools(newTabList)
-        navigate('/tools/personnal?deleted')
       }
     });
   }
 
-  
   return (
     <div>
       <Typography variant="h3" sx={{ px: 5, mt: 1, mb: 5 }}>
-        Listes des outils
-        <Button
-          size="medium"
-          variant="outlined"
-          color="primary"
-          sx={{ mr: 10, ml: 150, width: 250, marginLeft: '70%' }}
-          startIcon={<AddIcon />}
-          href='/tools/newpersonnaltool'
-        >
-          Nouveau outil
-        </Button>
+        Listes des outils supprimés
       </Typography>
 
       <Container maxWidth="xxl">
+
         <Paper sx={{ width: '95%', overflow: 'hidden' }}>
           <Box sx={{ height: 500, width: '100%' }}>
             <DataGrid
@@ -203,9 +166,10 @@ function PersonnalTools() {
             />
           </Box>
         </Paper>
+
       </Container>
     </div>
   )
 }
 
-export default PersonnalTools
+export default Trash

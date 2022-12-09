@@ -45,6 +45,9 @@ function NewMonthlyEmployee() {
   const [evaluation,setEvaluation] = useState('');
   const [sanction,setSanction] = useState('');
 
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+
+
   const getPostDailyEmployees = () => {
     postDailyEmployeeService.getAllPosts().then((res) => {
       setPost(res.data)
@@ -52,6 +55,9 @@ function NewMonthlyEmployee() {
       console.log(err);
     })
   }
+
+  var today = new Date();
+  var dateToday = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
   useEffect(() => {
     getPostDailyEmployees()
@@ -74,6 +80,7 @@ function NewMonthlyEmployee() {
     hiring_date:  hiringdate,
     ostie_num:    '',
     cnaps_num:    '',
+    par: '',
   }
 
   const [monthlyemployee, setMonthlyemployee] = useState(initialEmployeeState)
@@ -128,12 +135,13 @@ function NewMonthlyEmployee() {
       hiring_date:    monthlyemployee.hiring_date,
       ostie_num:      monthlyemployee.ostie_num,
       cnaps_num:      monthlyemployee.cnaps_num,
+      par: userInfo.role_name + " le " + dateToday
     } 
 
-    if(data.matricule.length <= 0 || data.firstname.length <= 0 || data.lastname.length <= 0 || data.group.length <= 0 || data.post_occupe.length <= 0 || data.status.length <= 0) {
+    if(!data.matricule || !data.firstname|| !data.lastname || !data.group || !data.post_occupe|| !data.salary || !data.status) {
       swal({
-        title: "Une erreur est survenue!",
-        text: "Veuillez remplir tous les formulaires",
+        title: "Un erreur est survenu!",
+        text: "Veuillez remplir les formulaires étoilés",
         icon: "error",
         button: "OK",
       });
@@ -256,7 +264,6 @@ function NewMonthlyEmployee() {
                           label="Status *"
                         >
                           <MenuItem value="Actif">Actif</MenuItem>
-                          <MenuItem value="Congé">Congé</MenuItem>
                           <MenuItem value="Démission">Démission</MenuItem>
                         </Select>
                       </FormControl>
