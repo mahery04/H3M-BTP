@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        NODEJS_HOME = tool 'NodeJS'
-        PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+        //NODEJS_HOME = tool 'NodeJS'
+        //PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
         DOCKERHUB_CREDENTIALS = credentials('dockerhub_id')
         DOCKER_IMAGE_NAME = 'faniry123/frontend'
         DOCKER_IMAGE_TAG = "${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}"
@@ -18,25 +18,25 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                script {
+        //stage('Install Dependencies') {
+           // steps {
+            //    script {
                     // Installation des dépendances pour le front-end
-                    sh 'npm install'
+                  //  sh 'npm install'
 
                     // Installation des dépendances pour le back-end
                    // sh 'cd back-end && npm install'
-                }
-            }
-        }
+              //  }
+          //  }
+       // }
 
-        stage('Run Front-end Tests') {
-            steps {
-                script {
-                    sh 'npm start'
-                }
-            }
-        }
+       // stage('Run Front-end Tests') {
+         //   steps {
+               // script {
+                   // sh 'npm start'
+                //}
+            //}
+       // }
 
         
         
