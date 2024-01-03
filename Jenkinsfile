@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Installation des dépendances pour le front-end
-                    sh 'cd frontend && npm install'
+                    sh 'npm install'
 
                     // Installation des dépendances pour le back-end
                    // sh 'cd back-end && npm install'
@@ -33,7 +33,7 @@ pipeline {
         stage('Run Front-end Tests') {
             steps {
                 script {
-                    sh 'cd frontend && npm start'
+                    sh 'npm start'
                 }
             }
         }
