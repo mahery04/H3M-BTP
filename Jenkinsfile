@@ -13,6 +13,9 @@ pipeline {
         stage('Installation') {
             steps {
                 script {
+                    echo 'Installation de Node.js et npm...'
+                    sh 'curl -sL https://deb.nodesource.com/setup_14.x | bash -'
+                    sh 'apt-get install -y nodejs'
                     echo 'Installation des dépendances pour le front-end'
                     sh 'npm install'
 
