@@ -10,31 +10,6 @@ pipeline {
         OLD_DOCKER_IMAGE_TAG = "${DOCKER_IMAGE_NAME}:${BUILD_NUMBER - 1}"
     }
     stages{
-        stage('Installation') {
-            steps {
-                script {
-                    echo 'Installation de Node.js et npm...'
-                    sh 'curl -sL https://deb.nodesource.com/setup_14.x | bash -'
-                    sh 'apt-get install -y nodejs'
-                    echo 'Installation des dépendances pour le front-end'
-                    sh 'npm install'
-
-                    // Installation des dépendances pour le back-end
-                   // sh 'cd back-end && npm install'
-                }
-            }
-        }
-
-        stage('Tests') {
-            steps {
-                script {
-                    echo 'Exécution des tests...'
-                    sh 'npm start'
-                }
-            }
-        }
-
-        
         
         stage('Build Docker Image') {
             steps {
