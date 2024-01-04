@@ -4,7 +4,7 @@ pipeline {
     environment {
         //NODEJS_HOME = tool 'NodeJS'
         //PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub_id')
+        DOCKERHUB_CREDENTIALS = credentials('id_hub')
         DOCKER_IMAGE_NAME = 'faniry123/frontend'
         DOCKER_IMAGE_TAG = "${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}"
         OLD_DOCKER_IMAGE_TAG = "${DOCKER_IMAGE_NAME}:${BUILD_NUMBER - 1}"
@@ -18,25 +18,26 @@ pipeline {
             }
         }
 
-        //stage('Install Dependencies') {
-           // steps {
-            //    script {
-                    // Installation des dépendances pour le front-end
-                  //  sh 'npm install'
+        stage('Installation') {
+            steps {
+                script {
+                    echo 'Installation des dépendances pour le front-end'
+                    sh 'npm install'
 
                     // Installation des dépendances pour le back-end
                    // sh 'cd back-end && npm install'
-              //  }
-          //  }
-       // }
+                }
+            }
+        }
 
-       // stage('Run Front-end Tests') {
-         //   steps {
-               // script {
-                   // sh 'npm start'
-                //}
-            //}
-       // }
+        stage('Tests') {
+            steps {
+                script {
+                    echo 'Exécution des tests...'
+                    sh 'npm start'
+                }
+            }
+        }
 
         
         
@@ -53,7 +54,7 @@ pipeline {
             steps {
                 script {
                     // Connexion à Docker Hub en utilisant les identifiants
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub_id', usernameVariable: 'DOCKERHUB_CREDENTIALS_USR', passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW')]) {
+                    withCredentials([usernamePassword(credentialsId: 'id_hub', usernameVariable: 'DOCKERHUB_CREDENTIALS_USR', passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW')]) {
                         sh "echo \$DOCKERHUB_CREDENTIALS_PSW | docker login -u \$DOCKERHUB_CREDENTIALS_USR --password-stdin"
                     }
                 }
