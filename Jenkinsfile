@@ -10,14 +10,6 @@ pipeline {
         OLD_DOCKER_IMAGE_TAG = "${DOCKER_IMAGE_NAME}:${BUILD_NUMBER - 1}"
     }
 
-    stages {
-       
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Installation') {
             steps {
                 script {
