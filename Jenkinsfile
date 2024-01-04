@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NODEJS_HOME = tool 'NodeJS'
+        NODEJS_HOME = tool 'nodejs'
         //PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
         DOCKERHUB_CREDENTIALS = credentials('id_hub')
         DOCKER_IMAGE_NAME = 'faniry123/frontend'
