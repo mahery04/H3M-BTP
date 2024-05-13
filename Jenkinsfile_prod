@@ -1,0 +1,165 @@
+
+def actuelBranch(branch) {
+    script {
+        echo "La branche actuelle est : ${branch}" 
+    }
+}
+
+def buildImage(branch) {
+            script {
+                sh "docker build --build-arg BUILD_NUMBER=${BUILD_NUMBER} -t ${github_username}/${image_name}:build_${BUILD_NUMBER} -t ${github_username}/${image_name} --no-cache ."
+            }
+        }
+
+
+pipeline {
+    agent any
+    environment {
+        //All your env required
+        DOCKERHUB_CREDENTIALS = 'DockerHub'
+        //github
+        github_username = "faniry123"
+        //Slack_tokens
+        slack_tokens = 'Slack _okens'
+        //Slack_channel
+        slackSend_channel = '#channel'
+        //teamDomain_Slack
+        slack_domain = 'consteslack'
+        //front or Back or API
+        tiers = 'f3m'
+        //Client Name
+        client = '3m'
+        //project
+        project = 'btp'
+        // Language with env
+        language = 'node'
+        // Image name
+        image_name = "${tiers}_${client}_${project}_${language}_${env.BRANCH_NAME}"
+        //
+        DOCKER_TAG_NAME = "${image_name}:${BUILD_NUMBER}"
+    }
+
+    
+    stages {
+        stage('Commiter') {
+            steps {
+                script {
+                    def COMMITTER_EMAIL
+                    if (isUnix()) {
+                        COMMITTER_EMAIL = sh(script: "git --no-pager show -s --format='%ae'", returnStdout: true).trim()
+                    } else {
+                        COMMITTER_EMAIL = bat(script: "git --no-pager show -s --format=%%ae", returnStdout: true).split('\r\n')[2].trim()
+                    }
+                    slackSend channel: "${slackSend_channel}", failOnError: true, message: "(${JOB_NAME}) ${COMMITTER_EMAIL} a initilisé le build numéro ${BUILD_DISPLAY_NAME}", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'good', iconEmoji: ':thumbsup:'
+                }
+            }
+        }
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    // Log in to Docker Hub using credentials
+                    withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DOCKERHUB_CREDENTIALS_USR', passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW')]) {
+                        sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+                    }
+                }
+            }
+            post('Login to Docker Hub') {
+                success {
+                    slackSend channel: "${slackSend_channel}", message: "Login to DockerHub  succeeded", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'good', iconEmoji: ':thumbsup:'
+                }
+                failure {
+                    slackSend channel: "${slackSend_channel}", message: "Login to DockerHub  failed", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'danger', iconEmoji: ':thumbsdown:'
+                }
+            }
+        }
+
+
+        stage('Build image') {
+            steps {
+                script {
+                    // Récupérer la liste des branches disponibles
+                    def branches = sh(script: 'git branch -r --format="%(refname:short)"', returnStdout: true).trim()
+                    def branchNames = branches.split('\n').collect { it.replaceAll('^\\s*origin/', '') }
+
+                    echo "Les branches Git dans le projet '${project}' sont : ${branchNames}"
+
+                    // Parcourir chaque branche et exécuter une action en fonction de la branche
+                    branchNames.each { branch ->
+                        switch (branch) {
+                            case "${env.BRANCH_NAME}":
+                                // Action à effectuer pour la branche actuelle
+                                actuelBranch(branch)
+                                buildImage(branch)
+                                break
+                            default:
+                                // Action par défaut pour les autres branches
+                                echo "La branche '${branch}' ne nécessite aucune action spécifique."
+                                break
+                        }
+                    }
+                }
+            }
+        
+            post('Build Docker Image') {
+                success {
+                    slackSend channel: "${slackSend_channel}", message: "(${JOB_NAME}) L'image ${DOCKER_TAG_NAME} a été buildé avec réussite!", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'good', iconEmoji: ':thumbsup:'
+                }
+                failure {
+                    slackSend channel: "${slackSend_channel}", message: "(${JOB_NAME}) Le Build de l'image  ${DOCKER_TAG_NAME} est un échec!", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'danger', iconEmoji: ':thumbsdown:'
+                }
+            }
+        }
+      
+        
+        stage('Push Image') {
+            steps {
+                script {
+                    // Push the Docker image with the specific version
+                    sh "docker push ${github_username}/${image_name}:build_${BUILD_NUMBER}"
+                    sh "docker push ${github_username}/${image_name}"
+                    
+                }
+            }
+            post {
+                success {
+                    slackSend channel: "${slackSend_channel}", message: "(${env.JOB_NAME}) l'image  ${DOCKER_TAG_NAME}  est disponible dans Dockehub", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'good', iconEmoji: ':thumbsup:'
+                }
+                failure {
+                    slackSend channel: "${slackSend_channel}", message: "(${env.JOB_NAME}) Le push de l'image  ${DOCKER_TAG_NAME} a échoué !", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'danger', iconEmoji: ':thumbsdown:'
+                    retry(1) {
+                        sh "docker push ${github_username}/${image_name}:build_${BUILD_NUMBER}"
+                        sh "docker push ${github_username}/${image_name}"
+                        
+                    }
+                }
+            }
+        }
+
+        stage('Cleaning Image') {
+            steps {
+                script {
+                    // Cleaning the Docker image with the specific version
+                    sh "docker  rmi -f ${github_username}/${image_name}:build_${BUILD_NUMBER}" 
+                    sh "docker  rmi -f ${github_username}/${image_name}"  
+                }
+            } 
+            post {
+                success {
+                    slackSend channel: "${slackSend_channel}", message: "(${env.JOB_NAME}) La suppression d'image ${DOCKER_TAG_NAME}  est reussi", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'good', iconEmoji: ':thumbsup:'
+                }
+                failure {
+                    slackSend channel: "${slackSend_channel}", message: "(${env.JOB_NAME}) Le suppression d'image ${DOCKER_TAG_NAME} a échoué!", teamDomain: "${slack_domain}", tokenCredentialId: "${slack_tokens}", color: 'danger', iconEmoji: ':thumbsdown:'
+                    }
+            }
+        }
+    }
+    post {
+        always {
+            // Log out of Docker Hub
+            sh 'docker logout'
+            sh "docker  rmi -f ${github_username}/${image_name}:build_${BUILD_NUMBER}"
+            sh 'docker image prune -f'
+            
+        }
+    }
+}
